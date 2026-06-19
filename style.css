@@ -32,13 +32,37 @@
 body {
     font-family: var(--font-primary);
     height: 100vh;
+    height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.55)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb') no-repeat center center fixed;
-    background-size: cover;
+    background-color: #0b0f19; /* لون داكن احترافي كخلفية احتياطية */
     color: var(--text-white);
     padding: 20px;
+    position: relative;
+    overflow: hidden; /* يمنع ظهور أي أشرطة تمرير بسبب الفيديو */
+}
+
+/* الخلفية المتحركة للفيديو */
+#bg-video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover; /* يغطي الشاشة بالكامل بشكل متناسق مع الحفاظ على الأبعاد */
+    z-index: -2; /* يكون تحت كل شيء */
+}
+
+/* فلتر تظليل فوق الفيديو لتوفير أعلى مستويات المقروئية والتباين الفخم للمربع الزجاجي */
+.video-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.65), rgba(9, 13, 22, 0.75));
+    z-index: -1; /* يوضع فوق الفيديو وتحت أزرار تسجيل الدخول */
 }
 
 /* 2. Ø§Ù„Ù…Ø±Ø¨Ø¹ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ (Ø§Ù„ÙƒÙˆÙ†ØªÙŠÙ†Ø± Ø§Ù„Ø²Ø¬Ø§Ø¬ÙŠ) */
@@ -50,28 +74,57 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    background: var(--bg-glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border-glass);
+    background: rgba(255, 255, 255, 0.2); /* جعل الدائرة من الداخل بيضاء قليلاً بشكل متناسق */
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1.5px solid rgba(255, 75, 130, 0.25); /* حدود وردية/حمراء خفيفة متناسقة مع الخلفية */
     padding: 40px;
-    box-shadow: var(--shadow-glass);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease, border-radius 0.4s ease;
+    /* ظل داكن مع توهج داخلي وخارجي باللون الوردي/الأحمر على الجوانب */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35), 
+                inset 0 0 20px rgba(255, 75, 130, 0.2), 
+                0 0 25px rgba(255, 75, 130, 0.3);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease, border-radius 0.4s ease, box-shadow 0.4s ease;
 }
 
 .container:hover {
     transform: scale(1.02);
-    border-color: rgba(0, 210, 255, 0.3);
+    border-color: rgba(255, 75, 130, 0.55);
+    /* زيادة التوهج عند تمرير الماوس للتفاعل البصري الممتاز */
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 
+                inset 0 0 25px rgba(255, 75, 130, 0.35), 
+                0 0 35px rgba(255, 75, 130, 0.45);
 }
 
-.container h1 {
-    font-size: 24px;
-    font-weight: 800;
-    margin-bottom: 8px;
-    background: linear-gradient(to left, #ffffff, #e2e8f0);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.container .login-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 12px;
+}
+
+.container .login-title .title-top {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+}
+
+.container .login-title .title-middle {
+    font-family: 'Outfit', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    color: #ffffff; /* كتابة بيضاء مثل الصورة الثانية */
+    /* توهج نيون وردي/أحمر فخم يخرج من جوانب الكتابة كما في الصورة الثانية */
+    text-shadow: 0 0 5px #ffffff,
+                 0 0 10px #ff4b82,
+                 0 0 20px #ff4b82,
+                 0 0 35px #ff4b82,
+                 0 0 50px #ff4b82;
+    letter-spacing: 0.5px;
+    margin: 2px 0;
 }
 
 .container p {
@@ -132,9 +185,11 @@ body {
 
 /* Ø±ÙˆØ§Ø¨Ø· Ø£Ø³ÙÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ */
 .footer-links {
-    margin-top: 20px;
+    margin-top: 18px;
     font-size: 13px;
     color: var(--text-muted);
+    text-align: center;
+    z-index: 10;
 }
 
 .footer-links a {
@@ -396,12 +451,13 @@ body {
 
 /* 6. Ø§Ø³Ù… Ø§Ù„Ø¹Ù„Ø§Ù…Ø© Ø§Ù„ØªØ¬Ø§Ø±ÙŠØ© HayMoi */
 .brand-title {
-    background: linear-gradient(45deg, #00d2ff, #0056b3); 
+    background: linear-gradient(135deg, #ffffff 0%, #ff4b82 100%); 
     -webkit-background-clip: text; 
     -webkit-text-fill-color: transparent;
     font-weight: 900; 
     font-style: italic; 
     letter-spacing: 0.5px; 
+    text-shadow: 0 0 8px rgba(255, 75, 130, 0.25);
 }
 
 /* 7. Ø´Ø§Ø´Ø§Øª Ø§Ù„Ù‡ÙˆØ§ØªÙ Ø§Ù„Ù…Ø­Ù…ÙˆÙ„Ø© */
@@ -411,19 +467,50 @@ body {
     }
     
     .container {
-        width: 100%;
-        height: auto;
-        aspect-ratio: auto;
-        border-radius: 20px;
-        padding: 30px 20px;
+        width: 92vw;
+        height: 92vw;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%; /* الحفاظ على شكل الدائرة المثالي فالهواتف أيضاً */
+        padding: 24px 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
     
-    .container h1 {
-        font-size: 20px;
+    .container .login-title {
+        gap: 2px;
+        margin-bottom: 8px;
+    }
+    
+    .container .login-title .title-top {
+        font-size: 12px;
+        letter-spacing: 1.5px;
+    }
+    
+    .container .login-title .title-middle {
+        font-size: 28px; /* تصغير حجم اللوجو قليلاً ليناسب الهواتف ولا يخرج عن الدائرة */
     }
     
     .container p {
-        font-size: 14px;
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+    
+    .social-login {
+        gap: 6px;
+        margin-top: 6px;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        font-size: 13.5px;
+        gap: 8px;
+    }
+    
+    .footer-links {
+        margin-top: 8px;
+        font-size: 11px;
     }
 }
 
@@ -434,6 +521,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
+    height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -445,6 +533,7 @@ body {
     width: 100%;
     max-width: 480px;
     height: 100vh;
+    height: 100dvh;
     background: #222222; /* خلفية رمادية داكنة فخمة متناسقة بطلب من المستخدم */
     border-left: 1px solid rgba(255, 255, 255, 0.08);
     border-right: 1px solid rgba(255, 255, 255, 0.08);
@@ -684,6 +773,7 @@ body {
     width: 100%;
     max-width: 440px;
     max-height: 85vh;
+    max-height: 85dvh;
     overflow-y: auto;
     border-radius: 24px;
     padding: 30px;
@@ -1956,6 +2046,7 @@ body {
 .image-lightbox img {
     max-width: 90%;
     max-height: 85vh;
+    max-height: 85dvh;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     object-fit: contain;

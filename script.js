@@ -121,7 +121,9 @@ let chatSubscription = null;
 let currentUserProfile = null; // تخزين الملف الشخصي الحالي للمستخدم بما فيه الإحداثيات
 let activeTopTab = 'nearby'; // التبويب العلوي النشط لقسم الاستكشاف
 let searchFilterQuery = ''; // نص البحث الحالي بالديسكفري
-let currentGenderFilter = 'all'; // فلتر الجنس: all, male, femaleأعضاء
+let currentGenderFilter = 'all'; // فلتر الجنس: all, male, female
+let currentDistanceFilter = 10000; // المسافة بالكيلومتر
+let requireVerifiedFilter = false; // الأعضاء الموثقين فقط
 let blockedUserIds = new Set(); // قائمة المحظورين
 let globalMessageSubscription = null; // اشتراك الإشعارات العالمي
 
@@ -958,15 +960,15 @@ function renderDiscoveryView(profiles, container) {
         const searchBar = document.createElement('div');
         searchBar.className = 'search-filter-container';
         searchBar.innerHTML = `
-            <div class="search-input-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="discovery-search-input" placeholder="ابحث بالاسم، السن، المهنة..." value="${escapeHtml(searchFilterQuery)}" autocomplete="off">
-                ${searchFilterQuery ? '<button id="clear-search-btn" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>' : ''}
-            </div>
-            <div class="gender-filter-pills" style="display:flex; gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none;">
-                <button class="filter-pill ${currentGenderFilter === 'all' ? 'active' : ''}" data-filter="all">الكل</button>
-                <button class="filter-pill ${currentGenderFilter === 'female' ? 'active' : ''}" data-filter="female">بنات ♀</button>
-                <button class="filter-pill ${currentGenderFilter === 'male' ? 'active' : ''}" data-filter="male">دراري ♂</button>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <div class="search-input-wrapper" style="flex:1;">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="discovery-search-input" placeholder="ابحث بالاسم، السن، المهنة..." value="${escapeHtml(searchFilterQuery)}" autocomplete="off">
+                    ${searchFilterQuery ? '<button id="clear-search-btn" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>' : ''}
+                </div>
+                <button id="advanced-filter-btn" style="width:44px; height:44px; border-radius:12px; background:var(--bg-glass); border:1px solid var(--border-glass); color:var(--text-white); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+                    <i class="fas fa-sliders-h"></i>
+                </button>
             </div>
         `;
         container.appendChild(searchBar);
@@ -1007,20 +1009,9 @@ function renderDiscoveryView(profiles, container) {
             }
         });
 
-        // إضافة مستمعي الأحداث لأزرار الفلترة
-        const filterPills = searchBar.querySelectorAll('.filter-pill');
-        filterPills.forEach(pill => {
-            pill.addEventListener('click', (e) => {
-                const filterValue = e.target.getAttribute('data-filter');
-                if (currentGenderFilter !== filterValue) {
-                    currentGenderFilter = filterValue;
-                    // تحديث مظهر الأزرار
-                    filterPills.forEach(p => p.classList.remove('active'));
-                    e.target.classList.add('active');
-                    // تحديث القائمة
-                    renderFilteredList(profiles, listContainer);
-                }
-            });
+        // فتح نافذة الفلترة المتقدمة
+        searchBar.querySelector('#advanced-filter-btn').addEventListener('click', () => {
+            openAdvancedFilterModal(profiles, listContainer);
         });
 
         renderFilteredList(profiles, listContainer);
@@ -1066,6 +1057,20 @@ function renderFilteredList(profiles, listContainer) {
     // فلترة الجنس أولاً
     if (currentGenderFilter !== 'all') {
         filtered = filtered.filter(p => p.gender === currentGenderFilter);
+    }
+    
+    // فلترة المسافة
+    if (currentDistanceFilter !== 10000 && currentUserProfile && currentUserProfile.latitude && currentUserProfile.longitude) {
+        filtered = filtered.filter(p => {
+            if (!p.latitude || !p.longitude) return false;
+            const dist = calculateDistance(currentUserProfile.latitude, currentUserProfile.longitude, p.latitude, p.longitude);
+            return dist !== null && dist <= currentDistanceFilter;
+        });
+    }
+
+    // فلترة التوثيق
+    if (requireVerifiedFilter) {
+        filtered = filtered.filter(p => p.is_vip);
     }
     
     if (query) {
@@ -3074,3 +3079,82 @@ setInterval(() => {
     }
 }, 30000);
 
+// === نافذة الفلترة المتقدمة ===
+function openAdvancedFilterModal(profiles, listContainer) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:2000; display:flex; align-items:center; justify-content:center; animation:fadeInModal 0.2s ease; padding: 20px;';
+
+    modal.innerHTML = `
+        <div class="glass-card" style="width:100%; max-width:400px; background:#fff5f0; border-radius:24px; overflow:hidden; color:#333; animation:slideUpModal 0.3s ease; padding:0;">
+            <!-- Header Tabs -->
+            <div style="display:flex; background:#ef4444; color:white; font-weight:bold;">
+                <div style="flex:1; text-align:center; padding:15px; border-bottom:3px solid white; cursor:pointer;">بسيط</div>
+                <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">متقدم</div>
+                <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">بالـ ID</div>
+            </div>
+
+            <div style="padding:24px;">
+                <!-- Gender -->
+                <h4 style="margin-top:0; color:#666; font-weight:normal; margin-bottom:12px;">الجنس</h4>
+                <div style="display:flex; justify-content:space-between; margin-bottom:24px; border-bottom:1px solid #ddd; padding-bottom:10px;">
+                    <div class="adv-gender-btn" data-val="female" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='female'?'2px solid #333':'none'}; color:${currentGenderFilter==='female'?'#333':'#888'}; font-weight:bold;">
+                        <i class="fas fa-venus" style="color:#ec4899; margin-left:4px;"></i> أنثى
+                    </div>
+                    <div class="adv-gender-btn" data-val="male" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='male'?'2px solid #333':'none'}; color:${currentGenderFilter==='male'?'#333':'#888'}; font-weight:bold;">
+                        <i class="fas fa-mars" style="color:#3b82f6; margin-left:4px;"></i> ذكر
+                    </div>
+                    <div class="adv-gender-btn" data-val="all" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='all'?'2px solid #333':'none'}; color:${currentGenderFilter==='all'?'#333':'#888'}; font-weight:bold;">
+                        الكل
+                    </div>
+                </div>
+
+                <!-- Distance -->
+                <h4 style="color:#666; font-weight:normal; margin-bottom:12px;">المسافة القصوى</h4>
+                <select id="adv-dist" style="width:100%; padding:12px; border:none; background:transparent; border-bottom:1px solid #ccc; font-size:16px; margin-bottom:24px; outline:none; color:#333; cursor:pointer;">
+                    <option value="10" ${currentDistanceFilter===10?'selected':''}>10 كم</option>
+                    <option value="50" ${currentDistanceFilter===50?'selected':''}>50 كم</option>
+                    <option value="100" ${currentDistanceFilter===100?'selected':''}>100 كم</option>
+                    <option value="500" ${currentDistanceFilter===500?'selected':''}>500 كم</option>
+                    <option value="10000" ${currentDistanceFilter===10000?'selected':''}>أي مسافة</option>
+                </select>
+
+                <!-- Verified Checkbox -->
+                <label style="display:flex; align-items:center; gap:10px; cursor:pointer; color:#333; font-size:16px; margin-bottom:30px; font-weight:bold;">
+                    <input type="checkbox" id="adv-verified" ${requireVerifiedFilter?'checked':''} style="width:20px; height:20px; accent-color:#ef4444;">
+                    أعضاء موثقين (VIP) فقط
+                </label>
+
+                <!-- Action Buttons -->
+                <div style="display:flex; gap:12px;">
+                    <button id="adv-cancel" style="flex:1; padding:14px; background:#fb923c; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">إلغاء</button>
+                    <button id="adv-search" style="flex:1; padding:14px; background:#991b1b; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">بحث</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const genderBtns = modal.querySelectorAll('.adv-gender-btn');
+    let tempGender = currentGenderFilter;
+    genderBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            genderBtns.forEach(b => { b.style.borderBottom='none'; b.style.color='#888'; });
+            const target = e.currentTarget;
+            target.style.borderBottom = '2px solid #333';
+            target.style.color = '#333';
+            tempGender = target.getAttribute('data-val');
+        });
+    });
+
+    modal.querySelector('#adv-cancel').addEventListener('click', () => modal.remove());
+    modal.querySelector('#adv-search').addEventListener('click', () => {
+        currentGenderFilter = tempGender;
+        currentDistanceFilter = parseInt(modal.querySelector('#adv-dist').value);
+        requireVerifiedFilter = modal.querySelector('#adv-verified').checked;
+        
+        modal.remove();
+        renderFilteredList(profiles, listContainer);
+    });
+}

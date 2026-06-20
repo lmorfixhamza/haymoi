@@ -3388,3 +3388,27 @@ body {
 
 
 
+
+.user-card.female .card-action-btn.like-btn:hover {
+    background: rgba(255, 51, 153, 0.12);
+    border-color: rgba(255, 51, 153, 0.35);
+    color: #ff3399;
+}
+.user-card.female .card-action-btn.like-btn.liked {
+    background: #ff3399 !important;
+    border-color: #ff3399 !important;
+    color: white !important;
+    box-shadow: 0 0 10px rgba(255, 51, 153, 0.4);
+}
+
+.user-card.male .card-action-btn.like-btn:hover {
+    background: rgba(26, 117, 255, 0.12);
+    border-color: rgba(26, 117, 255, 0.35);
+    color: #1a75ff;
+}
+.user-card.male .card-action-btn.like-btn.liked {
+    background: #1a75ff !important;
+    border-color: #1a75ff !important;
+    color: white !important;
+    box-shadow: 0 0 10px rgba(26, 117, 255, 0.4);
+}

@@ -1135,10 +1135,10 @@ body {
 
 /* ØºÙ„Ø§Ù Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø´Ø®ØµÙŠØ© Ù…Ø¹ Ø¥Ø·Ø§Ø± Ù…ØªÙˆÙ‡Ø¬ Ø«Ù„Ø§Ø«ÙŠ Ø§Ù„Ø£Ø¨Ø¹Ø§Ø¯ */
 .user-avatar-wrapper {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    padding: 3px;
+    padding: 4px;
     /* يحدد سمك الإطار المتوهج */
     background: rgba(255,255,255,0.1);
     /* تدرج لوني فخم افتراضي */

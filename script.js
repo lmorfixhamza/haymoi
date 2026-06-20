@@ -1317,24 +1317,36 @@ function openUserModal(profile) {
     modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; align-items:flex-end; justify-content:center; z-index:1300; animation:fadeInModal 0.3s ease;';
 
     modal.innerHTML = `
-        <div class="glass-card" style="width:100%; max-width:420px; max-height:85vh; border-radius:24px 24px 0 0; padding:24px; overflow-y:auto; animation:slideUpModal 0.35s ease;">
-            <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
-                <button id="close-user-modal" style="background:rgba(255,255,255,0.08); border:none; color:var(--text-muted); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background 0.2s;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-profile-header">
-                <div class="modal-avatar ${genderClass}">${profile.avatar_url ? `<img src="${profile.avatar_url}" alt="" loading="lazy">` : initial}</div>
-                <h3 class="modal-name">
-                    ${profile.full_name || 'مستخدم HayMoi'}
-                    ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 14px; margin-right: 6px;" title="عضو VIP"></i>' : ''}
-                </h3>
-                <div class="modal-status-line">
-                    <span class="gender-badge ${genderClass}">${genderSymbol} ${genderText}</span>
-                    <span>${age !== '-' ? age + ' سنة' : ''}</span>
-                    ${distanceText ? `<span style="color:var(--text-muted); font-size:12px;"><i class="fas fa-location-dot" style="color:var(--color-primary); margin-left:4px;"></i>${distanceText}</span>` : ''}
+        <div class="glass-card user-modal-card" style="width:100%; max-width:420px; max-height:90vh; border-radius:24px 24px 0 0; padding:0; overflow-y:auto; overflow-x:hidden; animation:slideUpModal 0.35s ease; position:relative; background:#1c1c1e; display:flex; flex-direction:column;">
+            
+            <button id="close-user-modal" style="position:absolute; top:16px; left:16px; background:rgba(0,0,0,0.5); border:none; color:white; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:18px; z-index:10; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(10px);">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- الصورة الكبيرة -->
+            <div style="width:100%; height:380px; position:relative; background: ${profile.gender === 'female' ? 'linear-gradient(135deg, #f97316, #ec4899)' : 'linear-gradient(135deg, #0ea5e9, #6366f1)'}; border-radius:24px 24px 0 0;">
+                ${profile.avatar_url ? `<img src="${profile.avatar_url}" style="width:100%; height:100%; object-fit:cover; border-radius:24px 24px 0 0;" loading="lazy">` : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:80px; color:rgba(255,255,255,0.7); font-weight:700;">${initial}</div>`}
+                
+                <!-- التدرج اللوني أسفل الصورة لعرض الاسم -->
+                <div style="position:absolute; bottom:0; left:0; right:0; height:150px; background:linear-gradient(to top, #1c1c1e, transparent); padding:20px; display:flex; flex-direction:column; justify-content:flex-end;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <h2 style="margin:0; font-size:26px; font-weight:800; color:white; line-height:1.2;">
+                            ${escapeHtml(profile.full_name || 'مستخدم')}
+                        </h2>
+                        <span style="font-size:22px; font-weight:400; color:#e4e4e7;">${age !== '-' ? age : ''}</span>
+                        ${profile.is_vip ? '<i class="fas fa-gem" style="color: #fbbf24; font-size: 18px;" title="عضو VIP"></i>' : ''}
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:6px;">
+                        <span class="gender-age-pill ${genderClass}" style="box-shadow:none; padding:2px 8px; font-size:11px;">
+                            <i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i> ${genderText}
+                        </span>
+                        ${distanceText ? `<span style="color:#a1a1aa; font-size:13px; display:flex; align-items:center; gap:4px;"><i class="fas fa-location-dot" style="color:var(--color-primary);"></i>${distanceText}</span>` : ''}
+                    </div>
                 </div>
             </div>
+
+            <!-- التفاصيل السفلية -->
+            <div style="padding:20px;">
             <div class="modal-details-grid">
                 <div class="modal-detail-box">
                     <span class="detail-label-modal">الجنس</span>
@@ -1362,6 +1374,7 @@ function openUserModal(profile) {
                     <i class="fas fa-flag"></i> إبلاغ
                 </button>
             </div>
+            </div> <!-- نهاية حاوية التفاصيل -->
         </div>
     `;
 

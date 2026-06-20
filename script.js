@@ -1184,6 +1184,16 @@ function createUserCard(profile, index) {
                 icon.classList.remove('far');
                 icon.classList.add('fas');
                 likeBtn.classList.add('liked');
+
+                // إنشاء قلب طائر متحرك
+                const rect = likeBtn.getBoundingClientRect();
+                const flyingHeart = document.createElement('i');
+                flyingHeart.className = 'fas fa-heart floating-heart-anim';
+                flyingHeart.style.left = `${rect.left + rect.width / 2}px`;
+                flyingHeart.style.top = `${rect.top}px`;
+                document.body.appendChild(flyingHeart);
+                setTimeout(() => flyingHeart.remove(), 1000);
+
                 showToastNotification(
                     { name: profile.full_name, gender: profile.gender, avatar_url: profile.avatar_url, user_id: profile.user_id },
                     profile.full_name || 'مستخدم',

@@ -1279,6 +1279,23 @@ body {
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
 }
 
+/* أنيميشن القلب الطائر عند الإعجاب */
+.floating-heart-anim {
+    position: fixed;
+    color: #ef4444;
+    font-size: 28px;
+    pointer-events: none;
+    z-index: 9999;
+    filter: drop-shadow(0 4px 8px rgba(239, 68, 68, 0.4));
+    animation: flyUpAndFade 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes flyUpAndFade {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+    40% { transform: translate(-50%, -120px) scale(1.2); opacity: 1; }
+    100% { transform: translate(-50%, -200px) scale(1); opacity: 0; }
+}
+
 .card-action-btn.chat-btn:hover {
     background: rgba(59, 130, 246, 0.12);
     border-color: rgba(59, 130, 246, 0.35);

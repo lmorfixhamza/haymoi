@@ -1159,7 +1159,7 @@ function createUserCard(profile, index) {
     const lastSeenTime = profile.last_seen || profile.created_at;
     const statusText = isOnline 
         ? '<span style="color:#22c55e; font-weight:700;">متصل الآن</span>' 
-        : `منذ ${formatRelativeTime(lastSeenTime)}`;
+        : formatRelativeTime(lastSeenTime);
 
     card.innerHTML = `
         <div class="user-avatar-wrapper ${genderClass} ${profile.is_vip ? 'vip-ring' : ''}">
@@ -1942,7 +1942,7 @@ async function loadActiveChats() {
                 const lastSeenTime = profile.last_seen || profile.created_at;
                 let statusText = isOnline 
                     ? '<span style="color:#22c55e; font-weight:700;">متصل الآن</span>' 
-                    : `آخر ظهور: منذ ${formatRelativeTime(lastSeenTime)}`;
+                    : `آخر ظهور: ${formatRelativeTime(lastSeenTime).replace("منذ ", "")}`;
                 
                 // إذا كان النص طويلا، يمكننا التخلي عن كلمة "آخر ظهور:" لتوفير المساحة
                 if (!isOnline && distanceTextHTML) {

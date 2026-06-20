@@ -63,7 +63,7 @@ body {
 .video-overlay {
     position: fixed;
     inset: 0;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.65), rgba(9, 13, 22, 0.75));
+    background: linear-gradient(135deg, #0f172a, #090d16); /* Solid background to hide the app underneath */
     z-index: -1;
     /* ÙŠÙˆØ¶Ø¹ Ù ÙˆÙ‚ Ø§Ù„Ù ÙŠØ¯ÙŠÙˆ ÙˆØªØ­Øª Ø£Ø²Ø±Ø§Ø± ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ */
 }
@@ -3200,7 +3200,7 @@ body {
 .splash-screen {
     position: fixed;
     inset: 0;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.65), rgba(9, 13, 22, 0.75));
+    background: linear-gradient(135deg, #0f172a, #090d16); /* Solid background to hide the app underneath */
     display: flex;
     align-items: center;
     justify-content: center;

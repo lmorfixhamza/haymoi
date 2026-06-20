@@ -3384,3 +3384,7 @@ body {
 }
 .adv-gender-btn.active[data-val="female"] { background: #ec4899; }
 .adv-gender-btn.active[data-val="male"] { background: #3b82f6; }
+
+.adv-gender-btn[data-val="female"] { color: #ec4899; }
+.adv-gender-btn[data-val="male"] { color: #3b82f6; }
+.adv-gender-btn[data-val="all"] { color: var(--text-white); }

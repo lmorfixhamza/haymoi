@@ -1351,11 +1351,17 @@ function openUserModal(profile) {
             </button>
 
             <!-- الصورة الكبيرة -->
-            <div style="width:100%; height:380px; position:relative; background: ${profile.gender === 'female' ? 'linear-gradient(135deg, #f97316, #ec4899)' : 'linear-gradient(135deg, #0ea5e9, #6366f1)'}; border-radius:24px 24px 0 0;">
-                ${profile.avatar_url ? `<img src="${profile.avatar_url}" style="width:100%; height:100%; object-fit:cover; border-radius:24px 24px 0 0;" loading="lazy">` : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:80px; color:rgba(255,255,255,0.7); font-weight:700;">${initial}</div>`}
+            <div style="width:100%; height:380px; position:relative; background: ${profile.gender === 'female' ? 'linear-gradient(135deg, #f97316, #ec4899)' : 'linear-gradient(135deg, #0ea5e9, #6366f1)'}; border-radius:24px 24px 0 0; overflow:hidden;">
+                <!-- خلفية ضبابية إذا كانت هناك صورة -->
+                ${profile.avatar_url ? `<img src="${profile.avatar_url}" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; filter:blur(20px) brightness(0.5); z-index:0;" loading="lazy">` : ''}
                 
-                <!-- التدرج اللوني أسفل الصورة لعرض الاسم -->
-                <div style="position:absolute; bottom:0; left:0; right:0; height:150px; background:linear-gradient(to top, #1c1c1e, transparent); padding:20px; display:flex; flex-direction:column; justify-content:flex-end;">
+                <!-- دائرة الصورة المركزية مثل القصص (Stories) -->
+                <div style="position:absolute; top:45%; left:50%; transform:translate(-50%, -50%); z-index:1; width:140px; height:140px; border-radius:50%; border:4px solid ${profile.gender === 'female' ? '#ff3399' : '#1a75ff'}; box-shadow:0 0 25px rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; background:#1c1c1e; overflow:hidden;">
+                    ${profile.avatar_url ? `<img src="${profile.avatar_url}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">` : `<span style="font-size:60px; color:white; font-weight:bold;">${initial}</span>`}
+                </div>
+
+                <!-- طبقة التدرج السفلى لاسم المستخدم -->
+                <div style="position:absolute; bottom:0; left:0; right:0; height:150px; background:linear-gradient(to top, #1c1c1e, transparent); padding:20px; display:flex; flex-direction:column; justify-content:flex-end; z-index:2;">
                     <div style="display:flex; align-items:center; gap:8px;" dir="ltr">
                         <h2 style="margin:0; font-size:26px; font-weight:800; color:white; line-height:1.2;">
                             ${escapeHtml(profile.full_name || 'مستخدم')}

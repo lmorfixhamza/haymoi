@@ -1142,18 +1142,13 @@ function createUserCard(profile, index) {
         socialIconHtml = `<span class="social-badge tiktok" title="سجل عبر TikTok"><i class="fab fa-tiktok"></i></span>`;
     }
 
-    // حساب المسافة الحقيقية
-    let distanceText = '';
+    // حساب المسافة بدقة مع الأيقونة
+    let distanceTextHTML = '';
     if (currentUserProfile && currentUserProfile.latitude && currentUserProfile.longitude && profile.latitude && profile.longitude) {
         const dist = calculateDistance(currentUserProfile.latitude, currentUserProfile.longitude, profile.latitude, profile.longitude);
         if (dist !== null) {
-            if (dist < 0.1) {
-                distanceText = 'قريب جداً';
-            } else if (dist < 1) {
-                distanceText = `${Math.round(dist * 1000)}m`;
-            } else {
-                distanceText = `${dist.toFixed(1)}km`;
-            }
+            const distValue = dist < 1 ? `${Math.round(dist * 1000)}m` : `${dist.toFixed(1)}km`;
+            distanceTextHTML = `<span style="display:inline-flex; align-items:center; gap:3px;" dir="ltr"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px;"></i>${distValue}</span>`;
         }
     }
 
@@ -1162,7 +1157,9 @@ function createUserCard(profile, index) {
         : initial;
 
     const lastSeenTime = profile.last_seen || profile.created_at;
-    const statusText = isOnline ? 'متصل الآن' : `آخر ظهور: ${formatRelativeTime(lastSeenTime)}`;
+    const statusText = isOnline 
+        ? '<span style="color:#22c55e; font-weight:700;">متصل الآن</span>' 
+        : `منذ ${formatRelativeTime(lastSeenTime)}`;
 
     card.innerHTML = `
         <div class="user-avatar-wrapper ${genderClass} ${profile.is_vip ? 'vip-ring' : ''}">
@@ -1195,9 +1192,9 @@ function createUserCard(profile, index) {
             </div>
         </div>
         <div class="card-right-stats">
-            <span class="distance-text">${distanceText || 'قريب'}</span>
+            <span class="distance-text">${distanceTextHTML || '<span dir="ltr"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px; margin-right:3px;"></i>?</span>'}</span>
             <span class="card-status-sep"> · </span>
-            <span class="card-status-text ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${isOnline ? 'en ligne' : formatRelativeTime(lastSeenTime)}</span>
+            <span class="card-status-text ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
         </div>
     `;
 

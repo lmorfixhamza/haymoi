@@ -3138,10 +3138,9 @@ function openAdvancedFilterModal(profiles, listContainer) {
     let tempGender = currentGenderFilter;
     genderBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            genderBtns.forEach(b => { b.style.borderBottom='none'; b.style.color='#888'; });
+            genderBtns.forEach(b => b.classList.remove('active'));
             const target = e.currentTarget;
-            target.style.borderBottom = '2px solid var(--color-primary)';
-            target.style.color = '#333';
+            target.classList.add('active');
             tempGender = target.getAttribute('data-val');
         });
     });

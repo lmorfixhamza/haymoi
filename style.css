@@ -1101,15 +1101,13 @@ body {
 }
 
 .user-card.female {
-    border-color: rgba(255, 102, 163, 0.2);
-    border-right: 3px solid #ff66a3; /* شريط وردي فالجنب الأيمن */
-    background: linear-gradient(to left, rgba(255, 102, 163, 0.03), #1c1c1e 40%) !important;
+    border: 1px solid rgba(236, 72, 153, 0.5) !important;
+    background: linear-gradient(to left, rgba(236, 72, 153, 0.05), #1c1c1e 40%) !important;
 }
 
 .user-card.male {
-    border-color: rgba(59, 130, 246, 0.2);
-    border-right: 3px solid #3b82f6; /* شريط أزرق فالجنب الأيمن */
-    background: linear-gradient(to left, rgba(59, 130, 246, 0.03), #1c1c1e 40%) !important;
+    border: 1px solid rgba(59, 130, 246, 0.5) !important;
+    background: linear-gradient(to left, rgba(59, 130, 246, 0.05), #1c1c1e 40%) !important;
 }
 
 .user-card:hover {
@@ -1140,7 +1138,7 @@ body {
     border-radius: 50%;
     padding: 3px;
     /* يحدد سمك الإطار المتوهج */
-    background: linear-gradient(45deg, #3b82f6, #ec4899);
+    background: rgba(255,255,255,0.1);
     /* تدرج لوني فخم افتراضي */
     display: flex;
     align-items: center;

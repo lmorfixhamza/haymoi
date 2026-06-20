@@ -1102,24 +1102,29 @@ body {
 
 .user-card.female {
     border-color: rgba(255, 102, 163, 0.2);
+    border-right: 3px solid #ff66a3; /* شريط وردي فالجنب الأيمن */
+    background: linear-gradient(to left, rgba(255, 102, 163, 0.03), #1c1c1e 40%) !important;
 }
 
 .user-card.male {
     border-color: rgba(59, 130, 246, 0.2);
+    border-right: 3px solid #3b82f6; /* شريط أزرق فالجنب الأيمن */
+    background: linear-gradient(to left, rgba(59, 130, 246, 0.03), #1c1c1e 40%) !important;
 }
 
 .user-card:hover {
     transform: translateY(-5px) scale(1.02);
-    background: rgba(255, 255, 255, 0.06) !important;
 }
 
 .user-card.male:hover {
     border-color: rgba(59, 130, 246, 0.5);
+    background: linear-gradient(to left, rgba(59, 130, 246, 0.06), rgba(255, 255, 255, 0.04) 60%) !important;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.2);
 }
 
 .user-card.female:hover {
     border-color: rgba(255, 102, 163, 0.5);
+    background: linear-gradient(to left, rgba(255, 102, 163, 0.06), rgba(255, 255, 255, 0.04) 60%) !important;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 102, 163, 0.2);
 }
 

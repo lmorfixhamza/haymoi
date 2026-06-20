@@ -3084,9 +3084,9 @@ function openAdvancedFilterModal(profiles, listContainer) {
         <div class="user-modal-card" style="width:100%; max-width:400px; background:#1c1c1e; border-radius:24px; overflow:hidden; color:var(--text-white); animation:slideUpModal 0.3s ease; padding:0;">
             <!-- Header Tabs -->
             <div style="display:flex; background:rgba(255,255,255,0.03); color:var(--text-white); font-weight:bold;">
-                <div style="flex:1; text-align:center; padding:15px; border-bottom:3px solid var(--color-primary); cursor:pointer;">بسيط</div>
-                <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">متقدم</div>
                 <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">بالـ ID</div>
+                <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">متقدم</div>
+                <div style="flex:1; text-align:center; padding:15px; border-bottom:3px solid var(--color-primary); cursor:pointer;">بسيط</div>
             </div>
 
             <div style="padding:24px;">
@@ -3115,9 +3115,9 @@ function openAdvancedFilterModal(profiles, listContainer) {
                 </select>
 
                 <!-- Verified Checkbox -->
-                <label style="display:flex; align-items:center; gap:10px; cursor:pointer; color:var(--text-white); font-size:16px; margin-bottom:30px; font-weight:bold;">
-                    <input type="checkbox" id="adv-verified" ${requireVerifiedFilter?'checked':''} style="width:20px; height:20px; accent-color:var(--color-primary);">
+                <label style="display:flex; align-items:center; justify-content:flex-end; gap:10px; cursor:pointer; color:var(--text-white); font-size:16px; margin-bottom:30px; font-weight:bold;">
                     أعضاء موثقين (VIP) فقط
+                    <input type="checkbox" id="adv-verified" ${requireVerifiedFilter?'checked':''} style="width:20px; height:20px; accent-color:var(--color-primary);">
                 </label>
 
                 <!-- Action Buttons -->

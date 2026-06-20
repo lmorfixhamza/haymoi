@@ -1085,12 +1085,9 @@ body {
     margin-bottom: 8px;
     gap: 14px;
     padding: 16px;
-    background: rgba(28, 28, 30, 0.8) !important;
-    /* نردوها شفافة شوية باش يبان الضوء من وراها */
-    backdrop-filter: blur(10px);
-    /* تأثير الزجاج */
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #1c1c1e !important;
+    /* تمت إزالة التأثير الزجاجي لتسريع التصفح في الهواتف */
+    border: 1px solid rgba(255, 255, 255, 0.05);
     /* حدود رقيقة جداً */
     border-radius: 28px;
     /* زوايا منحنية بزاوية دائرية تعطي طابع عصري */
@@ -1100,8 +1097,10 @@ body {
     /* يبدأ من اليمين كـ SayHi */
     margin-bottom: 0;
     /* تم إلغاء الهامش السفلي لتقريب الكروت بطلب من المستخدم */
-    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.02), 0 10px 25px rgba(0, 0, 0, 0.4);
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* ظل خفيف وسريع المعالجة */
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    /* تحديد الحركات لتخفيف الضغط على المعالج */
 }
 
 /* Ø£Ù†ÙŠÙ…ÙŠØ´Ù† Ø¸Ù‡ÙˆØ± Ø¨Ø·Ø§Ù‚Ø§Øª Ø§Ù„Ø£Ø¹Ø¶Ø§Ø¡ */

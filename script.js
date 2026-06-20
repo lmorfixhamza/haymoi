@@ -963,7 +963,7 @@ function renderDiscoveryView(profiles, container) {
             <div style="display:flex; gap:10px; align-items:center;">
                 <div class="search-input-wrapper" style="flex:1;">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="discovery-search-input" placeholder="ابحث بالاسم، السن، المهنة..." value="${escapeHtml(searchFilterQuery)}" autocomplete="off">
+                    <input type="text" id="discovery-search-input" placeholder="ابحث بالاسم، السن، المهنة، أو الـ ID..." value="${escapeHtml(searchFilterQuery)}" autocomplete="off">
                     ${searchFilterQuery ? '<button id="clear-search-btn" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>' : ''}
                 </div>
                 <button id="advanced-filter-btn" style="width:44px; height:44px; border-radius:12px; background:var(--bg-glass); border:1px solid var(--border-glass); color:var(--text-white); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;">
@@ -1080,12 +1080,14 @@ function renderFilteredList(profiles, listContainer) {
             const residence = (p.residence || '').toLowerCase();
             const profession = (p.profession || '').toLowerCase();
             const age = calculateAge(p.dob).toString();
+            const userId = (p.user_id || '').toLowerCase();
             
             return name.includes(query) || 
                    bio.includes(query) || 
                    residence.includes(query) || 
                    profession.includes(query) ||
-                   age.includes(query);
+                   age.includes(query) ||
+                   userId.includes(query);
         });
     }
 

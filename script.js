@@ -3092,14 +3092,14 @@ function openAdvancedFilterModal(profiles, listContainer) {
             <div style="padding:24px;">
                 <!-- Gender -->
                 <h4 style="margin-top:0; color:var(--text-muted); font-weight:normal; margin-bottom:12px;">الجنس</h4>
-                <div style="display:flex; justify-content:space-between; margin-bottom:24px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px;">
-                    <div class="adv-gender-btn" data-val="female" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='female'?'2px solid var(--color-primary)':'none'}; color:${currentGenderFilter==='female'?'#333':'#888'}; font-weight:bold;">
+                <div class="ios-segmented-control">
+                    <div class="adv-gender-btn ${currentGenderFilter==='female'?'active':''}" data-val="female">
                         <i class="fas fa-venus" style="color:#ec4899; margin-left:4px;"></i> أنثى
                     </div>
-                    <div class="adv-gender-btn" data-val="male" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='male'?'2px solid var(--color-primary)':'none'}; color:${currentGenderFilter==='male'?'#333':'#888'}; font-weight:bold;">
+                    <div class="adv-gender-btn ${currentGenderFilter==='male'?'active':''}" data-val="male">
                         <i class="fas fa-mars" style="color:#3b82f6; margin-left:4px;"></i> ذكر
                     </div>
-                    <div class="adv-gender-btn" data-val="all" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='all'?'2px solid var(--color-primary)':'none'}; color:${currentGenderFilter==='all'?'#333':'#888'}; font-weight:bold;">
+                    <div class="adv-gender-btn ${currentGenderFilter==='all'?'active':''}" data-val="all">
                         الكل
                     </div>
                 </div>
@@ -3115,9 +3115,12 @@ function openAdvancedFilterModal(profiles, listContainer) {
                 </select>
 
                 <!-- Verified Checkbox -->
-                <label style="display:flex; align-items:center; justify-content:flex-end; gap:10px; cursor:pointer; color:var(--text-white); font-size:16px; margin-bottom:30px; font-weight:bold;">
-                    أعضاء موثقين (VIP) فقط
-                    <input type="checkbox" id="adv-verified" ${requireVerifiedFilter?'checked':''} style="width:20px; height:20px; accent-color:var(--color-primary);">
+                <label style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; color:var(--text-white); font-size:16px; margin-bottom:30px; font-weight:bold; background:rgba(255,255,255,0.03); padding:15px; border-radius:14px; border:1px solid rgba(255,255,255,0.05);">
+                    <span>أعضاء موثقين (VIP) فقط</span>
+                    <div class="ios-toggle">
+                        <input type="checkbox" id="adv-verified" ${requireVerifiedFilter?'checked':''}>
+                        <div class="toggle-bg"></div>
+                    </div>
                 </label>
 
                 <!-- Action Buttons -->

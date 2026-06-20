@@ -3320,3 +3320,67 @@ body {
     color: rgba(255, 255, 255, 0.15);
     margin: 0 4px;
 }
+/* iOS Toggle Switch */
+.ios-toggle {
+    position: relative;
+    width: 50px;
+    height: 30px;
+    display: inline-block;
+}
+.ios-toggle input { display: none; }
+.ios-toggle .toggle-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 30px;
+    transition: 0.3s ease;
+}
+.ios-toggle .toggle-bg::before {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 26px; height: 26px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.ios-toggle input:checked + .toggle-bg {
+    background: var(--color-primary);
+}
+.ios-toggle input:checked + .toggle-bg::before {
+    transform: translateX(20px);
+}
+
+/* iOS Segmented Control */
+.ios-segmented-control {
+    display: flex;
+    background: #2a2a2d;
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.adv-gender-btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    color: var(--text-muted);
+}
+.adv-gender-btn.active {
+    background: rgba(255,255,255,0.1);
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.adv-gender-btn i {
+    transition: color 0.3s ease;
+}
+.adv-gender-btn.active i {
+    color: white !important;
+}
+.adv-gender-btn.active[data-val="female"] { background: #ec4899; }
+.adv-gender-btn.active[data-val="male"] { background: #3b82f6; }

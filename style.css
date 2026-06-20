@@ -727,7 +727,7 @@ body {
 .app-content {
     flex: 1;
     overflow-y: auto;
-    padding: 10px 5px 110px 5px;
+    padding: 10px 2px 110px 2px;
     /* زيادة الهامش السفلي لكي لا يغطي شريط التنقل العائم المحتوى */
     position: relative;
     z-index: 1;
@@ -1073,7 +1073,7 @@ body {
 .users-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
     /* مسافة قريبة ومريحة بين الكروت */
     padding: 10px 5px;
 }

@@ -1096,7 +1096,7 @@ body {
     /* زوايا منحنية بزاوية دائرية تعطي طابع عصري */
     cursor: pointer;
     position: relative;
-    direction: rtl;
+    direction: ltr;
     /* يبدأ من اليمين كـ SayHi */
     margin-bottom: 0;
     /* تم إلغاء الهامش السفلي لتقريب الكروت بطلب من المستخدم */
@@ -1312,8 +1312,26 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    text-align: right;
+    text-align: left;
     /* Ù…Ø­Ø§Ø°Ø§Ø© Ø§Ù„Ù†Øµ Ù„Ù„ÙŠÙ…ÙŠÙ† Ù„ÙŠØªÙˆØ§ÙÙ‚ Ù…Ø¹ Ø§Ù„Ø§ØªØ¬Ø§Ù‡ Ø§Ù„Ø¬Ø¯ÙŠØ¯ */
+}
+
+.user-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+.card-right-stats {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 12px;
+    color: #a1a1aa;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .user-name-row {
@@ -1337,25 +1355,25 @@ body {
 }
 
 /* Ø´Ø§Ø±Ø© Ø§Ù„Ø¬Ù†Ø³ ÙˆØ§Ù„Ø¹Ù…Ø± */
-.gender-badge {
+.gender-age-pill {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-    font-size: 10.5px;
+    gap: 4px;
+    font-size: 11px;
     font-weight: 700;
-    padding: 2.5px 6px;
-    border-radius: 10px;
+    padding: 3px 8px;
+    border-radius: 12px;
     color: #ffffff !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
 }
 
-.gender-badge.male {
-    background: #2563eb;
+.gender-age-pill.male {
+    background: #3b82f6;
 }
 
-.gender-badge.female {
-    background: #db2777;
+.gender-age-pill.female {
+    background: #f43f5e;
 }
 
 /* Ø´Ø§Ø±Ø© Ù…ÙˆÙ‚Ø¹ Ø§Ù„ØªÙˆØ§ØµÙ„ */

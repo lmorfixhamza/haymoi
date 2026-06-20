@@ -1138,13 +1138,21 @@ function createUserCard(profile, index) {
     const statusText = isOnline ? 'متصل الآن' : `آخر ظهور: ${formatRelativeTime(lastSeenTime)}`;
 
     card.innerHTML = `
+        <div class="user-avatar-wrapper ${genderClass} ${profile.is_vip ? 'vip-ring' : ''}">
+            <div class="user-avatar-inner">
+                ${avatarContent}
+            </div>
+            ${isOnline ? '<span class="online-dot"></span>' : ''}
+        </div>
         <div class="user-info">
             <div class="user-name-row">
-                <span class="user-name">
-                    ${escapeHtml(profile.full_name || 'مستخدم')}
-                    (${age !== '-' ? age + ' ' : ''}<span style="color: ${profile.gender === 'female' ? '#ec4899' : '#0ea5e9'}; font-weight: bold; font-size: 14px;">${profile.gender === 'female' ? '♀' : '♂'}</span>)
-                </span>
+                <span class="user-name">${escapeHtml(profile.full_name || 'مستخدم')}</span>
                 ${profile.is_vip ? '<i class="fas fa-gem card-vip-icon" title="عضو VIP"></i>' : ''}
+            </div>
+            <div class="user-meta-row">
+                <span class="gender-age-pill ${genderClass}">
+                    <i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i> ${age !== '-' ? age : ''}
+                </span>
                 ${socialIconHtml}
             </div>
             <p class="user-bio">${escapeHtml(bio)}</p>
@@ -1157,19 +1165,12 @@ function createUserCard(profile, index) {
                         <i class="far fa-comment"></i>
                     </button>
                 </div>
-                <div class="card-distance">
-                    <i class="fas fa-location-dot"></i>
-                    <span>${distanceText || 'قريب'}</span>
-                    <span class="card-status-sep"> · </span>
-                    <span class="card-status-text ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
-                </div>
             </div>
         </div>
-        <div class="user-avatar-wrapper ${genderClass} ${profile.is_vip ? 'vip-ring' : ''}">
-            <div class="user-avatar-inner">
-                ${avatarContent}
-            </div>
-            ${isOnline ? '<span class="online-dot"></span>' : ''}
+        <div class="card-right-stats">
+            <span class="distance-text">${distanceText || 'قريب'}</span>
+            <span class="card-status-sep"> · </span>
+            <span class="card-status-text ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${isOnline ? 'en ligne' : formatRelativeTime(lastSeenTime)}</span>
         </div>
     `;
 

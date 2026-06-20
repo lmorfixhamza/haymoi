@@ -1082,14 +1082,14 @@ function renderFilteredList(profiles, listContainer) {
 function createUserCard(profile, index) {
     debugLog(`createUserCard: rendering card for ${profile.full_name || 'unnamed'} (${profile.user_id})`);
     const card = document.createElement('div');
-    card.className = profile.is_vip ? 'user-card vip-member-card' : 'user-card';
+    const genderClass = profile.gender === 'female' ? 'female' : 'male';
+    card.className = `user-card ${genderClass} ${profile.is_vip ? 'vip-member-card' : ''}`;
     card.setAttribute('data-user-id', profile.user_id);
     card.style.animationDelay = `${index * 0.05}s`;
     card.style.animation = 'fadeSlideUp 0.4s ease forwards';
     card.style.opacity = '0';
 
     const age = calculateAge(profile.dob);
-    const genderClass = profile.gender === 'female' ? 'female' : 'male';
     const initial = (profile.full_name || '?').charAt(0).toUpperCase();
     const bio = profile.bio || 'لا يوجد وصف';
     const isOnline = onlineUsers.has(profile.user_id);

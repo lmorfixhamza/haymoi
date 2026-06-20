@@ -1100,17 +1100,32 @@ body {
     }
 }
 
+.user-card.female {
+    border-color: rgba(255, 102, 163, 0.2);
+}
+
+.user-card.male {
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
 .user-card:hover {
     transform: translateY(-5px) scale(1.02);
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(59, 130, 246, 0.4);
-    /* توهج أزرق خفيف عند اللمس */
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.user-card.male:hover {
+    border-color: rgba(59, 130, 246, 0.5);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+.user-card.female:hover {
+    border-color: rgba(255, 102, 163, 0.5);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 102, 163, 0.2);
 }
 
 .user-card:active {
     transform: translateY(0);
-    background: #18181a;
+    background: #18181a !important;
 }
 
 /* ØºÙ„Ø§Ù Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø´Ø®ØµÙŠØ© Ù…Ø¹ Ø¥Ø·Ø§Ø± Ù…ØªÙˆÙ‡Ø¬ Ø«Ù„Ø§Ø«ÙŠ Ø§Ù„Ø£Ø¨Ø¹Ø§Ø¯ */

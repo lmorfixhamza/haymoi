@@ -1103,13 +1103,13 @@ body {
 .user-card.female {
     border: 1.5px solid #ff3399 !important;
     box-shadow: 0 0 12px rgba(255, 51, 153, 0.3) !important;
-    background: linear-gradient(to left, rgba(255, 51, 153, 0.08), #1c1c1e 50%) !important;
+    background: linear-gradient(to left, rgba(255, 51, 153, 0.15), rgba(255, 51, 153, 0.02) 100%) !important;
 }
 
 .user-card.male {
     border: 1.5px solid #1a75ff !important;
     box-shadow: 0 0 12px rgba(26, 117, 255, 0.3) !important;
-    background: linear-gradient(to left, rgba(26, 117, 255, 0.08), #1c1c1e 50%) !important;
+    background: linear-gradient(to left, rgba(26, 117, 255, 0.15), rgba(26, 117, 255, 0.02) 100%) !important;
 }
 
 .user-card:hover {

@@ -1067,8 +1067,8 @@ body {
     align-items: center;
     width: 100%;
     margin-bottom: 8px;
-    gap: 14px;
-    padding: 16px;
+    gap: 12px;
+    padding: 10px 14px;
     background: #1c1c1e !important;
     /* تمت إزالة التأثير الزجاجي لتسريع التصفح في الهواتف */
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -1115,8 +1115,8 @@ body {
 
 /* ØºÙ„Ø§Ù Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø´Ø®ØµÙŠØ© Ù…Ø¹ Ø¥Ø·Ø§Ø± Ù…ØªÙˆÙ‡Ø¬ Ø«Ù„Ø§Ø«ÙŠ Ø§Ù„Ø£Ø¨Ø¹Ø§Ø¯ */
 .user-avatar-wrapper {
-    width: 65px;
-    height: 65px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     padding: 3px;
     /* يحدد سمك الإطار المتوهج */
@@ -1294,7 +1294,7 @@ body {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     text-align: left;
     /* Ù…Ø­Ø§Ø°Ø§Ø© Ø§Ù„Ù†Øµ Ù„Ù„ÙŠÙ…ÙŠÙ† Ù„ÙŠØªÙˆØ§ÙÙ‚ Ù…Ø¹ Ø§Ù„Ø§ØªØ¬Ø§Ù‡ Ø§Ù„Ø¬Ø¯ÙŠØ¯ */
 }
@@ -1391,12 +1391,12 @@ body {
 }
 
 .user-bio {
-    font-size: 13.5px;
+    font-size: 12.5px;
     color: var(--text-muted);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 1px;
+    margin-top: 0px;
 }
 
 /* Ø§Ù„Ù…Ø³Ø§ÙØ© ÙˆØ­Ø§Ù„Ø© Ø§Ù„Ø§ØªØµØ§Ù„ Ø¹Ù„Ù‰ Ø§Ù„ÙŠØ³Ø§Ø±/Ø§Ù„ÙŠÙ…ÙŠÙ† */

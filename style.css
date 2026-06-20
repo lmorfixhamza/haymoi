@@ -124,7 +124,7 @@ body {
 
 .container p {
     font-size: 15px;
-    color: var(--text-muted);
+    color: var(--text-white);
     margin-bottom: 5px;
     font-weight: 400;
     line-height: 1.5;
@@ -3385,6 +3385,6 @@ body {
 .adv-gender-btn.active[data-val="female"] { background: #ec4899; }
 .adv-gender-btn.active[data-val="male"] { background: #3b82f6; }
 
-.adv-gender-btn[data-val="female"] { color: #ec4899; }
-.adv-gender-btn[data-val="male"] { color: #3b82f6; }
-.adv-gender-btn[data-val="all"] { color: var(--text-white); }
+
+
+

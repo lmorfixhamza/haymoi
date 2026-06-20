@@ -71,9 +71,12 @@ async function loadAppData(user) {
 
     try {
         debugLog("loadAppData: Requesting geolocation...");
-        requestLocationAndSave();
+        await requestLocationAndSave();
     } catch (e) {
-        debugLog("loadAppData: Error requesting geolocation: " + e.message, true);
+        debugLog("loadAppData: Error requesting geolocation (Access Denied): " + e.message, true);
+        alert("يجب تفعيل صلاحية الوصول للموقع الجغرافي لاستخدام التطبيق. سيتم تسجيل خروجك الآن.");
+        if (typeof handleLogout === 'function') handleLogout();
+        return; // Stop loading app data so they can't enter
     }
 
     try {
@@ -735,62 +738,69 @@ async function loadOwnProfile(user) {
 
 // === نظام جلب الموقع الجغرافي للمستخدم وتحديثه ===
 function requestLocationAndSave() {
-    if (!navigator.geolocation) {
-        console.warn("تحديد الموقع الجغرافي غير مدعوم في هذا المتصفح.");
-        debugLog("requestLocationAndSave: Geolocation not supported by browser.", true);
-        return;
-    }
-
-    debugLog("requestLocationAndSave: Querying browser geolocation...");
-    navigator.geolocation.getCurrentPosition(async (position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        debugLog(`requestLocationAndSave: Got coordinates: lat=${lat}, lon=${lon}`);
-
-        if (!currentUser) {
-            debugLog("requestLocationAndSave: currentUser is null, skipping save.");
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+            console.warn("تحديد الموقع الجغرافي غير مدعوم في هذا المتصفح.");
+            debugLog("requestLocationAndSave: Geolocation not supported by browser.", true);
+            reject(new Error("Geolocation not supported by browser."));
             return;
         }
 
-        try {
-            const { error } = await sb
-                .from('profiles')
-                .update({ latitude: lat, longitude: lon })
-                .eq('user_id', currentUser.id);
+        debugLog("requestLocationAndSave: Querying browser geolocation...");
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            debugLog(`requestLocationAndSave: Got coordinates: lat=${lat}, lon=${lon}`);
 
-            if (error) throw error;
+            if (!currentUser) {
+                debugLog("requestLocationAndSave: currentUser is null, skipping save.");
+                resolve();
+                return;
+            }
 
-            debugLog("requestLocationAndSave: Saved coordinates to profiles table successfully.");
+            try {
+                const { error } = await sb
+                    .from('profiles')
+                    .update({ latitude: lat, longitude: lon })
+                    .eq('user_id', currentUser.id);
 
-            // جلب البروفايل بالكامل من قاعدة البيانات إذا لم يكن متوفراً محلياً
-            if (!currentUserProfile) {
-                const { data } = await sb.from('profiles').select('*').eq('user_id', currentUser.id);
-                if (data && data.length > 0) {
-                    currentUserProfile = data[0];
+                if (error) throw error;
+
+                debugLog("requestLocationAndSave: Saved coordinates to profiles table successfully.");
+
+                // جلب البروفايل بالكامل من قاعدة البيانات إذا لم يكن متوفراً محلياً
+                if (!currentUserProfile) {
+                    const { data } = await sb.from('profiles').select('*').eq('user_id', currentUser.id);
+                    if (data && data.length > 0) {
+                        currentUserProfile = data[0];
+                    }
                 }
+
+                // تحديث الإحداثيات في المتغير العام أيضاً
+                if (currentUserProfile) {
+                    currentUserProfile.latitude = lat;
+                    currentUserProfile.longitude = lon;
+                }
+
+                // إعادة تحميل قائمة الأعضاء لحساب المسافات الحقيقية بناءً على الموقع الجديد
+                debugLog("requestLocationAndSave: Reloading discovery users to reflect new coordinates...");
+                loadDiscoveryUsers(currentUser);
+                resolve();
+
+            } catch (err) {
+                console.error("خطأ أثناء تحديث الموقع في قاعدة البيانات:", err);
+                debugLog("requestLocationAndSave: Error updating DB profile location: " + err.message, true);
+                resolve(); // We still resolve because they gave permission, just DB failed
             }
-
-            // تحديث الإحداثيات في المتغير العام أيضاً
-            if (currentUserProfile) {
-                currentUserProfile.latitude = lat;
-                currentUserProfile.longitude = lon;
-            }
-
-            // إعادة تحميل قائمة الأعضاء لحساب المسافات الحقيقية بناءً على الموقع الجديد
-            debugLog("requestLocationAndSave: Reloading discovery users to reflect new coordinates...");
-            loadDiscoveryUsers(currentUser);
-
-        } catch (err) {
-            console.error("خطأ أثناء تحديث الموقع في قاعدة البيانات:", err);
-            debugLog("requestLocationAndSave: Error updating DB profile location: " + err.message, true);
-        }
-    }, (error) => {
-        console.warn("فشل جلب الموقع الجغرافي أو تم رفض الإذن:", error.message);
-        debugLog("requestLocationAndSave: Geolocation failed/denied: " + error.message, true);
-    }, {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
+        }, (error) => {
+            console.warn("فشل جلب الموقع الجغرافي أو تم رفض الإذن:", error.message);
+            debugLog("requestLocationAndSave: Geolocation failed/denied: " + error.message, true);
+            reject(new Error("Permission denied or failed to get location."));
+        }, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        });
     });
 }
 

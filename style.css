@@ -3369,7 +3369,7 @@ body {
     cursor: pointer;
     font-weight: bold;
     transition: all 0.3s ease;
-    color: var(--text-muted);
+    color: var(--text-white);
 }
 .adv-gender-btn.active {
     background: rgba(255,255,255,0.1);

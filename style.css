@@ -3423,3 +3423,28 @@ body {
     color: white !important;
     box-shadow: 0 0 10px rgba(26, 117, 255, 0.4);
 }
+
+/* أيقونة الدردشة العصرية اللي اقترحتيها (مطبقة على أزرار الدردشة في البطاقات) */
+.card-action-btn.chat-btn {
+    width: 38px !important; /* حجم متناسق مع البطاقة */
+    height: 38px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+}
+
+.card-action-btn.chat-btn:hover {
+    background: #ffffff !important;
+    color: #0b0f19 !important;
+    transform: scale(1.15) !important;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4) !important;
+}
+
+.card-action-btn.chat-btn i {
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+}

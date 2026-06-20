@@ -1235,7 +1235,7 @@ body {
 /* Ø§Ù„ØªØ°ÙŠÙŠÙ„ ÙˆØ§Ù„Ø£Ø²Ø±Ø§Ø± Ø§Ù„Ù…Ø¶Ù…Ù†Ø© Ø¨Ø§Ù„Ø¨Ø·Ø§Ù‚Ø© */
 .user-card-bottom {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end; /* تحريك الأزرار لجهة اليمين */
     align-items: center;
     width: 100%;
     margin-top: 3px;

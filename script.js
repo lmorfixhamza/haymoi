@@ -1932,22 +1932,29 @@ async function loadActiveChats() {
                     socialIconHtml = `<span class="social-badge tiktok" title="سجل عبر TikTok"><i class="fab fa-tiktok"></i></span>`;
                 }
 
-                // حساب المسافة للشريك
-                let distanceText = '';
+                // حساب المسافة بدقة وتنسيق حالة الاتصال
+                let distanceTextHTML = '';
                 if (currentUserProfile && currentUserProfile.latitude && currentUserProfile.longitude && profile.latitude && profile.longitude) {
                     const dist = calculateDistance(currentUserProfile.latitude, currentUserProfile.longitude, profile.latitude, profile.longitude);
                     if (dist !== null) {
-                        if (dist < 0.1) {
-                            distanceText = 'قريب جداً';
-                        } else if (dist < 1) {
-                            distanceText = `${Math.round(dist * 1000)}m`;
-                        } else {
-                            distanceText = `${dist.toFixed(1)}km`;
-                        }
+                        const distValue = dist < 1 ? `${Math.round(dist * 1000)}m` : `${dist.toFixed(1)}km`;
+                        distanceTextHTML = `<span style="color: var(--text-white); font-weight: 600; display:inline-flex; align-items:center; gap:3px;"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px;"></i>${distValue}</span>`;
                     }
                 }
 
-                const rightMetaText = distanceText ? `${distanceText} · ${lastChat.time}` : lastChat.time;
+                const lastSeenTime = profile.last_seen || profile.created_at;
+                let statusText = isOnline 
+                    ? '<span style="color:#22c55e; font-weight:700;">متصل الآن</span>' 
+                    : `آخر ظهور: منذ ${formatRelativeTime(lastSeenTime)}`;
+                
+                // إذا كان النص طويلا، يمكننا التخلي عن كلمة "آخر ظهور:" لتوفير المساحة
+                if (!isOnline && distanceTextHTML) {
+                    statusText = `منذ ${formatRelativeTime(lastSeenTime)}`;
+                }
+
+                const rightMetaText = distanceTextHTML 
+                    ? `<span dir="rtl" style="display:inline-flex; align-items:center; gap:6px; font-size:11px;">${statusText} <span style="opacity:0.3;">•</span> <span dir="ltr">${distanceTextHTML}</span></span>` 
+                    : `<span style="font-size:11px;">${statusText}</span>`;
 
                 item.innerHTML = `
                     <div class="chat-item-avatar-wrapper" style="position: relative; flex-shrink: 0;">

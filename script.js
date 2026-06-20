@@ -3086,32 +3086,32 @@ function openAdvancedFilterModal(profiles, listContainer) {
     modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:2000; display:flex; align-items:center; justify-content:center; animation:fadeInModal 0.2s ease; padding: 20px;';
 
     modal.innerHTML = `
-        <div class="glass-card" style="width:100%; max-width:400px; background:#fff5f0; border-radius:24px; overflow:hidden; color:#333; animation:slideUpModal 0.3s ease; padding:0;">
+        <div class="user-modal-card" style="width:100%; max-width:400px; background:#1c1c1e; border-radius:24px; overflow:hidden; color:var(--text-white); animation:slideUpModal 0.3s ease; padding:0;">
             <!-- Header Tabs -->
-            <div style="display:flex; background:#ef4444; color:white; font-weight:bold;">
-                <div style="flex:1; text-align:center; padding:15px; border-bottom:3px solid white; cursor:pointer;">بسيط</div>
+            <div style="display:flex; background:rgba(255,255,255,0.03); color:var(--text-white); font-weight:bold;">
+                <div style="flex:1; text-align:center; padding:15px; border-bottom:3px solid var(--color-primary); cursor:pointer;">بسيط</div>
                 <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">متقدم</div>
                 <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">بالـ ID</div>
             </div>
 
             <div style="padding:24px;">
                 <!-- Gender -->
-                <h4 style="margin-top:0; color:#666; font-weight:normal; margin-bottom:12px;">الجنس</h4>
-                <div style="display:flex; justify-content:space-between; margin-bottom:24px; border-bottom:1px solid #ddd; padding-bottom:10px;">
-                    <div class="adv-gender-btn" data-val="female" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='female'?'2px solid #333':'none'}; color:${currentGenderFilter==='female'?'#333':'#888'}; font-weight:bold;">
+                <h4 style="margin-top:0; color:var(--text-muted); font-weight:normal; margin-bottom:12px;">الجنس</h4>
+                <div style="display:flex; justify-content:space-between; margin-bottom:24px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px;">
+                    <div class="adv-gender-btn" data-val="female" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='female'?'2px solid var(--color-primary)':'none'}; color:${currentGenderFilter==='female'?'#333':'#888'}; font-weight:bold;">
                         <i class="fas fa-venus" style="color:#ec4899; margin-left:4px;"></i> أنثى
                     </div>
-                    <div class="adv-gender-btn" data-val="male" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='male'?'2px solid #333':'none'}; color:${currentGenderFilter==='male'?'#333':'#888'}; font-weight:bold;">
+                    <div class="adv-gender-btn" data-val="male" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='male'?'2px solid var(--color-primary)':'none'}; color:${currentGenderFilter==='male'?'#333':'#888'}; font-weight:bold;">
                         <i class="fas fa-mars" style="color:#3b82f6; margin-left:4px;"></i> ذكر
                     </div>
-                    <div class="adv-gender-btn" data-val="all" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='all'?'2px solid #333':'none'}; color:${currentGenderFilter==='all'?'#333':'#888'}; font-weight:bold;">
+                    <div class="adv-gender-btn" data-val="all" style="cursor:pointer; padding:8px 16px; border-bottom:${currentGenderFilter==='all'?'2px solid var(--color-primary)':'none'}; color:${currentGenderFilter==='all'?'#333':'#888'}; font-weight:bold;">
                         الكل
                     </div>
                 </div>
 
                 <!-- Distance -->
                 <h4 style="color:#666; font-weight:normal; margin-bottom:12px;">المسافة القصوى</h4>
-                <select id="adv-dist" style="width:100%; padding:12px; border:none; background:transparent; border-bottom:1px solid #ccc; font-size:16px; margin-bottom:24px; outline:none; color:#333; cursor:pointer;">
+                <select id="adv-dist" style="width:100%; padding:12px; border:1px solid rgba(255,255,255,0.1); background:#2a2a2d; border-radius:12px;; font-size:16px; margin-bottom:24px; outline:none; color:var(--text-white); cursor:pointer;">
                     <option value="10" ${currentDistanceFilter===10?'selected':''}>10 كم</option>
                     <option value="50" ${currentDistanceFilter===50?'selected':''}>50 كم</option>
                     <option value="100" ${currentDistanceFilter===100?'selected':''}>100 كم</option>
@@ -3120,15 +3120,15 @@ function openAdvancedFilterModal(profiles, listContainer) {
                 </select>
 
                 <!-- Verified Checkbox -->
-                <label style="display:flex; align-items:center; gap:10px; cursor:pointer; color:#333; font-size:16px; margin-bottom:30px; font-weight:bold;">
-                    <input type="checkbox" id="adv-verified" ${requireVerifiedFilter?'checked':''} style="width:20px; height:20px; accent-color:#ef4444;">
+                <label style="display:flex; align-items:center; gap:10px; cursor:pointer; color:var(--text-white); font-size:16px; margin-bottom:30px; font-weight:bold;">
+                    <input type="checkbox" id="adv-verified" ${requireVerifiedFilter?'checked':''} style="width:20px; height:20px; accent-color:var(--color-primary);">
                     أعضاء موثقين (VIP) فقط
                 </label>
 
                 <!-- Action Buttons -->
                 <div style="display:flex; gap:12px;">
-                    <button id="adv-cancel" style="flex:1; padding:14px; background:#fb923c; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">إلغاء</button>
-                    <button id="adv-search" style="flex:1; padding:14px; background:#991b1b; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">بحث</button>
+                    <button id="adv-cancel" style="flex:1; padding:14px; background:rgba(255,255,255,0.08); color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">إلغاء</button>
+                    <button id="adv-search" style="flex:1; padding:14px; background:var(--color-primary); color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">بحث</button>
                 </div>
             </div>
         </div>
@@ -3142,7 +3142,7 @@ function openAdvancedFilterModal(profiles, listContainer) {
         btn.addEventListener('click', (e) => {
             genderBtns.forEach(b => { b.style.borderBottom='none'; b.style.color='#888'; });
             const target = e.currentTarget;
-            target.style.borderBottom = '2px solid #333';
+            target.style.borderBottom = '2px solid var(--color-primary)';
             target.style.color = '#333';
             tempGender = target.getAttribute('data-val');
         });

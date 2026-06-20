@@ -1905,7 +1905,7 @@ async function loadActiveChats() {
                 const genderSymbol = profile.gender === 'female' ? '♀' : '♂';
 
                 const item = document.createElement('div');
-                item.className = 'chat-item';
+                item.className = `chat-item ${genderClass}`;
                 item.setAttribute('data-user-id', profile.user_id);
 
                 const isOnline = onlineUsers.has(profile.user_id);

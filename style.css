@@ -2123,20 +2123,32 @@ body {
     gap: 14px;
     padding: 16px 12px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    /* Ø£Ø³Ø·Ø± ÙØ§ØµÙ„Ø© Ù„Ù„Ù…Ø­Ø§Ø¯Ø«Ø§Øª */
     cursor: pointer;
     transition: background 0.2s ease;
     background: transparent;
     direction: rtl;
-    /* ÙŠØ¨Ø¯Ø£ Ù…Ù† Ø§Ù„ÙŠÙ…ÙŠÙ† Ø¨Ø·Ù„Ø¨ Ù…Ù† Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… ÙƒÙ€ SayHi */
+}
+
+/* خلفيات ملونة للمحادثات حسب الجنس */
+.chat-item.female {
+    background: linear-gradient(to left, rgba(255, 51, 153, 0.08), transparent 70%);
+}
+.chat-item.male {
+    background: linear-gradient(to left, rgba(26, 117, 255, 0.08), transparent 70%);
 }
 
 .chat-item:hover {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.03);
+}
+.chat-item.female:hover {
+    background: linear-gradient(to left, rgba(255, 51, 153, 0.15), rgba(255, 51, 153, 0.02) 100%);
+}
+.chat-item.male:hover {
+    background: linear-gradient(to left, rgba(26, 117, 255, 0.15), rgba(26, 117, 255, 0.02) 100%);
 }
 
 .chat-item:active {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .chat-item-avatar {

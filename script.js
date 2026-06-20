@@ -3142,6 +3142,15 @@ function openAdvancedFilterModal(profiles, listContainer) {
             const target = e.currentTarget;
             target.classList.add('active');
             tempGender = target.getAttribute('data-val');
+            
+            const searchBtn = modal.querySelector('#adv-search');
+            if (tempGender === 'female') {
+                searchBtn.style.background = '#ec4899';
+            } else if (tempGender === 'male') {
+                searchBtn.style.background = '#3b82f6';
+            } else {
+                searchBtn.style.background = 'linear-gradient(45deg, #3b82f6, #ec4899)';
+            }
         });
     });
 

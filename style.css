@@ -695,21 +695,19 @@ body {
 /* Ã˜Â´Ã˜Â±Ã™Å Ã˜Â· Ã˜Â§Ã™â€žÃ˜ÂªÃ™â€ Ã™â€šÃ™â€ž Ã˜Â§Ã™â€žÃ˜Â³Ã™ÂÃ™â€žÃ™Å  */
 .bottom-nav {
     position: absolute;
-    bottom: 20px; /* عائم فوق الأرضية داخل الكونتينر */
+    bottom: 20px;
     left: 16px;
     right: 16px;
     height: 70px;
-    background: rgba(20, 20, 20, 0.85);
-    backdrop-filter: blur(25px); /* تأثير زجاجي قوي */
-    -webkit-backdrop-filter: blur(25px);
+    background: #1c1f26;
     border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     z-index: 1000;
-    direction: ltr; /* فرض الاتجاه من اليسار لليمين */
+    direction: ltr;
 }
 
 .nav-item {
@@ -719,38 +717,95 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    justify-content: center;
     cursor: pointer;
     font-family: inherit;
-    font-size: 11px;
     font-weight: 600;
     text-transform: lowercase;
-    transition: all 0.3s ease;
-    padding: 8px 12px;
-    border-radius: 12px;
     position: relative;
-    min-width: 70px;
+    width: 25%;
+    height: 100%;
+    z-index: 1;
+    padding: 0;
 }
 
-.nav-item i {
-    font-size: 18px;
-    transition: transform 0.3s ease;
+.nav-item .icon {
+    position: relative;
+    display: block;
+    line-height: 45px;
+    font-size: 22px;
+    text-align: center;
+    transition: 0.5s;
+    color: var(--text-muted);
 }
 
-.nav-item:hover {
-    color: var(--text-white);
-}
-
-.nav-item.active {
-    background: rgba(59, 130, 246, 0.15);
-    color: #3b82f6;
-    padding: 8px 16px;
-    border-radius: 18px;
-}
-
-.nav-item.active i {
-    transform: translateY(-2px);
+.nav-item.active .icon {
+    transform: translateY(-35px);
+    color: #fff;
     filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+}
+
+.nav-item .text {
+    position: absolute;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: 0.5s;
+    opacity: 1;
+    bottom: 12px;
+}
+
+.nav-item.active .text {
+    color: #3b82f6;
+    transform: translateY(2px);
+}
+
+.bottom-nav .indicator-wrapper {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    width: 25%;
+    height: 70px;
+    transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform: translateX(calc(100% * var(--active-idx)));
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bottom-nav .indicator-circle {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background: #3b82f6;
+    border-radius: 50%;
+    border: 6px solid #1c1f26;
+}
+
+.bottom-nav .indicator-circle::before {
+    content: '';
+    position: absolute;
+    top: 22px;
+    left: -26px;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border-top-right-radius: 20px;
+    box-shadow: 2px -10px 0 0 #1c1f26;
+}
+
+.bottom-nav .indicator-circle::after {
+    content: '';
+    position: absolute;
+    top: 22px;
+    right: -26px;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border-top-left-radius: 20px;
+    box-shadow: -2px -10px 0 0 #1c1f26;
 }
 
 .badge {

@@ -464,11 +464,23 @@ function initAppTabs() {
 
         // تفعيل الزر المناسب
         const targetBtn = document.getElementById('btn-nav-' + viewId);
-        if (targetBtn) targetBtn.classList.add('active');
+        if (targetBtn) {
+            targetBtn.classList.add('active');
+            
+            // تحديث مكان المؤشر السحري
+            const bottomNav = document.querySelector('.bottom-nav');
+            if (bottomNav) {
+                const navBtnsArray = Array.from(document.querySelectorAll('.bottom-nav .nav-item'));
+                const activeIndex = navBtnsArray.indexOf(targetBtn);
+                if (activeIndex !== -1) {
+                    bottomNav.style.setProperty('--active-idx', activeIndex);
+                }
+            }
+        }
 
-        // إظهار/إخفاء الشريط العلوي (يظهر في قسم الاستكشاف وقسم المحادثات)
+        // إظهار/إخفاء الشريط العلوي (يظهر في قسم الاستكشاف وقسم المحادثات وجهات الاتصال)
         if (appHeader) {
-            const showHeader = viewId === 'trouver' || viewId === 'chats';
+            const showHeader = viewId === 'trouver' || viewId === 'chats' || viewId === 'contacts';
             appHeader.style.display = showHeader ? 'flex' : 'none';
             
             const headerTitle = document.getElementById('header-title');
@@ -477,10 +489,12 @@ function initAppTabs() {
                     headerTitle.textContent = 'Trouver';
                 } else if (viewId === 'chats') {
                     headerTitle.textContent = 'Chats';
+                } else if (viewId === 'contacts') {
+                    headerTitle.textContent = 'Contacts';
                 }
             }
 
-            // إظهار أو إخفاء أيقونات الهيدر حسب طلب المستخدم لتبويب الشات
+            // إظهار أو إخفاء أيقونات الهيدر حسب طلب المستخدم
             const headerAvatar = document.getElementById('header-user-avatar');
             const notifBell = document.getElementById('notif-bell-btn');
             const tabSearch = document.getElementById('tab-search');
@@ -493,8 +507,8 @@ function initAppTabs() {
                 if (tabSearch) tabSearch.style.display = '';
                 if (tabGroups) tabGroups.style.display = '';
                 if (tabVip) tabVip.style.display = '';
-            } else if (viewId === 'chats') {
-                if (headerAvatar) headerAvatar.style.display = 'none'; // إخفاء الأفاتار بالكامل ليتنحى العنوان "Chats" جهة اليسار
+            } else if (viewId === 'chats' || viewId === 'contacts') {
+                if (headerAvatar) headerAvatar.style.display = 'none'; // إخفاء الأفاتار بالكامل ليتنحى العنوان لليسار
                 if (notifBell) notifBell.style.display = 'none'; // إخفاء الجرس
                 if (tabSearch) tabSearch.style.display = ''; // إبقاء البحث
                 if (tabGroups) tabGroups.style.display = 'none'; // إخفاء القلب

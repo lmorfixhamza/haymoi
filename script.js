@@ -1317,7 +1317,7 @@ function openUserModal(profile) {
     modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; align-items:flex-end; justify-content:center; z-index:1300; animation:fadeInModal 0.3s ease;';
 
     modal.innerHTML = `
-        <div class="glass-card user-modal-card" style="width:100%; max-width:420px; max-height:90vh; border-radius:24px 24px 0 0; padding:0; overflow-y:auto; overflow-x:hidden; animation:slideUpModal 0.35s ease; position:relative; background:#1c1c1e; display:flex; flex-direction:column;">
+        <div class="user-modal-card" style="width:100%; max-width:420px; max-height:90vh; border-radius:24px 24px 0 0; padding:0; overflow-y:auto; overflow-x:hidden; animation:slideUpModal 0.35s ease; position:relative; background:#1c1c1e; display:flex; flex-direction:column;">
             
             <button id="close-user-modal" style="position:absolute; top:16px; left:16px; background:rgba(0,0,0,0.5); border:none; color:white; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:18px; z-index:10; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(10px);">
                 <i class="fas fa-times"></i>
@@ -1329,11 +1329,11 @@ function openUserModal(profile) {
                 
                 <!-- التدرج اللوني أسفل الصورة لعرض الاسم -->
                 <div style="position:absolute; bottom:0; left:0; right:0; height:150px; background:linear-gradient(to top, #1c1c1e, transparent); padding:20px; display:flex; flex-direction:column; justify-content:flex-end;">
-                    <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="display:flex; align-items:center; gap:8px;" dir="ltr">
                         <h2 style="margin:0; font-size:26px; font-weight:800; color:white; line-height:1.2;">
                             ${escapeHtml(profile.full_name || 'مستخدم')}
                         </h2>
-                        <span style="font-size:22px; font-weight:400; color:#e4e4e7;">${age !== '-' ? age : ''}</span>
+                        <span style="font-size:22px; font-weight:400; color:#e4e4e7; margin-left:6px;">${age !== '-' ? age : ''}</span>
                         ${profile.is_vip ? '<i class="fas fa-gem" style="color: #fbbf24; font-size: 18px;" title="عضو VIP"></i>' : ''}
                     </div>
                     <div style="display:flex; align-items:center; gap:10px; margin-top:6px;">

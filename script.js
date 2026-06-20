@@ -120,7 +120,8 @@ let activeChatUserProfile = null; // تخزين الملف الشخصي الكا
 let chatSubscription = null;
 let currentUserProfile = null; // تخزين الملف الشخصي الحالي للمستخدم بما فيه الإحداثيات
 let activeTopTab = 'nearby'; // التبويب العلوي النشط لقسم الاستكشاف
-let searchFilterQuery = ''; // نص البحث لتصفية الأعضاء
+let searchFilterQuery = ''; // نص البحث الحالي بالديسكفري
+let currentGenderFilter = 'all'; // فلتر الجنس: all, male, femaleأعضاء
 let blockedUserIds = new Set(); // قائمة المحظورين
 let globalMessageSubscription = null; // اشتراك الإشعارات العالمي
 
@@ -962,6 +963,11 @@ function renderDiscoveryView(profiles, container) {
                 <input type="text" id="discovery-search-input" placeholder="ابحث بالاسم، السن، المهنة..." value="${escapeHtml(searchFilterQuery)}" autocomplete="off">
                 ${searchFilterQuery ? '<button id="clear-search-btn" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>' : ''}
             </div>
+            <div class="gender-filter-pills" style="display:flex; gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none;">
+                <button class="filter-pill ${currentGenderFilter === 'all' ? 'active' : ''}" data-filter="all">الكل</button>
+                <button class="filter-pill ${currentGenderFilter === 'female' ? 'active' : ''}" data-filter="female">بنات ♀</button>
+                <button class="filter-pill ${currentGenderFilter === 'male' ? 'active' : ''}" data-filter="male">دراري ♂</button>
+            </div>
         `;
         container.appendChild(searchBar);
 
@@ -999,6 +1005,22 @@ function renderDiscoveryView(profiles, container) {
             } else {
                 if (clearBtn) clearBtn.remove();
             }
+        });
+
+        // إضافة مستمعي الأحداث لأزرار الفلترة
+        const filterPills = searchBar.querySelectorAll('.filter-pill');
+        filterPills.forEach(pill => {
+            pill.addEventListener('click', (e) => {
+                const filterValue = e.target.getAttribute('data-filter');
+                if (currentGenderFilter !== filterValue) {
+                    currentGenderFilter = filterValue;
+                    // تحديث مظهر الأزرار
+                    filterPills.forEach(p => p.classList.remove('active'));
+                    e.target.classList.add('active');
+                    // تحديث القائمة
+                    renderFilteredList(profiles, listContainer);
+                }
+            });
         });
 
         renderFilteredList(profiles, listContainer);
@@ -1040,6 +1062,11 @@ function renderFilteredList(profiles, listContainer) {
     
     const query = searchFilterQuery.trim().toLowerCase();
     let filtered = [...profiles];
+    
+    // فلترة الجنس أولاً
+    if (currentGenderFilter !== 'all') {
+        filtered = filtered.filter(p => p.gender === currentGenderFilter);
+    }
     
     if (query) {
         filtered = filtered.filter(p => {

@@ -2537,6 +2537,47 @@ body {
     /* Ù„ÙˆÙ† Ø±Ù…Ø§Ø¯ÙŠ Ù…Ù‚Ø±ÙˆØ¡ Ù„Ù„ÙˆØ¶Ø¹ Ø§Ù„Ø¯Ø§ÙƒÙ† */
 }
 
+/* أزرار الفلترة */
+.gender-filter-pills::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-glass);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.filter-pill.active {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+.filter-pill[data-filter="female"].active {
+    background: #ec4899;
+    border-color: #ec4899;
+    box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3);
+}
+
+.filter-pill[data-filter="male"].active {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
 /* Ø¨Ø·Ø§Ù‚Ø© ØªØ±Ù‚ÙŠØ© VIP Ø§Ù„Ù…Ù…ØªØ§Ø²Ø© */
 .vip-premium-card {
     background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);

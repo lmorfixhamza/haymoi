@@ -1259,29 +1259,37 @@ body {
 }
 
 .card-action-btn {
-    width: 28px;
-    height: 28px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--text-muted);
-    font-size: 12px;
-    cursor: pointer;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 
 .card-action-btn:hover {
+    background: #ffffff;
+    color: #0b0f19;
     transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
-.card-action-btn.like-btn:hover {
-    background: rgba(239, 68, 68, 0.12);
-    border-color: rgba(239, 68, 68, 0.35);
-    color: #f87171;
+.card-action-btn i {
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
 }
+
+
+
+
 
 .card-action-btn.like-btn.liked {
     background: #ef4444 !important;
@@ -1307,17 +1315,9 @@ body {
     100% { transform: translate(-50%, -200px) scale(1); opacity: 0; }
 }
 
-.card-action-btn.chat-btn:hover {
-    background: rgba(59, 130, 246, 0.12);
-    border-color: rgba(59, 130, 246, 0.35);
-    color: #60a5fa;
-}
 
-.card-action-btn.block-btn:hover {
-    background: rgba(244, 63, 94, 0.12);
-    border-color: rgba(244, 63, 94, 0.35);
-    color: #fb7185;
-}
+
+
 
 .card-distance {
     display: inline-flex;
@@ -3424,27 +3424,4 @@ body {
     box-shadow: 0 0 10px rgba(26, 117, 255, 0.4);
 }
 
-/* أيقونة الدردشة العصرية اللي اقترحتيها (مطبقة على أزرار الدردشة في البطاقات) */
-.card-action-btn.chat-btn {
-    width: 38px !important; /* حجم متناسق مع البطاقة */
-    height: 38px !important;
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: #ffffff !important;
-    font-size: 16px !important;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
-}
 
-.card-action-btn.chat-btn:hover {
-    background: #ffffff !important;
-    color: #0b0f19 !important;
-    transform: scale(1.15) !important;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4) !important;
-}
-
-.card-action-btn.chat-btn i {
-    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
-}

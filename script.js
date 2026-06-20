@@ -3093,14 +3093,14 @@ function openAdvancedFilterModal(profiles, listContainer) {
                 <!-- Gender -->
                 <h4 style="margin-top:0; color:var(--text-muted); font-weight:normal; margin-bottom:12px;">الجنس</h4>
                 <div class="ios-segmented-control">
+                    <div class="adv-gender-btn ${currentGenderFilter==='all'?'active':''}" data-val="all">
+                        الكل
+                    </div>
                     <div class="adv-gender-btn ${currentGenderFilter==='female'?'active':''}" data-val="female">
                         <i class="fas fa-venus" style="color:#ec4899; margin-left:4px;"></i> أنثى
                     </div>
                     <div class="adv-gender-btn ${currentGenderFilter==='male'?'active':''}" data-val="male">
                         <i class="fas fa-mars" style="color:#3b82f6; margin-left:4px;"></i> ذكر
-                    </div>
-                    <div class="adv-gender-btn ${currentGenderFilter==='all'?'active':''}" data-val="all">
-                        الكل
                     </div>
                 </div>
 
@@ -3116,11 +3116,11 @@ function openAdvancedFilterModal(profiles, listContainer) {
 
                 <!-- Verified Checkbox -->
                 <label style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; color:var(--text-white); font-size:16px; margin-bottom:30px; font-weight:bold; background:rgba(255,255,255,0.03); padding:15px; border-radius:14px; border:1px solid rgba(255,255,255,0.05);">
-                    <span>أعضاء موثقين (VIP) فقط</span>
                     <div class="ios-toggle">
                         <input type="checkbox" id="adv-verified" ${requireVerifiedFilter?'checked':''}>
                         <div class="toggle-bg"></div>
                     </div>
+                    <span>أعضاء موثقين (VIP) فقط</span>
                 </label>
 
                 <!-- Action Buttons -->

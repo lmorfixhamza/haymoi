@@ -1073,7 +1073,7 @@ body {
 .users-list {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 2px;
     /* مسافة قريبة ومريحة بين الكروت */
     padding: 10px 5px;
 }

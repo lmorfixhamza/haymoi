@@ -3126,7 +3126,7 @@ function openAdvancedFilterModal(profiles, listContainer) {
                 <!-- Action Buttons -->
                 <div style="display:flex; gap:12px;">
                     <button id="adv-cancel" style="flex:1; padding:14px; background:rgba(255,255,255,0.08); color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">إلغاء</button>
-                    <button id="adv-search" style="flex:1; padding:14px; background:var(--color-primary); color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">بحث</button>
+                    <button id="adv-search" style="flex:1; padding:14px; background:${currentGenderFilter==='female' ? '#ec4899' : currentGenderFilter==='male' ? '#3b82f6' : 'linear-gradient(45deg, #3b82f6, #ec4899)'}; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.5s;">بحث</button>
                 </div>
             </div>
         </div>

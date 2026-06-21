@@ -3463,7 +3463,9 @@ body {
 
 /* Chat Window Background */
 .chat-window {
-    background: radial-gradient(circle at top right, #1e293b 0%, #080a0f 100%) !important;
+    background: rgba(15, 18, 24, 0.95) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
     color: #ffffff !important;
     --text-white: #ffffff;
     --text-muted: rgba(255, 255, 255, 0.6);

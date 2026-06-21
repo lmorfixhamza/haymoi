@@ -2518,13 +2518,6 @@ body {
 .search-filter-container {
     padding: 10px 4px 16px 4px;
     animation: fadeInView 0.35s ease;
-    position: sticky;
-    top: -1px; /* Stick perfectly to the top of the scroll container */
-    z-index: 100;
-    background: #090c12; /* Solid background matching app-body to hide scrolling content */
-    margin-bottom: 8px; /* Extra space below it before cards */
-    margin-top: -10px; /* Offset the app-content padding-top (10px) to make it flush to top */
-    padding-top: 10px; /* Restore the top breathing room internally */
 }
 
 .search-input-wrapper {

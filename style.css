@@ -722,8 +722,8 @@ body {
 .app-content {
     flex: 1;
     overflow-y: auto;
-    padding: 10px 2px 110px 2px;
-    /* زيادة الهامش السفلي لكي لا يغطي شريط التنقل العائم المحتوى */
+    margin-bottom: 80px;
+    padding: 10px 2px 15px 2px;
     position: relative;
     z-index: 1;
     /* باش البطاقات تجي فوق الضوء */

@@ -965,96 +965,62 @@ function renderDiscoveryView(profiles, container) {
         return;
     }
 
-    if (activeTopTab === 'search') {
-        // عرض حقل البحث
-        const searchBar = document.createElement('div');
-        searchBar.className = 'search-filter-container';
-        searchBar.innerHTML = `
-            <div style="display:flex; gap:10px; align-items:center;">
-                <div class="search-input-wrapper" style="flex:1;">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="discovery-search-input" placeholder="ابحث بواسطة الـ ID..." value="${escapeHtml(searchFilterQuery)}" autocomplete="off">
-                    ${searchFilterQuery ? '<button id="clear-search-btn" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>' : ''}
-                </div>
-                <button id="advanced-filter-btn" style="width:44px; height:44px; border-radius:12px; background:var(--bg-glass); border:1px solid var(--border-glass); color:var(--text-white); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;">
-                    <i class="fas fa-sliders-h"></i>
-                </button>
+    // عرض حقل البحث والفلتر دائماً في الأعلى
+    const searchBar = document.createElement('div');
+    searchBar.className = 'search-filter-container';
+    searchBar.innerHTML = `
+        <div style="display:flex; gap:10px; align-items:center;">
+            <div class="search-input-wrapper" style="flex:1;">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="discovery-search-input" placeholder="ابحث بواسطة الـ ID..." value="${escapeHtml(searchFilterQuery)}" autocomplete="off">
+                ${searchFilterQuery ? '<button id="clear-search-btn" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>' : ''}
             </div>
-        `;
-        container.appendChild(searchBar);
+            <button id="advanced-filter-btn" style="width:44px; height:44px; border-radius:12px; background:var(--bg-glass); border:1px solid var(--border-glass); color:var(--text-white); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+                <i class="fas fa-sliders-h"></i>
+            </button>
+        </div>
+    `;
+    container.appendChild(searchBar);
 
-        // حاوية تصفية النتائج
-        const listContainer = document.createElement('div');
-        listContainer.className = 'users-list-sub-container';
-        container.appendChild(listContainer);
+    // حاوية تصفية النتائج
+    const listContainer = document.createElement('div');
+    listContainer.className = 'users-list-sub-container';
+    container.appendChild(listContainer);
 
-        const input = searchBar.querySelector('#discovery-search-input');
-        input.focus();
-        
-        // تحريك مؤشر الكتابة لآخر النص
-        const val = input.value;
-        input.value = '';
-        input.value = val;
-
-        input.addEventListener('input', (e) => {
-            searchFilterQuery = e.target.value;
-            renderFilteredList(profiles, listContainer);
-            
-            // تحديث زر الحذف
-            let clearBtn = searchBar.querySelector('#clear-search-btn');
-            if (searchFilterQuery) {
-                if (!clearBtn) {
-                    clearBtn = document.createElement('button');
-                    clearBtn.id = 'clear-search-btn';
-                    clearBtn.style.cssText = 'background:none; border:none; color:var(--text-muted); cursor:pointer;';
-                    clearBtn.innerHTML = '<i class="fas fa-times"></i>';
-                    searchBar.querySelector('.search-input-wrapper').appendChild(clearBtn);
-                    clearBtn.addEventListener('click', () => {
-                        searchFilterQuery = '';
-                        renderDiscoveryView(profiles, container);
-                    });
-                }
-            } else {
-                if (clearBtn) clearBtn.remove();
-            }
-        });
-
-        // فتح نافذة الفلترة المتقدمة
-        searchBar.querySelector('#advanced-filter-btn').addEventListener('click', () => {
-            openAdvancedFilterModal(profiles, listContainer);
-        });
-
+    const input = searchBar.querySelector('#discovery-search-input');
+    
+    input.addEventListener('input', (e) => {
+        searchFilterQuery = e.target.value;
         renderFilteredList(profiles, listContainer);
-        return;
-    }
-
-    // لتبويبي: الأعضاء القريبين (Nearby) ومتصلين الآن (Online)
-    let displayedProfiles = [...profiles];
-    if (activeTopTab === 'groups') {
-        // تصفية المتصلين الآن فقط
-        displayedProfiles = displayedProfiles.filter(p => onlineUsers.has(p.user_id));
-    }
-
-    if (displayedProfiles.length === 0) {
-        container.innerHTML = `
-            <div style="display:flex; flex-direction:column; align-items:center; padding:50px 20px; gap:12px; text-align:center;">
-                <i class="fas fa-users-slash" style="font-size:40px; color:var(--text-muted); opacity:0.4;"></i>
-                <p style="color:var(--text-muted); font-size:14px;">لا يوجد أعضاء متصلون حالياً في محيطك.</p>
-            </div>
-        `;
-        return;
-    }
-
-    const list = document.createElement('div');
-    list.className = 'users-list';
-
-    displayedProfiles.forEach((profile, index) => {
-        const card = createUserCard(profile, index);
-        card.addEventListener('click', () => openUserModal(profile));
-        list.appendChild(card);
+        
+        // تحديث زر الحذف
+        let clearBtn = searchBar.querySelector('#clear-search-btn');
+        if (searchFilterQuery) {
+            if (!clearBtn) {
+                clearBtn = document.createElement('button');
+                clearBtn.id = 'clear-search-btn';
+                clearBtn.style.cssText = 'background:none; border:none; color:var(--text-muted); cursor:pointer;';
+                clearBtn.innerHTML = '<i class="fas fa-times"></i>';
+                searchBar.querySelector('.search-input-wrapper').appendChild(clearBtn);
+                clearBtn.addEventListener('click', () => {
+                    searchFilterQuery = '';
+                    input.value = '';
+                    renderFilteredList(profiles, listContainer);
+                    clearBtn.remove();
+                });
+            }
+        } else {
+            if (clearBtn) clearBtn.remove();
+        }
     });
 
-    container.appendChild(list);
+    // فتح نافذة الفلترة المتقدمة
+    searchBar.querySelector('#advanced-filter-btn').addEventListener('click', () => {
+        openAdvancedFilterModal(profiles, listContainer);
+    });
+
+    // رسم القائمة المصفاة في الحاوية
+    renderFilteredList(profiles, listContainer);
 }
 
 // دالة رسم القائمة المصفاة للبحث

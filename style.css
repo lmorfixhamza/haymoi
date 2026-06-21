@@ -3661,3 +3661,31 @@ body {
 .chat-item-name-row {
     direction: ltr !important;
 }
+
+/* ==============================================================
+   MOBILE UI SCALING OVERRIDES
+   ============================================================== */
+/* Header */
+.app-header { height: 52px !important; }
+.app-header h3 { font-size: 18px !important; }
+
+/* User Card (Discovery List) */
+.user-card { padding: 8px 12px !important; gap: 10px !important; border-radius: 20px !important; }
+.user-avatar-wrapper { width: 48px !important; height: 48px !important; padding: 2px !important; }
+.user-avatar-inner, .user-avatar { font-size: 16px !important; }
+.card-action-btn { width: 32px !important; height: 32px !important; font-size: 14px !important; }
+.user-name { font-size: 15px !important; }
+.gender-age-pill, .card-distance { padding: 3px 8px !important; font-size: 10px !important; }
+
+/* Chats List Item */
+.chat-item { padding: 12px 10px !important; gap: 12px !important; }
+.chat-item-avatar { width: 48px !important; height: 48px !important; }
+.chat-item-name { font-size: 14px !important; }
+
+/* Search Bar */
+.search-filter-container { padding: 10px 15px !important; }
+.search-input-wrapper { height: 40px !important; }
+.search-input-wrapper input { font-size: 13px !important; }
+
+/* Bottom Nav Scale Down */
+.bottom-nav { transform: scale(0.9); transform-origin: bottom center; bottom: 5px !important; }

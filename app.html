@@ -38,8 +38,20 @@
             <!-- صورتنا الشخصية في اليسار للوصول السريع للبروفايل -->
             <div class="header-user-avatar" id="header-user-avatar" title="الملف الشخصي">?</div>
 
+            <!-- حاوية البحث والتصفية مدمجة في الهيدر -->
+            <div class="header-search-container" id="header-search-container">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="discovery-search-input" placeholder="ابحث بواسطة الـ ID..." autocomplete="off">
+                    <button id="clear-search-btn" style="display: none; background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+                <button id="advanced-filter-btn" class="header-filter-btn" title="تصفية متقدمة">
+                    <i class="fas fa-filter"></i>
+                </button>
+            </div>
+
             <!-- عنوان التطبيق في الوسط -->
-            <span class="header-title" id="header-title">Trouver</span>
+            <span class="header-title" id="header-title" style="display: none;">Trouver</span>
 
             <!-- أزرار التنقل في الأعلى -->
             <div class="top-nav-tabs" style="display: none;">

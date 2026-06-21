@@ -129,6 +129,7 @@ let currentDistanceFilter = 10000; // المسافة بالكيلومتر
 let requireVerifiedFilter = false; // الأعضاء الموثقين فقط
 let blockedUserIds = new Set(); // قائمة المحظورين
 let globalMessageSubscription = null; // اشتراك الإشعارات العالمي
+let latestDiscoveryProfiles = []; // تخزين آخر قائمة بروفايل تم جلبها للاستكشاف
 
 // حساب المسافة بين نقطتين جغرافيتين بالكيلومتر
 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -490,14 +491,21 @@ function initAppTabs() {
             appHeader.style.display = showHeader ? 'flex' : 'none';
             
             const headerTitle = document.getElementById('header-title');
+            const headerSearch = document.getElementById('header-search-container');
             if (headerTitle) {
                 if (viewId === 'trouver') {
-                    headerTitle.textContent = 'Trouver';
-                } else if (viewId === 'chats') {
-                    headerTitle.textContent = 'Chats';
-                } else if (viewId === 'contacts') {
-                    headerTitle.textContent = 'Contacts';
+                    headerTitle.style.display = 'none';
+                } else {
+                    headerTitle.style.display = '';
+                    if (viewId === 'chats') {
+                        headerTitle.textContent = 'Chats';
+                    } else if (viewId === 'contacts') {
+                        headerTitle.textContent = 'Contacts';
+                    }
                 }
+            }
+            if (headerSearch) {
+                headerSearch.style.display = viewId === 'trouver' ? 'flex' : 'none';
             }
 
             // إظهار أو إخفاء أيقونات الهيدر حسب طلب المستخدم
@@ -581,6 +589,52 @@ function initTopTabs() {
             }
         });
     });
+}
+
+// === تهيئة نظام البحث والفلترة في الشريط العلوي ===
+function initHeaderSearch() {
+    const input = document.getElementById('discovery-search-input');
+    const advancedFilterBtn = document.getElementById('advanced-filter-btn');
+    const clearBtn = document.getElementById('clear-search-btn');
+
+    if (input) {
+        input.addEventListener('input', (e) => {
+            searchFilterQuery = e.target.value;
+            
+            // تحديث زر مسح البحث
+            if (clearBtn) {
+                clearBtn.style.display = searchFilterQuery ? 'inline-block' : 'none';
+            }
+            
+            // إعادة تصفية القائمة
+            const listContainer = document.querySelector('.users-list-sub-container');
+            if (listContainer) {
+                renderFilteredList(latestDiscoveryProfiles, listContainer);
+            }
+        });
+    }
+
+    if (clearBtn && input) {
+        clearBtn.addEventListener('click', () => {
+            searchFilterQuery = '';
+            input.value = '';
+            clearBtn.style.display = 'none';
+            
+            const listContainer = document.querySelector('.users-list-sub-container');
+            if (listContainer) {
+                renderFilteredList(latestDiscoveryProfiles, listContainer);
+            }
+        });
+    }
+
+    if (advancedFilterBtn) {
+        advancedFilterBtn.addEventListener('click', () => {
+            const listContainer = document.querySelector('.users-list-sub-container');
+            if (listContainer) {
+                openAdvancedFilterModal(latestDiscoveryProfiles, listContainer);
+            }
+        });
+    }
 }
 
 // === تحميل بيانات الملف الشخصي في قسم profil ===
@@ -910,6 +964,7 @@ async function loadDiscoveryUsers(currentUser) {
 
 // دالة رسم المحتوى حسب التبويب العلوي النشط
 function renderDiscoveryView(profiles, container) {
+    latestDiscoveryProfiles = profiles; // حفظ القائمة عالمياً
     debugLog(`renderDiscoveryView: activeTopTab=${activeTopTab}, profiles count=${profiles.length}`);
     container.innerHTML = '';
 
@@ -965,59 +1020,20 @@ function renderDiscoveryView(profiles, container) {
         return;
     }
 
-    // عرض حقل البحث والفلتر دائماً في الأعلى
-    const searchBar = document.createElement('div');
-    searchBar.className = 'search-filter-container';
-    searchBar.innerHTML = `
-        <div style="display:flex; gap:12px; align-items:center;">
-            <button id="advanced-filter-btn" style="width:48px; height:48px; border-radius:18px; background:rgba(255, 255, 255, 0.05); border:1px solid rgba(255, 255, 255, 0.08); color:white; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s; flex-shrink:0;">
-                <i class="fas fa-filter"></i>
-            </button>
-            <div class="search-input-wrapper" style="flex:1;">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="discovery-search-input" placeholder="ابحث بواسطة الـ ID..." value="${escapeHtml(searchFilterQuery)}" autocomplete="off">
-                ${searchFilterQuery ? '<button id="clear-search-btn" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>' : ''}
-            </div>
-        </div>
-    `;
-    container.appendChild(searchBar);
-
     // حاوية تصفية النتائج
     const listContainer = document.createElement('div');
     listContainer.className = 'users-list-sub-container';
     container.appendChild(listContainer);
 
-    const input = searchBar.querySelector('#discovery-search-input');
-    
-    input.addEventListener('input', (e) => {
-        searchFilterQuery = e.target.value;
-        renderFilteredList(profiles, listContainer);
-        
-        // تحديث زر الحذف
-        let clearBtn = searchBar.querySelector('#clear-search-btn');
-        if (searchFilterQuery) {
-            if (!clearBtn) {
-                clearBtn = document.createElement('button');
-                clearBtn.id = 'clear-search-btn';
-                clearBtn.style.cssText = 'background:none; border:none; color:var(--text-muted); cursor:pointer;';
-                clearBtn.innerHTML = '<i class="fas fa-times"></i>';
-                searchBar.querySelector('.search-input-wrapper').appendChild(clearBtn);
-                clearBtn.addEventListener('click', () => {
-                    searchFilterQuery = '';
-                    input.value = '';
-                    renderFilteredList(profiles, listContainer);
-                    clearBtn.remove();
-                });
-            }
-        } else {
-            if (clearBtn) clearBtn.remove();
-        }
-    });
-
-    // فتح نافذة الفلترة المتقدمة
-    searchBar.querySelector('#advanced-filter-btn').addEventListener('click', () => {
-        openAdvancedFilterModal(profiles, listContainer);
-    });
+    // تحديث قيمة البحث والزر المساعد في الهيدر
+    const headerSearchInput = document.getElementById('discovery-search-input');
+    if (headerSearchInput) {
+        headerSearchInput.value = searchFilterQuery;
+    }
+    const clearBtn = document.getElementById('clear-search-btn');
+    if (clearBtn) {
+        clearBtn.style.display = searchFilterQuery ? 'inline-block' : 'none';
+    }
 
     // رسم القائمة المصفاة في الحاوية
     renderFilteredList(profiles, listContainer);
@@ -2016,6 +2032,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // تشغيل التبويبات إذا كنا في app.html
     initAppTabs();
     initTopTabs();
+    initHeaderSearch();
 
     // مستمعي أحداث الشات
     const chatBackBtn = document.getElementById('chat-back-btn');

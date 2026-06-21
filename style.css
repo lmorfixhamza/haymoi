@@ -3646,3 +3646,18 @@ body {
 .attach-icon-videochat { background: linear-gradient(135deg, #10b981, #059669); }
 .attach-icon-gift { background: linear-gradient(135deg, #f43f5e, #e11d48); }
 .attach-icon-video { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+
+/* ==============================================================
+   CHATS LIST ITEM (LTR OVERRIDE)
+   ============================================================== */
+.chat-item {
+    direction: ltr !important;
+}
+
+.chat-item-details {
+    text-align: left !important;
+}
+
+.chat-item-name-row {
+    direction: ltr !important;
+}

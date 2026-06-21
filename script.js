@@ -969,14 +969,14 @@ function renderDiscoveryView(profiles, container) {
     const searchBar = document.createElement('div');
     searchBar.className = 'search-filter-container';
     searchBar.innerHTML = `
-        <div style="display:flex; gap:10px; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
             <div class="search-input-wrapper" style="flex:1;">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" id="discovery-search-input" placeholder="ابحث بواسطة الـ ID..." value="${escapeHtml(searchFilterQuery)}" autocomplete="off">
                 ${searchFilterQuery ? '<button id="clear-search-btn" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>' : ''}
             </div>
-            <button id="advanced-filter-btn" style="width:44px; height:44px; border-radius:12px; background:var(--bg-glass); border:1px solid var(--border-glass); color:var(--text-white); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;">
-                <i class="fas fa-sliders-h"></i>
+            <button id="advanced-filter-btn" style="width:48px; height:48px; border-radius:18px; background:rgba(255, 255, 255, 0.05); border:1px solid rgba(255, 255, 255, 0.08); color:white; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+                <i class="fas fa-filter"></i>
             </button>
         </div>
     `;

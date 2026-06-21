@@ -3463,12 +3463,41 @@ body {
 
 /* Chat Window Background */
 .chat-window {
-    background: transparent !important;
+    background: #0b0f19 !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     color: #ffffff !important;
     --text-white: #ffffff;
     --text-muted: rgba(255, 255, 255, 0.6);
+}
+
+/* Add glowing orbs to chat background to match main app */
+.chat-window::before,
+.chat-window::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 0;
+    opacity: 0.15;
+    pointer-events: none;
+}
+.chat-window::before {
+    background: #3b82f6;
+    top: -50px;
+    left: -100px;
+}
+.chat-window::after {
+    background: #ec4899;
+    bottom: 100px;
+    right: -100px;
+}
+
+.chat-messages, .chat-input-area {
+    position: relative;
+    z-index: 10;
 }
 
 /* Chat Header Glassmorphism */

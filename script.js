@@ -3100,13 +3100,15 @@ function openAdvancedFilterModal(profiles, listContainer) {
                     <option value="10000" ${currentDistanceFilter===10000?'selected':''}>أي مسافة</option>
                 </select>
 
-                <!-- Verified Checkbox -->
-                <label style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; color:var(--text-white); font-size:16px; margin-bottom:30px; font-weight:bold; background:rgba(255,255,255,0.03); padding:15px; border-radius:14px; border:1px solid rgba(255,255,255,0.05);">
-                    <div class="ios-toggle">
+                <!-- Verified VIP Checkbox -->
+                <label class="vip-filter-label" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; font-size:16px; margin-bottom:30px; font-weight:800; background:linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(20, 20, 22, 0.8)); padding:18px 15px; border-radius:14px; border:1px solid rgba(251, 191, 36, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    <div class="ios-toggle vip-toggle">
                         <input type="checkbox" id="adv-verified" ${requireVerifiedFilter?'checked':''}>
                         <div class="toggle-bg"></div>
                     </div>
-                    <span>أعضاء موثقين (VIP) فقط</span>
+                    <span style="color:#fbbf24; display:flex; align-items:center; gap:8px;">
+                        Réservé aux membres VIP <i class="fas fa-gem" style="font-size:14px;"></i>
+                    </span>
                 </label>
 
                 <!-- Action Buttons -->

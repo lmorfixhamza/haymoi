@@ -3377,6 +3377,25 @@ body {
     transform: translateX(20px);
 }
 
+/* VIP Custom Toggle Style */
+.ios-toggle.vip-toggle .toggle-bg {
+    background: rgba(251, 191, 36, 0.05);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+.ios-toggle.vip-toggle .toggle-bg::before {
+    background: #666;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+.ios-toggle.vip-toggle input:checked + .toggle-bg {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-color: #fbbf24;
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
+}
+.ios-toggle.vip-toggle input:checked + .toggle-bg::before {
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
 /* iOS Segmented Control */
 .ios-segmented-control {
     display: flex;

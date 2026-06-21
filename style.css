@@ -1149,7 +1149,7 @@ body {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    padding: 4px;
+    padding: 2.5px;
     /* يحدد سمك الإطار المتوهج */
     background: rgba(255,255,255,0.1);
     /* تدرج لوني فخم افتراضي */
@@ -1164,14 +1164,12 @@ body {
 
 .user-avatar-wrapper.male {
     background: #1a75ff !important;
-    box-shadow: 0 0 15px rgba(26, 117, 255, 0.5) !important;
-    border: 2px solid #1a75ff !important;
+    box-shadow: 0 0 15px rgba(26, 117, 255, 0.4) !important;
 }
 
 .user-avatar-wrapper.female {
     background: #ff3399 !important;
-    box-shadow: 0 0 15px rgba(255, 51, 153, 0.5) !important;
-    border: 2px solid #ff3399 !important;
+    box-shadow: 0 0 15px rgba(255, 51, 153, 0.4) !important;
 }
 
 .user-avatar-wrapper.vip-ring {

@@ -1146,8 +1146,8 @@ body {
 
 /* ØºÙ„Ø§Ù Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø´Ø®ØµÙŠØ© Ù…Ø¹ Ø¥Ø·Ø§Ø± Ù…ØªÙˆÙ‡Ø¬ Ø«Ù„Ø§Ø«ÙŠ Ø§Ù„Ø£Ø¨Ø¹Ø§Ø¯ */
 .user-avatar-wrapper {
-    width: 52px;
-    height: 52px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     padding: 4px;
     /* يحدد سمك الإطار المتوهج */
@@ -1190,7 +1190,7 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    font-size: 17px;
+    font-size: 20px;
     font-weight: 800;
     color: #fff;
 }

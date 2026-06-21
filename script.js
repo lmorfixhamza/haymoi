@@ -880,7 +880,7 @@ async function loadDiscoveryUsers(currentUser) {
 
     debugLog("loadDiscoveryUsers: Starting fetch...");
     // عرض مؤشر التحميل فقط إذا لم نكن في وضع البحث النشط لتجنب الفليكر
-    if (activeTopTab !== 'search' || !container.querySelector('.search-filter-container')) {
+    if (activeTopTab !== 'search' || !document.getElementById('discovery-search-input')) {
         container.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; padding:40px 0; gap:12px;">
                 <div class="loading-spinner"></div>

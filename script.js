@@ -2161,10 +2161,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const recordingStopBtn = document.getElementById('recording-stop-btn');
     const recordingCancelBtn = document.getElementById('recording-cancel-btn');
 
-    // زر إرسال الصور
-    if (chatImgBtn && chatImgInput) {
+    // زر قائمة المرفقات
+    const attachmentMenu = document.getElementById('attachment-menu');
+    if (chatImgBtn && attachmentMenu) {
         chatImgBtn.addEventListener('click', () => {
+            attachmentMenu.classList.toggle('open');
+        });
+        
+        // إغلاق القائمة عند النقر في أي مكان آخر
+        document.addEventListener('click', (e) => {
+            if (!attachmentMenu.contains(e.target) && !chatImgBtn.contains(e.target)) {
+                attachmentMenu.classList.remove('open');
+            }
+        });
+    }
+
+    const attachPhotoBtn = document.getElementById('attach-photo-btn');
+    if (attachPhotoBtn && chatImgInput) {
+        attachPhotoBtn.addEventListener('click', () => {
             chatImgInput.click();
+            if(attachmentMenu) attachmentMenu.classList.remove('open');
         });
 
         chatImgInput.addEventListener('change', async (e) => {

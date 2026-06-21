@@ -3457,4 +3457,161 @@ body {
     box-shadow: 0 0 10px rgba(26, 117, 255, 0.4);
 }
 
+/* ==============================================================
+   iOS PREMIUM DARK CHAT OVERRIDES
+   ============================================================== */
 
+/* Chat Window Background */
+.chat-window {
+    background: radial-gradient(circle at top right, #1e293b 0%, #080a0f 100%) !important;
+    color: #ffffff !important;
+    --text-white: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+}
+
+/* Chat Header Glassmorphism */
+.chat-header {
+    background: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.chat-back-btn {
+    color: #0a84ff !important;
+}
+
+/* Messages Area */
+.chat-messages {
+    background: transparent !important;
+}
+
+/* Hide Avatars in Messages */
+.chat-messages .msg-avatar {
+    display: none !important;
+}
+
+/* Message Bubbles */
+.msg-bubble {
+    border-radius: 18px !important;
+}
+
+.msg-bubble.sent {
+    background: linear-gradient(135deg, #007aff 0%, #0a84ff 100%) !important;
+    color: #ffffff !important;
+    border-radius: 18px 18px 4px 18px !important;
+}
+
+.msg-bubble.received {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: #f1f5f9 !important;
+    border-radius: 18px 18px 18px 4px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Input Area */
+.chat-input-area {
+    background: rgba(15, 18, 24, 0.85) !important;
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 12px 16px 20px 16px !important;
+    gap: 8px !important;
+}
+
+/* Pill-shaped Input Field */
+.chat-input-area input {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 22px !important;
+    padding: 10px 15px !important;
+    color: #ffffff !important;
+    transition: all 0.2s ease;
+}
+
+.chat-input-area input:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(10, 132, 255, 0.5) !important;
+}
+
+/* Send Button */
+.chat-send-btn {
+    background: #0a84ff !important;
+    box-shadow: 0 0 10px rgba(10, 132, 255, 0.4) !important;
+}
+
+/* Chat Action Button (+) */
+.chat-attach-btn {
+    border-color: rgba(10, 132, 255, 0.4) !important;
+    color: #0a84ff !important;
+}
+.chat-attach-btn:hover {
+    background: rgba(10, 132, 255, 0.1) !important;
+    border-color: #0a84ff !important;
+}
+
+/* ==============================================================
+   ATTACHMENT MENU (BOTTOM SHEET)
+   ============================================================== */
+.attachment-bottom-sheet {
+    position: absolute;
+    bottom: -300px;
+    left: 0;
+    width: 100%;
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+    transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1000;
+}
+
+.attachment-bottom-sheet.open {
+    bottom: 0;
+}
+
+.attach-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.attach-option:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+.attach-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.attach-option .attach-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #f1f5f9;
+}
+
+/* Individual Icon Colors */
+.attach-icon-photo { background: linear-gradient(135deg, #0ea5e9, #3b82f6); }
+.attach-icon-videochat { background: linear-gradient(135deg, #10b981, #059669); }
+.attach-icon-gift { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+.attach-icon-video { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }

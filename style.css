@@ -3709,6 +3709,7 @@ body {
     align-items: center;
     gap: 8px;
     direction: ltr;
+    margin-left: 12px;
 }
 
 .header-search-container .search-input-wrapper {

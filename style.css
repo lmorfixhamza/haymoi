@@ -609,7 +609,6 @@ body {
     /* أزرق */
     top: -50px;
     left: -100px;
-    animation: floatLight 8s infinite alternate;
 }
 
 /* الضوء اللي تحت على اليمين */
@@ -618,17 +617,6 @@ body {
     /* وردي/غوز */
     bottom: 100px;
     right: -100px;
-    animation: floatLight 10s infinite alternate-reverse;
-}
-
-@keyframes floatLight {
-    from {
-        transform: translate(0, 0);
-    }
-
-    to {
-        transform: translate(40px, 60px);
-    }
 }
 
 .app-header {
@@ -1274,8 +1262,6 @@ body {
     font-size: 16px;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
 }
 
 .card-action-btn:hover {
@@ -3539,8 +3525,6 @@ body {
 
 .msg-bubble.received {
     background: rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
     color: #f1f5f9 !important;
     border-radius: 18px 18px 18px 4px !important;

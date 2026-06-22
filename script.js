@@ -1960,7 +1960,7 @@ async function loadActiveChats() {
                             </span>
                         </div>
                         <div class="chat-item-badge-row" style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
-                            <span class="gender-badge ${genderClass}">${genderSymbol} ${age !== '-' ? age : ''}</span>
+                            <span class="gender-badge ${genderClass}"><i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i> ${age !== '-' ? age : ''}</span>
                             ${socialIconHtml}
                         </div>
                         <p class="chat-item-lastmsg">${escapeHtml(lastChat.content)}</p>

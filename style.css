@@ -1480,11 +1480,11 @@ body {
 }
 
 .gender-badge.male {
-    background: #0ea5e9;
+    background: #3b82f6;
 }
 
 .gender-badge.female {
-    background: #ec4899;
+    background: #ff66a3;
 }
 
 .user-bio {

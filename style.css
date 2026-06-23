@@ -1049,9 +1049,9 @@ body {
 .users-list {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 10px;
     /* مسافة قريبة ومريحة بين الكروت */
-    padding: 4px 5px;
+    padding: 8px 12px;
     /* تحسين الأداء - لا يرسم العناصر خارج الشاشة */
     contain: layout style;
 }

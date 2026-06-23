@@ -1263,7 +1263,7 @@ body {
 .card-actions-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 7px;
+    gap: 11px;
     padding-left: 14px;
     border-left: 1px solid rgba(255, 255, 255, 0.06);
     flex-shrink: 0;
@@ -1281,18 +1281,19 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 18px;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.03);
 }
 
-.action-btn:hover {
-    transform: scale(1.12);
+@media (hover: hover) and (pointer: fine) {
+    .action-btn:hover {
+        transform: scale(1.12);
+    }
+    .action-btn.chat:hover  { background: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 12px rgba(59,130,246,0.5); }
+    .action-btn.close:hover { background: #ef4444; border-color: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.5); }
+    .action-btn.heart:hover { background: #ff4b82; border-color: #ff4b82; box-shadow: 0 0 12px rgba(255,75,130,0.5); }
+    .action-btn.star:hover  { background: #eab308; border-color: #eab308; box-shadow: 0 0 12px rgba(234,179,8,0.5); }
 }
-
-.action-btn.chat:hover  { background: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 12px rgba(59,130,246,0.5); }
-.action-btn.close:hover { background: #ef4444; border-color: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.5); }
-.action-btn.heart:hover { background: #ff4b82; border-color: #ff4b82; box-shadow: 0 0 12px rgba(255,75,130,0.5); }
-.action-btn.star:hover  { background: #eab308; border-color: #eab308; box-shadow: 0 0 12px rgba(234,179,8,0.5); }
 
 .action-btn.heart.liked {
     background: #ef4444 !important;
@@ -1419,8 +1420,8 @@ body {
 }
 
 .card-action-btn {
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1429,7 +1430,7 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 19px;
+    font-size: 18px;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
@@ -3883,14 +3884,14 @@ body {
     }
 
     .card-actions-grid {
-        gap: 6px !important;
+        gap: 9px !important;
         padding-left: 10px !important;
     }
 
     .action-btn {
         width: 33px !important;
         height: 33px !important;
-        font-size: 13px !important;
+        font-size: 16px !important;
     }
 
     .card-status-text {

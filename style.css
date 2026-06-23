@@ -480,6 +480,7 @@ body {
 .brand-title {
     background: linear-gradient(135deg, #ffffff 0%, #ff4b82 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 900;
     font-style: italic;
@@ -3395,6 +3396,7 @@ body {
     letter-spacing: 1px;
     background: linear-gradient(to right, #ffffff, #ff4b82);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 

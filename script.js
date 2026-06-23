@@ -330,6 +330,7 @@ function stopLastSeenHeartbeat() {
 
 // === نظام التتبع الفوري لحالة الاتصال (Supabase Presence) ===
 let onlineUsers = new Set();
+let lastSeenTimeMap = new Map(); // خارطة لتخزين آخر ظهور محدث لكل مستخدم لتفادي البيانات القديمة
 let presenceChannel = null;
 
 function initPresence() {
@@ -399,14 +400,16 @@ function updateOnlineDotsInUI() {
                     statusTextEl.textContent = 'متصل الآن';
                     statusTextEl.classList.add('online');
                 }
+                // تحديث وقت آخر ظهور محلياً طالما هو متصل
+                lastSeenTimeMap.set(userId, new Date().toISOString());
             } else {
                 if (dot) dot.remove();
                 if (statusTextEl) {
                     // إذا كان متصلاً والآن خرج، نحدث آخر ظهور ليكون الوقت الحالي
                     if (statusTextEl.classList.contains('online')) {
-                        statusTextEl.setAttribute('data-last-seen', new Date().toISOString());
+                        lastSeenTimeMap.set(userId, new Date().toISOString());
                     }
-                    const lastSeen = statusTextEl.getAttribute('data-last-seen') || statusTextEl.getAttribute('data-created-at');
+                    const lastSeen = lastSeenTimeMap.get(userId) || statusTextEl.getAttribute('data-created-at');
                     statusTextEl.textContent = `آخر ظهور: ${formatRelativeTime(lastSeen)}`;
                     statusTextEl.classList.remove('online');
                 }
@@ -428,6 +431,7 @@ function updateOnlineDotsInUI() {
                     onlineDot.style.cssText = 'bottom: 0; right: 0; width: 11px; height: 11px; border: 2px solid #0f172a;';
                     avatarWrapper.appendChild(onlineDot);
                 }
+                lastSeenTimeMap.set(userId, new Date().toISOString());
             } else {
                 if (onlineDot) onlineDot.remove();
             }
@@ -442,8 +446,10 @@ function updateOnlineDotsInUI() {
             if (isOnline) {
                 chatStatusEl.textContent = 'متصل الآن';
                 chatStatusEl.style.color = '#22c55e';
+                lastSeenTimeMap.set(activeChatUserId, new Date().toISOString());
             } else {
-                chatStatusEl.textContent = 'غير متصل';
+                const lastSeen = lastSeenTimeMap.get(activeChatUserId) || (activeChatUserProfile ? activeChatUserProfile.created_at : null);
+                chatStatusEl.textContent = lastSeen ? `آخر ظهور: ${formatRelativeTime(lastSeen)}` : 'غير متصل';
                 chatStatusEl.style.color = 'var(--text-muted)';
             }
         }
@@ -916,6 +922,9 @@ async function loadDiscoveryUsers(currentUser) {
         const uniqueProfiles = [];
         const seenUserIds = new Set();
         profiles.forEach(p => {
+            if (p.last_seen) {
+                lastSeenTimeMap.set(p.user_id, p.last_seen);
+            }
             if (!seenUserIds.has(p.user_id)) {
                 seenUserIds.add(p.user_id);
                 uniqueProfiles.push(p);
@@ -1110,7 +1119,7 @@ function createUserCard(profile, index) {
 
     const age = calculateAge(profile.dob);
     const initial = (profile.full_name || '?').charAt(0).toUpperCase();
-    const bio = profile.bio || 'لا يوجد وصف';
+    const bio = profile.bio || 'Je suis libre pour chat! 💬';
     const isOnline = onlineUsers.has(profile.user_id);
 
 
@@ -1168,19 +1177,19 @@ function createUserCard(profile, index) {
                 <span class="card-status-text ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
             </div>
             <div class="card-top-actions-row" style="display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; width: 100%;">
-                <button class="card-action-btn ignore-btn" title="تجاهل" style="margin: 0;">
-                    <i class="fas fa-times"></i>
-                </button>
                 <button class="card-action-btn chat-btn" title="دردشة" style="margin: 0;">
                     <i class="far fa-comment"></i>
                 </button>
+                <button class="card-action-btn ignore-btn" title="تجاهل" style="margin: 0;">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="card-actions-row" style="display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; width: 100%;">
-                <button class="card-action-btn favorite-btn" title="المفضلة" style="margin: 0;">
-                    <i class="far fa-star"></i>
-                </button>
                 <button class="card-action-btn like-btn" title="إعجاب" style="margin: 0;">
                     <i class="far fa-heart"></i>
+                </button>
+                <button class="card-action-btn favorite-btn" title="المفضلة" style="margin: 0;">
+                    <i class="far fa-star"></i>
                 </button>
             </div>
         </div>
@@ -1489,8 +1498,9 @@ async function openChatWindow(receiverProfile) {
         if (isOnline) {
             chatStatusEl.textContent = 'متصل الآن';
             chatStatusEl.style.color = '#22c55e';
+            lastSeenTimeMap.set(receiverProfile.user_id, new Date().toISOString());
         } else {
-            const lastSeen = receiverProfile.last_seen || receiverProfile.created_at;
+            const lastSeen = lastSeenTimeMap.get(receiverProfile.user_id) || receiverProfile.last_seen || receiverProfile.created_at;
             chatStatusEl.textContent = lastSeen ? `آخر ظهور: ${formatRelativeTime(lastSeen)}` : 'غير متصل';
             chatStatusEl.style.color = 'var(--text-muted)';
         }
@@ -1904,6 +1914,9 @@ async function loadActiveChats() {
             const uniqueProfiles = [];
             const seenUserIds = new Set();
             profiles.forEach(p => {
+                if (p.last_seen && !lastSeenTimeMap.has(p.user_id)) {
+                    lastSeenTimeMap.set(p.user_id, p.last_seen);
+                }
                 if (!seenUserIds.has(p.user_id)) {
                     seenUserIds.add(p.user_id);
                     uniqueProfiles.push(p);
@@ -3078,7 +3091,9 @@ window.addEventListener('visibilitychange', () => {
 setInterval(() => {
     document.querySelectorAll('.card-status-text').forEach(el => {
         if (!el.classList.contains('online')) {
-            const lastSeen = el.getAttribute('data-last-seen') || el.getAttribute('data-created-at');
+            const card = el.closest('.user-card');
+            const userId = card ? card.getAttribute('data-user-id') : null;
+            const lastSeen = userId ? lastSeenTimeMap.get(userId) : (el.getAttribute('data-last-seen') || el.getAttribute('data-created-at'));
             if (lastSeen) {
                 el.textContent = `آخر ظهور: ${formatRelativeTime(lastSeen)}`;
             }
@@ -3088,7 +3103,7 @@ setInterval(() => {
     if (activeChatUserId) {
         const chatStatusEl = document.getElementById('chat-user-status');
         if (chatStatusEl && chatStatusEl.textContent !== 'متصل الآن') {
-            const lastSeen = activeChatUserProfile ? (activeChatUserProfile.last_seen || activeChatUserProfile.created_at) : null;
+            const lastSeen = lastSeenTimeMap.get(activeChatUserId) || (activeChatUserProfile ? activeChatUserProfile.created_at : null);
             if (lastSeen) {
                 chatStatusEl.textContent = `آخر ظهور: ${formatRelativeTime(lastSeen)}`;
             }

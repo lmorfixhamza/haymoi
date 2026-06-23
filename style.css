@@ -1181,12 +1181,12 @@ body {
     justify-content: center;
     gap: 6px;
     flex-shrink: 0;
-    width: 100px; /* اتساع مناسب للصورة والمسافة */
+    width: 104px; /* اتساع مناسب للصورة والمسافة */
 }
 
 .card-center-panel .user-avatar-wrapper {
-    width: 86px !important;
-    height: 86px !important;
+    width: 90px !important;
+    height: 90px !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
     float: none !important;
@@ -1211,6 +1211,7 @@ body {
     justify-content: center;
     text-align: center;
     width: 100%;
+    margin-left: 6px; /* إزاحة بسيطة لليمين لتعويض وجود الأيقونة وتوسيط النص بالكامل تحت الصورة */
 }
 
 .distance-text {
@@ -3439,9 +3440,10 @@ body {
 
 /* ØªÙ†Ø³ÙŠÙ‚ Ø­Ø§Ù„Ø© Ø§Ù„Ø§ØªØµØ§Ù„/Ø¢Ø®Ø± Ø¸Ù‡ÙˆØ± ÙÙŠ ÙƒØ±ÙˆØª Ø§Ù„Ø§Ø³ØªÙƒØ´Ø§Ù */
 .card-status-text {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-muted);
     transition: color 0.3s;
+    white-space: nowrap;
 }
 
 .card-status-text.online {
@@ -3811,13 +3813,13 @@ body {
     }
     
     .card-center-panel {
-        width: 72px !important;
+        width: 78px !important;
         gap: 4px !important;
     }
     
     .card-center-panel .user-avatar-wrapper {
-        width: 62px !important;
-        height: 62px !important;
+        width: 68px !important;
+        height: 68px !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
     }
@@ -3838,13 +3840,21 @@ body {
     }
     
     .card-right-panel {
-        width: 86px !important;
+        width: 106px !important;
     }
 
     .card-action-btn {
-        width: 34px !important;
-        height: 34px !important;
-        font-size: 14.5px !important;
+        width: 42px !important;
+        height: 42px !important;
+        font-size: 18px !important;
+    }
+
+    .card-top-actions-row, .card-actions-row {
+        gap: 12px !important;
+    }
+
+    .card-status-text {
+        font-size: 10px !important;
     }
 
     /* Chats List Item */

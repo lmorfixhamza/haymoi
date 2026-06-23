@@ -715,10 +715,13 @@ body {
 .app-content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     margin-bottom: 0;
-    padding: 8px 6px 110px 6px;
+    padding: 6px 6px 6px 6px;
     position: relative;
     z-index: 1;
+    /* الارتفاع يحسب: الشاشة - الهيدر (60px) - الـ bottom-nav (70px) - مسافته من الأسفل (20px) - هامش (10px) */
+    max-height: calc(100dvh - 60px - 100px);
     /* باش البطاقات تجي فوق الضوء */
 }
 
@@ -1186,15 +1189,15 @@ body {
 }
 
 .card-center-panel .user-avatar-wrapper {
-    width: 90px !important;
-    height: 90px !important;
+    width: 72px !important;
+    height: 72px !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
     float: none !important;
 }
 
 .card-center-panel .user-avatar-inner {
-    font-size: 26px !important;
+    font-size: 22px !important;
 }
 
 .card-center-panel .user-avatar-wrapper .online-dot {
@@ -3821,19 +3824,19 @@ body {
     }
     
     .card-center-panel {
-        width: 78px !important;
+        width: 65px !important;
         gap: 4px !important;
     }
     
     .card-center-panel .user-avatar-wrapper {
-        width: 68px !important;
-        height: 68px !important;
+        width: 58px !important;
+        height: 58px !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
     }
 
     .card-center-panel .user-avatar-inner {
-        font-size: 20px !important;
+        font-size: 17px !important;
     }
 
     .card-center-panel .user-avatar-wrapper .online-dot {

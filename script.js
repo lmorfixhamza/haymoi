@@ -1185,7 +1185,6 @@ function createUserCard(profile, index) {
                     ${avatarInner}
                     ${isOnline ? '<span class="online-status"></span>' : ''}
                 </div>
-                ${distBadgeHTML}
             </div>
             <div class="info-section">
                 <div class="name-row">
@@ -1194,7 +1193,10 @@ function createUserCard(profile, index) {
                     ${profile.is_vip ? '<i class="fas fa-gem card-vip-icon" title="VIP" style="color:#fbbf24;font-size:13px;"></i>' : ''}
                 </div>
                 <p class="bio-text">${escapeHtml(bio)}</p>
-                <span class="time-ago ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
+                <div class="status-row">
+                    ${distBadgeHTML}
+                    <span class="time-ago ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
+                </div>
             </div>
         </div>
 

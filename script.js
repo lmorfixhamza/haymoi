@@ -554,7 +554,10 @@ function initAppTabs() {
                 debugLog('switchView: trouver tab - using cached profiles, no refetch needed.');
                 // إعادة رسم القائمة من الكاش بدون طلب جديد
                 const container = document.getElementById('users-list-container');
-                if (container) renderDiscoveryView(latestDiscoveryProfiles, container);
+                if (container) {
+                    container.innerHTML = ''; // نظف الحاوية أولاً
+                    renderDiscoveryView(latestDiscoveryProfiles, container);
+                }
             }
         }
     };

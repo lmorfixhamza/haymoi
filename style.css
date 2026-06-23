@@ -1075,7 +1075,7 @@ body {
     width: 100%;
     margin-bottom: 6px;
     gap: 8px;
-    padding: 4px 8px;
+    padding: 3px 6px;
     background: #1c1c1e !important;
     /* تمت إزالة التأثير الزجاجي لتسريع التصفح في الهواتف */
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -1145,24 +1145,24 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     direction: ltr;
     text-align: left;
     align-self: stretch;
     justify-content: flex-start;
     min-width: 0;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 .user-bio-box {
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(0, 0, 0, 0.25) !important;
-    border-radius: 12px;
-    padding: 6px 10px;
-    margin-top: 6px;
+    border-radius: 10px;
+    padding: 3px 7px;
+    margin-top: 3px;
     flex: 1;
-    min-height: 48px;
+    min-height: 34px;
     overflow-y: auto;
     width: 100%;
 }
@@ -3797,8 +3797,9 @@ body {
     }
     
     .card-left-panel {
-        gap: 4px !important;
-        padding-bottom: 8px !important;
+        gap: 2px !important;
+        padding-bottom: 4px !important;
+        padding-top: 4px !important;
     }
     
     .user-name {
@@ -3812,11 +3813,11 @@ body {
     }
     
     .user-bio-box {
-        padding: 5px 8px !important;
+        padding: 3px 6px !important;
         flex: 1 !important;
-        min-height: 42px !important;
-        margin-top: 4px !important;
-        border-radius: 10px !important;
+        min-height: 30px !important;
+        margin-top: 2px !important;
+        border-radius: 8px !important;
     }
     
     .user-bio-box .user-bio {
@@ -3855,9 +3856,9 @@ body {
     }
 
     .card-action-btn {
-        width: 42px !important;
-        height: 42px !important;
-        font-size: 18px !important;
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 15px !important;
     }
 
     .card-top-actions-row, .card-actions-row {

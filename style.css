@@ -1,5 +1,5 @@
 /* 1. Ã˜Â§Ã˜Â³Ã˜ÂªÃ™Å Ã˜Â±Ã˜Â§Ã˜Â¯ Ã˜Â§Ã™â€žÃ˜Â®Ã˜Â·Ã™Ë†Ã˜Â· Ã™Ë†Ã˜Â§Ã™â€žÃ˜Â¥Ã˜Â¹Ã˜Â¯Ã˜Â§Ã˜Â¯Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â³Ã˜Â§Ã˜Â³Ã™Å Ã˜Â© */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Tajawal:wght@300;400;500;700;900&display=swap');
+/* Google Fonts loaded via HTML <link> tags for better performance */
 
 * {
     box-sizing: border-box;
@@ -77,10 +77,9 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.2);
-    /* Ø¬Ø¹Ù„ Ø§Ù„Ø¯Ø§Ø¦Ø±Ø© Ù…Ù† Ø§Ù„Ø¯Ø§Ø®Ù„ Ø¨ÙŠØ¶Ø§Ø¡ Ù‚Ù„ÙŠÙ„Ø§Ù‹ Ø¨Ø´ÙƒÙ„ Ù…ØªÙ†Ø§Ø³Ù‚ */
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    background: rgba(30, 30, 50, 0.85);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     border: 1.5px solid rgba(255, 75, 130, 0.25);
     /* Ø­Ø¯ÙˆØ¯ ÙˆØ±Ø¯ÙŠØ©/Ø­Ù…Ø±Ø§Ø¡ Ø®ÙÙŠÙØ© Ù…ØªÙ†Ø§Ø³Ù‚Ø© Ù…Ø¹ Ø§Ù„Ø®Ù„ÙÙŠØ© */
     padding: 40px;
@@ -902,7 +901,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(5px);
+    backdrop-filter: none;
     z-index: 100;
     justify-content: center;
     align-items: center;
@@ -1053,6 +1052,8 @@ body {
     gap: 3px;
     /* مسافة قريبة ومريحة بين الكروت */
     padding: 4px 5px;
+    /* تحسين الأداء - لا يرسم العناصر خارج الشاشة */
+    contain: layout style;
 }
 
 /* ===== بطاقة المستخدم - الشكل الجديد ===== */
@@ -1068,8 +1069,9 @@ body {
     cursor: pointer;
     position: relative;
     direction: ltr;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.2s ease, border-color 0.2s ease; /* أسرع وأخف من all */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    will-change: transform; /* GPU compositor لسكرول سلس */
 }
 
 /* أنيميشن ظهور بطاقات الأعضاء */
@@ -1820,8 +1822,8 @@ body {
 
 .glass-card {
     background: #ffffff;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     color: #0f172a;
@@ -1858,8 +1860,8 @@ body {
     gap: 12px;
     padding: 12px 16px;
     background: #ffffff;
-    /* Ø±Ø£Ø³ Ø´Ø§Øª Ø£Ø¨ÙŠØ¶ Ù†Ø§ØµØ¹ */
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     min-height: 58px;
     position: relative;
@@ -2143,9 +2145,9 @@ body {
     max-height: 200px;
     overflow-y: auto;
     border-radius: 16px;
-    background: rgba(15, 23, 42, 0.96);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: #111827;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     z-index: 1200;
@@ -2701,9 +2703,9 @@ body {
     display: flex;
     align-items: center;
     border-radius: 20px;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.07);
     border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 6px 14px;
     transition: all 0.3s ease;
@@ -3672,9 +3674,9 @@ body {
 
 /* Chat Header Glassmorphism */
 .chat-header {
-    background: rgba(15, 23, 42, 0.6) !important;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -3713,9 +3715,9 @@ body {
 
 /* Input Area */
 .chat-input-area {
-    background: rgba(15, 18, 24, 0.85) !important;
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    background: #0f1218 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
     padding: 12px 16px 20px 16px !important;
     gap: 8px !important;
@@ -3763,9 +3765,9 @@ body {
     bottom: -300px;
     left: 0;
     width: 100%;
-    background: rgba(30, 41, 59, 0.95);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    background: #1e293b;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     border-top-left-radius: 24px;
     border-top-right-radius: 24px;
     padding: 20px;

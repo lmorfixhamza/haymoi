@@ -13,18 +13,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // === نظام تتبع الأخطاء البرمجية (Debug System) ===
 function debugLog(message, isError = false) {
-    console.log("[HayMoi Debug]", message);
-    const debugBox = document.getElementById('app-debug-log');
-    if (debugBox) {
-        const line = document.createElement('div');
-        line.style.color = isError ? '#ef4444' : '#22c55e';
-        line.style.marginBottom = '4px';
-        line.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
-        line.style.paddingBottom = '2px';
-        line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-        debugBox.appendChild(line);
-        debugBox.scrollTop = debugBox.scrollHeight;
-    }
+    // Disabled in production for performance
 }
 
 function initDebugBox() {
@@ -3110,8 +3099,9 @@ window.addEventListener('visibilitychange', () => {
     }
 });
 
-// تحديث التوقيت النسبي لجميع البطاقات غير المتصلة كل 60 ثانية
-setInterval(() => {
+// تحديث التوقيت النسبي - متوقف عند إخفاء الصفحة لتوفير البطارية
+function updateRelativeTimes() {
+    if (document.visibilityState === 'hidden') return; // لا تشغل لما الصفحة مخفية
     document.querySelectorAll('.card-status-text').forEach(el => {
         if (!el.classList.contains('online')) {
             const card = el.closest('.user-card');
@@ -3132,7 +3122,8 @@ setInterval(() => {
             }
         }
     }
-}, 120000); // تحديث كل 120 ثانية للموبايل على المعالج
+}
+setInterval(updateRelativeTimes, 120000); // كل 120 ثانية
 
 // === نافذة الفلترة المتقدمة ===
 function openAdvancedFilterModal(profiles, listContainer) {

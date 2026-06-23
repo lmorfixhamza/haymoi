@@ -79,8 +79,8 @@ body {
     align-items: center;
     background: rgba(255, 255, 255, 0.2);
     /* Ø¬Ø¹Ù„ Ø§Ù„Ø¯Ø§Ø¦Ø±Ø© Ù…Ù† Ø§Ù„Ø¯Ø§Ø®Ù„ Ø¨ÙŠØ¶Ø§Ø¡ Ù‚Ù„ÙŠÙ„Ø§Ù‹ Ø¨Ø´ÙƒÙ„ Ù…ØªÙ†Ø§Ø³Ù‚ */
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1.5px solid rgba(255, 75, 130, 0.25);
     /* Ø­Ø¯ÙˆØ¯ ÙˆØ±Ø¯ÙŠØ©/Ø­Ù…Ø±Ø§Ø¡ Ø®ÙÙŠÙØ© Ù…ØªÙ†Ø§Ø³Ù‚Ø© Ù…Ø¹ Ø§Ù„Ø®Ù„ÙÙŠØ© */
     padding: 40px;
@@ -339,6 +339,7 @@ body {
     margin-bottom: 10px;
     filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.3));
     animation: floatAvatar 3s ease-in-out infinite alternate;
+    will-change: transform;
 }
 
 @keyframes floatAvatar {
@@ -594,8 +595,8 @@ body {
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    filter: blur(100px);
-    /* سر المهنة كاين فهاد التضبيب العالي */
+    filter: blur(40px);
+    /* تقليص blur لتحسين الأداء على الهواتف */
     z-index: 0;
     /* كيبقاو مورا البطاقات */
     opacity: 0.15;
@@ -718,7 +719,8 @@ body {
     padding: 10px 2px 15px 2px;
     position: relative;
     z-index: 1;
-    /* باش البطاقات تجي فوق الضوء */
+    -webkit-overflow-scrolling: touch; /* تمرير سلس على iOS وSamsung */
+    overscroll-behavior: contain; /* منع الـ bounce effect الذي يثقل الأداء */
 }
 
 .app-view {
@@ -790,6 +792,7 @@ body {
     transition: 0.5s;
     color: var(--text-muted);
     transform: translateY(-11px);
+    will-change: transform;
 }
 
 .nav-item.active .icon {
@@ -826,6 +829,7 @@ body {
     justify-content: center;
     pointer-events: none;
     z-index: 0;
+    will-change: transform;
 }
 
 .bottom-nav .indicator-circle {
@@ -968,6 +972,7 @@ body {
 .profil-avatar-ring {
     margin-bottom: 15px;
     animation: floatAvatar 3s ease-in-out infinite alternate;
+    will-change: transform;
 }
 
 .profil-avatar-letter {
@@ -1073,21 +1078,15 @@ body {
     gap: 8px;
     padding: 6px 10px;
     background: #1c1c1e !important;
-    /* تمت إزالة التأثير الزجاجي لتسريع التصفح في الهواتف */
     border: 1px solid rgba(255, 255, 255, 0.05);
-    /* حدود رقيقة جداً */
     border-radius: 28px;
-    /* زوايا منحنية بزاوية دائرية تعطي طابع عصري */
     cursor: pointer;
     position: relative;
     direction: ltr;
-    /* يبدأ من اليمين كـ SayHi */
     margin-bottom: 0;
-    /* تم إلغاء الهامش السفلي لتقريب الكروت بطلب من المستخدم */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    /* ظل خفيف وسريع المعالجة */
     transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-    /* تحديد الحركات لتخفيف الضغط على المعالج */
+    contain: layout style; /* تحسين الأداء - منع تأثير كارت واحد على بقية الكروت */
 }
 
 /* Ø£Ù†ÙŠÙ…ÙŠØ´Ù† Ø¸Ù‡ÙˆØ± Ø¨Ø·Ø§Ù‚Ø§Øª Ø§Ù„Ø£Ø¹Ø¶Ø§Ø¡ */
@@ -1758,8 +1757,8 @@ body {
 
 .glass-card {
     background: #ffffff;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     color: #0f172a;
@@ -1796,8 +1795,8 @@ body {
     gap: 12px;
     padding: 12px 16px;
     background: #ffffff;
-    /* Ø±Ø£Ø³ Ø´Ø§Øª Ø£Ø¨ÙŠØ¶ Ù†Ø§ØµØ¹ */
-    backdrop-filter: blur(20px);
+    /* رأس شات أبيض ناصع */
+    backdrop-filter: blur(6px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     min-height: 58px;
     position: relative;
@@ -2636,9 +2635,9 @@ body {
     display: flex;
     align-items: center;
     border-radius: 20px;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    background: rgba(255, 255, 255, 0.07);
     border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 6px 14px;
     transition: all 0.3s ease;
@@ -2733,19 +2732,9 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.04), transparent);
     transform: rotate(45deg);
-    animation: shineVIP 4s infinite linear;
-}
-
-@keyframes shineVIP {
-    0% {
-        transform: translate(-30%, -30%) rotate(45deg);
-    }
-
-    100% {
-        transform: translate(30%, 30%) rotate(45deg);
-    }
+    /* تم إيقاف أنيميشن shineVIP لتحسين الأداء على الهواتف */
 }
 
 .vip-badge-icon {
@@ -2759,8 +2748,9 @@ body {
     font-size: 26px;
     color: #fff;
     margin: 0 auto 14px auto;
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
-    animation: pulseVIP 2s infinite ease-in-out;
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+    animation: pulseVIP 3s infinite ease-in-out;
+    will-change: transform;
 }
 
 @keyframes pulseVIP {

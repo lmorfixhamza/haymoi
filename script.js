@@ -130,6 +130,8 @@ let requireVerifiedFilter = false; // الأعضاء الموثقين فقط
 let blockedUserIds = new Set(); // قائمة المحظورين
 let globalMessageSubscription = null; // اشتراك الإشعارات العالمي
 let latestDiscoveryProfiles = []; // تخزين آخر قائمة بروفايل تم جلبها للاستكشاف
+let discoveryLastFetchTime = 0; // وقت آخر جلب للبيانات - للتحكم في الكاش
+const DISCOVERY_CACHE_MS = 60000; // كاش لمدة دقيقة واحدة لتجنب الطلبات المتكررة
 
 // حساب المسافة بين نقطتين جغرافيتين بالكيلومتر
 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -318,7 +320,7 @@ function startLastSeenHeartbeat() {
         clearInterval(lastSeenHeartbeatInterval);
     }
     updateLastSeenInDB(); // تحديث فوري عند بدء الجلسة
-    lastSeenHeartbeatInterval = setInterval(updateLastSeenInDB, 30000); // تحديث كل 30 ثانية
+    lastSeenHeartbeatInterval = setInterval(updateLastSeenInDB, 60000); // تحديث كل 60 ثانية بدل 30 لتخفيف الضغط
 }
 
 function stopLastSeenHeartbeat() {
@@ -541,10 +543,19 @@ function initAppTabs() {
             loadActiveChats();
         }
 
-        // شبكة أمان: إعادة تحميل الأعضاء عند الانتقال لقسم الاستكشاف
+        // إعادة تحميل الأعضاء عند الانتقال لقسم الاستكشاف - مع الكاش لتجنب الطلبات الزائدة
         if (viewId === 'trouver' && currentUser) {
-            debugLog('switchView: trouver tab selected, reloading discovery users...');
-            loadDiscoveryUsers(currentUser);
+            const now = Date.now();
+            const cacheExpired = (now - discoveryLastFetchTime) > DISCOVERY_CACHE_MS;
+            if (cacheExpired || latestDiscoveryProfiles.length === 0) {
+                debugLog('switchView: trouver tab - cache expired, reloading discovery users...');
+                loadDiscoveryUsers(currentUser);
+            } else {
+                debugLog('switchView: trouver tab - using cached profiles, no refetch needed.');
+                // إعادة رسم القائمة من الكاش بدون طلب جديد
+                const container = document.getElementById('users-list-container');
+                if (container) renderDiscoveryView(latestDiscoveryProfiles, container);
+            }
         }
     };
 
@@ -857,9 +868,9 @@ function requestLocationAndSave() {
             debugLog("requestLocationAndSave: Geolocation failed/denied: " + error.message, true);
             reject(new Error("Permission denied or failed to get location."));
         }, {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
+            enableHighAccuracy: false,   // تعطيل GPS الدقيق لتسريع الاستجابة وتوفير البطارية
+            timeout: 8000,
+            maximumAge: 300000           // استخدام آخر موقع محفوظ إذا كان عمره أقل من 5 دقائق
         });
     });
 }
@@ -962,6 +973,7 @@ async function loadDiscoveryUsers(currentUser) {
         });
 
         debugLog(`loadDiscoveryUsers: Calling renderDiscoveryView with ${filteredProfiles.length} profiles...`);
+        discoveryLastFetchTime = Date.now(); // حفظ وقت آخر جلب ناجح للكاش
         renderDiscoveryView(filteredProfiles, container);
 
     } catch (err) {
@@ -3087,7 +3099,7 @@ window.addEventListener('visibilitychange', () => {
     }
 });
 
-// تحديث التوقيت النسبي لجميع البطاقات غير المتصلة كل 30 ثانية لتحديث "آخر ظهور" تلقائياً
+// تحديث التوقيت النسبي لجميع البطاقات غير المتصلة كل 60 ثانية
 setInterval(() => {
     document.querySelectorAll('.card-status-text').forEach(el => {
         if (!el.classList.contains('online')) {
@@ -3109,7 +3121,7 @@ setInterval(() => {
             }
         }
     }
-}, 30000);
+}, 60000); // تحديث كل 60 ثانية بدل 30 لتخفيف الضغط على المعالج
 
 // === نافذة الفلترة المتقدمة ===
 function openAdvancedFilterModal(profiles, listContainer) {

@@ -1049,9 +1049,9 @@ body {
 .users-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 3px;
     /* مسافة قريبة ومريحة بين الكروت */
-    padding: 6px 4px;
+    padding: 6px 0px;
     /* تحسين الأداء - لا يرسم العناصر خارج الشاشة */
     contain: layout style;
 }
@@ -1064,7 +1064,7 @@ body {
     background: rgba(255, 255, 255, 0.03) !important;
     border-radius: 30px;
     padding: 12px 16px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     cursor: pointer;
     position: relative;

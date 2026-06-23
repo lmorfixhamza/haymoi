@@ -903,7 +903,7 @@ body {
     color: rgba(255, 255, 255, 0.15);
 }
 
-/* Ã™â€ Ã˜Â§Ã™ÂÃ˜Â°Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¹Ã˜Â±Ã˜Â¶ Ã˜Â§Ã™â€žÃ™â€¦Ã™â€ Ã˜Â¨Ã˜Â«Ã™â€šÃ˜Â© (Modal) */
+/* Ã™â€ Ã˜Â§Ã™Â Ã˜Â°Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¹Ã˜Â±Ã˜Â¶ Ã˜Â§Ã™â€žÃ™â€¦Ã™â€ Ã˜Â¨Ã˜Â«Ã™â€šÃ˜Â© (Modal) */
 .modal {
     display: none;
     position: fixed;
@@ -956,7 +956,7 @@ body {
     }
 }
 
-/* --- 9. Ã˜Â¨Ã˜Â·Ã˜Â§Ã™â€šÃ˜Â© Ã˜Â§Ã™â€žÃ™â€¦Ã™â€žÃ™Â Ã˜Â§Ã™â€žÃ˜Â´Ã˜Â®Ã˜ÂµÃ™Å  (Profil Card) --- */
+/* --- 9. Ã˜Â¨Ã˜Â·Ã˜Â§Ã™â€šÃ˜Â© Ã˜Â§Ã™â€žÃ™â€¦Ã™â€žÃ™Â  Ã˜Â§Ã™â€žÃ˜Â´Ã˜Â®Ã˜ÂµÃ™Å  (Profil Card) --- */
 .profil-card {
     display: flex;
     flex-direction: column;
@@ -1065,181 +1065,250 @@ body {
     padding: 4px 5px;
 }
 
+/* ===== بطاقة المستخدم - الشكل الجديد ===== */
 .user-card {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    margin-bottom: 6px;
-    gap: 8px;
-    padding: 3px 6px;
-    background: #1c1c1e !important;
-    /* تمت إزالة التأثير الزجاجي لتسريع التصفح في الهواتف */
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    /* حدود رقيقة جداً */
-    border-radius: 28px;
-    /* زوايا منحنية بزاوية دائرية تعطي طابع عصري */
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(20px);
+    border-radius: 30px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     cursor: pointer;
     position: relative;
     direction: ltr;
-    /* يبدأ من اليمين كـ SayHi */
-    margin-bottom: 0;
-    /* تم إلغاء الهامش السفلي لتقريب الكروت بطلب من المستخدم */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    /* ظل خفيف وسريع المعالجة */
-    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-    /* تحديد الحركات لتخفيف الضغط على المعالج */
 }
 
-/* Ø£Ù†ÙŠÙ…ÙŠØ´Ù† Ø¸Ù‡ÙˆØ± Ø¨Ø·Ø§Ù‚Ø§Øª Ø§Ù„Ø£Ø¹Ø¶Ø§Ø¡ */
+/* أنيميشن ظهور بطاقات الأعضاء */
 @keyframes fadeSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(12px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .user-card.female {
     border: 1.5px solid #ff3399 !important;
     box-shadow: 0 0 12px rgba(255, 51, 153, 0.3) !important;
-    background: linear-gradient(to left, rgba(255, 51, 153, 0.25), rgba(255, 51, 153, 0.06) 100%) !important;
+    background: linear-gradient(135deg, rgba(255, 51, 153, 0.12), rgba(255, 51, 153, 0.04)) !important;
 }
 
 .user-card.male {
     border: 1.5px solid #1a75ff !important;
     box-shadow: 0 0 12px rgba(26, 117, 255, 0.3) !important;
-    background: linear-gradient(to left, rgba(26, 117, 255, 0.25), rgba(26, 117, 255, 0.06) 100%) !important;
+    background: linear-gradient(135deg, rgba(26, 117, 255, 0.12), rgba(26, 117, 255, 0.04)) !important;
 }
 
 .user-card:hover {
-    transform: translateY(-5px) scale(1.02);
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.06) !important;
 }
 
 .user-card.male:hover {
-    border-color: rgba(59, 130, 246, 0.5);
-    background: linear-gradient(to left, rgba(59, 130, 246, 0.06), rgba(255, 255, 255, 0.04) 60%) !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(59, 130, 246, 0.2) !important;
 }
 
 .user-card.female:hover {
-    border-color: rgba(255, 102, 163, 0.5);
-    background: linear-gradient(to left, rgba(255, 102, 163, 0.06), rgba(255, 255, 255, 0.04) 60%) !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 102, 163, 0.2);
+    border-color: rgba(255, 102, 163, 0.5) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 102, 163, 0.2) !important;
 }
 
 .user-card:active {
     transform: translateY(0);
-    background: #18181a !important;
+    background: rgba(255, 255, 255, 0.01) !important;
 }
 
-/* تنسيق الأقسام الثلاثة لكارت الاستكشاف */
-.card-left-panel {
-    flex: 1;
+/* ===== قسم المعلومات الرئيسي (أفاتار + نص) ===== */
+.card-main {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
-    direction: ltr;
-    text-align: left;
-    align-self: stretch;
-    justify-content: flex-start;
-    min-width: 0;
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-
-.user-bio-box {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(0, 0, 0, 0.25) !important;
-    border-radius: 10px;
-    padding: 3px 7px;
-    margin-top: 3px;
+    align-items: center;
+    gap: 13px;
     flex: 1;
-    min-height: 34px;
-    overflow-y: auto;
-    width: 100%;
+    min-width: 0;
 }
 
-.user-bio-box .user-bio {
-    font-size: 11.5px;
-    line-height: 1.4;
-    color: #cbd5e1 !important;
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
-    margin: 0;
-    text-align: left;
-}
-
-.card-center-panel {
+/* ===== قسم الأفاتار مع المسافة ===== */
+.avatar-section {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 6px;
     flex-shrink: 0;
-    width: 104px; /* اتساع مناسب للصورة والمسافة */
 }
 
-.card-center-panel .user-avatar-wrapper {
-    width: 72px !important;
-    height: 72px !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    float: none !important;
+.avatar-ring {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(45deg, #3b82f6, #2563eb);
+    position: relative;
+    box-shadow: 0 0 14px rgba(59, 130, 246, 0.35);
 }
 
-.card-center-panel .user-avatar-inner {
-    font-size: 22px !important;
+.user-card.female .avatar-ring {
+    background: linear-gradient(45deg, #ff3399, #db2777);
+    box-shadow: 0 0 14px rgba(255, 51, 153, 0.35);
 }
 
-.card-center-panel .user-avatar-wrapper .online-dot {
-    width: 13px;
-    height: 13px;
-    bottom: 2px;
-    right: 2px;
-    border-width: 2px;
-}
-
-
-.card-distance-row {
+.avatar-ring img,
+.avatar-ring .avatar-initials {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #0f172a;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    width: 100%;
-    margin-left: 6px; /* إزاحة بسيطة لليمين لتعويض وجود الأيقونة وتوسيط النص بالكامل تحت الصورة */
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    background: #1c1c1e;
 }
 
-.distance-text {
-    font-size: 12px;
-    font-weight: 600;
-    color: #cbd5e1;
+.online-status {
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 2px solid #0f172a;
+    box-shadow: 0 0 6px #22c55e;
+    z-index: 2;
 }
 
-.card-right-panel {
-    flex: 1;
+.distance-badge {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.user-card.female .distance-badge {
+    background: rgba(255, 51, 153, 0.15);
+    color: #f472b6;
+}
+
+/* ===== قسم النص (اسم + bio + وقت) ===== */
+.info-section {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-start;
-    align-self: stretch;
-    min-width: 0;
-    padding-top: 8px;
-}
-
-.card-right-panel .card-right-stats {
-    position: static !important;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
     gap: 4px;
+    min-width: 0;
+    flex: 1;
 }
 
-/* ØºÙ„Ø§Ù Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø´Ø®ØµÙŠØ© Ù…Ø¹ Ø¥Ø·Ø§Ø± Ù…ØªÙˆÙ‡Ø¬ Ø«Ù„Ø§Ø«ÙŠ Ø§Ù„Ø£Ø¨Ø¹Ø§Ø¯ */
+.name-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.name-row h3 {
+    font-size: 17px;
+    font-weight: 900;
+    color: #fff;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+    text-transform: capitalize;
+}
+
+.age-tag {
+    background: #3b82f6;
+    color: white;
+    padding: 1px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.user-card.female .age-tag {
+    background: #ff3399;
+}
+
+.bio-text {
+    font-size: 12.5px;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 190px;
+    margin: 0;
+}
+
+.time-ago {
+    font-size: 10px;
+    color: #475569;
+}
+
+.time-ago.online {
+    color: #22c55e;
+    font-weight: 700;
+}
+
+/* ===== شبكة الأزرار 2×2 ===== */
+.card-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    padding-left: 14px;
+    border-left: 1px solid rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
+}
+
+.action-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: white;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.03);
+}
+
+.action-btn:hover {
+    transform: scale(1.12);
+}
+
+.action-btn.chat:hover  { background: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 12px rgba(59,130,246,0.5); }
+.action-btn.close:hover { background: #ef4444; border-color: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.5); }
+.action-btn.heart:hover { background: #ff4b82; border-color: #ff4b82; box-shadow: 0 0 12px rgba(255,75,130,0.5); }
+.action-btn.star:hover  { background: #eab308; border-color: #eab308; box-shadow: 0 0 12px rgba(234,179,8,0.5); }
+
+.action-btn.heart.liked {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+.action-btn.star.favorited {
+    background: #eab308 !important;
+    border-color: #eab308 !important;
+    box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+}
+
+/* ØºÙ„Ø§Ù  Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø´Ø®ØµÙŠØ© Ù…Ø¹ Ø¥Ø·Ø§Ø± Ù…ØªÙˆÙ‡Ø¬ Ø«Ù„Ø§Ø«ÙŠ Ø§Ù„Ø£Ø¨Ø¹Ø§Ø¯ */
 .user-avatar-wrapper {
     width: 60px;
     height: 60px;
@@ -1367,11 +1436,13 @@ body {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
-.card-action-btn:hover {
-    background: #ffffff;
-    color: #0b0f19;
-    transform: scale(1.15);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+@media (hover: hover) and (pointer: fine) {
+    .card-action-btn:hover {
+        background: #ffffff;
+        color: #0b0f19;
+        transform: scale(1.15);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
 }
 
 .card-action-btn i {
@@ -1396,11 +1467,13 @@ body {
     box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
 }
 
-.card-action-btn.ignore-btn:hover {
-    background: #ef4444 !important;
-    border-color: #ef4444 !important;
-    color: white !important;
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+@media (hover: hover) and (pointer: fine) {
+    .card-action-btn.ignore-btn:hover {
+        background: #ef4444 !important;
+        border-color: #ef4444 !important;
+        color: white !important;
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+    }
 }
 
 /* أنيميشن القلب الطائر عند الإعجاب */
@@ -3547,22 +3620,23 @@ body {
 
 
 
-.user-card.female .card-action-btn.like-btn:hover {
-    background: rgba(255, 51, 153, 0.12);
-    border-color: rgba(255, 51, 153, 0.35);
-    color: #ff3399;
+@media (hover: hover) and (pointer: fine) {
+    .user-card.female .card-action-btn.like-btn:hover {
+        background: rgba(255, 51, 153, 0.12);
+        border-color: rgba(255, 51, 153, 0.35);
+        color: #ff3399;
+    }
+    .user-card.male .card-action-btn.like-btn:hover {
+        background: rgba(26, 117, 255, 0.12);
+        border-color: rgba(26, 117, 255, 0.35);
+        color: #1a75ff;
+    }
 }
 .user-card.female .card-action-btn.like-btn.liked {
     background: #ff3399 !important;
     border-color: #ff3399 !important;
     color: white !important;
     box-shadow: 0 0 10px rgba(255, 51, 153, 0.4);
-}
-
-.user-card.male .card-action-btn.like-btn:hover {
-    background: rgba(26, 117, 255, 0.12);
-    border-color: rgba(26, 117, 255, 0.35);
-    color: #1a75ff;
 }
 .user-card.male .card-action-btn.like-btn.liked {
     background: #1a75ff !important;
@@ -3787,78 +3861,45 @@ body {
 
     /* User Card (Discovery List) Mobile Responsive styles */
     .user-card {
-        padding: 8px 10px !important;
-        gap: 6px !important;
-        border-radius: 20px !important;
+        padding: 9px 11px !important;
+        border-radius: 22px !important;
+        margin-bottom: 8px !important;
     }
-    
-    .card-left-panel {
-        gap: 2px !important;
-        padding-bottom: 4px !important;
-        padding-top: 4px !important;
-    }
-    
-    .user-name {
-        font-size: 17.5px !important;
-        max-width: 95px !important;
-    }
-    
-    .gender-age-pill {
-        padding: 1.5px 4px !important;
-        font-size: 9.5px !important;
-    }
-    
-    .user-bio-box {
-        padding: 3px 6px !important;
-        flex: 1 !important;
-        min-height: 30px !important;
-        margin-top: 2px !important;
-        border-radius: 8px !important;
-    }
-    
-    .user-bio-box .user-bio {
-        font-size: 11px !important;
-    }
-    
-    .card-center-panel {
-        width: 65px !important;
-        gap: 4px !important;
-    }
-    
-    .card-center-panel .user-avatar-wrapper {
+
+    .avatar-ring {
         width: 58px !important;
         height: 58px !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
     }
 
-    .card-center-panel .user-avatar-inner {
-        font-size: 17px !important;
-    }
-
-    .card-center-panel .user-avatar-wrapper .online-dot {
-        width: 11px !important;
-        height: 11px !important;
-        bottom: 1.5px !important;
-        right: 1.5px !important;
-    }
-    
-    .distance-text {
-        font-size: 10px !important;
-    }
-    
-    .card-right-panel {
-        width: 106px !important;
-    }
-
-    .card-action-btn {
-        width: 36px !important;
-        height: 36px !important;
+    .name-row h3 {
         font-size: 15px !important;
+        max-width: 100px !important;
     }
 
-    .card-top-actions-row, .card-actions-row {
-        gap: 12px !important;
+    .age-tag {
+        font-size: 10px !important;
+        padding: 1px 6px !important;
+    }
+
+    .bio-text {
+        font-size: 11.5px !important;
+        max-width: 150px !important;
+    }
+
+    .distance-badge {
+        font-size: 9px !important;
+        padding: 2px 6px !important;
+    }
+
+    .card-actions-grid {
+        gap: 6px !important;
+        padding-left: 10px !important;
+    }
+
+    .action-btn {
+        width: 33px !important;
+        height: 33px !important;
+        font-size: 13px !important;
     }
 
     .card-status-text {

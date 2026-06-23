@@ -5,22 +5,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. جلب المستخدم الحالي وجلب بياناته السابقة إن وجدت لتسهيل التعديل
     const { data: { user } } = await sb.auth.getUser();
     
-    // إنشاء صندوق تصحيح الأخطاء وعرضه على الشاشة
-    const setupBox = document.querySelector('.setup-box');
-    if (setupBox) {
-        const debugBox = document.createElement('div');
-        debugBox.id = 'debug-auth-box';
-        debugBox.style.cssText = 'margin-top: 20px; border: 1px dashed #ef4444; padding: 12px; border-radius: 10px; font-size: 12.5px; font-family: monospace; background: rgba(239, 68, 68, 0.05); text-align: left; direction: ltr; color: #fca5a5; width: 100%;';
-        debugBox.innerHTML = `
-            <h4 style="margin: 0 0 8px 0; color: #ef4444; font-weight: 700;">[HayMoi Debug Panel]</h4>
-            <div><strong>User ID:</strong> <span id="debug-user-id">${user ? user.id : 'No User'}</span></div>
-            <div><strong>Email:</strong> <span id="debug-user-email">${user ? user.email : 'No Email'}</span></div>
-            <div><strong>Profile in DB:</strong> <span id="debug-profile-status">Querying...</span></div>
-            <div><strong>DB Error:</strong> <span id="debug-error-details">None</span></div>
-        `;
-        setupBox.appendChild(debugBox);
-    }
-
     if (user) {
         try {
             const { data: profilesList, error } = await sb
@@ -28,20 +12,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .select('*')
                 .eq('user_id', user.id);
 
-            const statusEl = document.getElementById('debug-profile-status');
-            const errorEl = document.getElementById('debug-error-details');
-
             if (error) {
                 console.error("Error fetching profile:", error);
-                if (statusEl) statusEl.textContent = "Error";
-                if (errorEl) errorEl.textContent = `${error.message} (Code: ${error.code})`;
-                alert("DEBUG SELECT ERROR: خطأ في جلب بيانات البروفايل: " + error.message + "\nCode: " + error.code + "\nDetails: " + error.details);
+                alert("Erreur lors de la récupération des données de votre profil. Veuillez réessayer.");
                 return;
             }
 
             const profile = profilesList && profilesList.length > 0 ? profilesList[0] : null;
-            if (statusEl) statusEl.textContent = profile ? `Found (Name: ${profile.full_name})` : "Not Found (Null)";
-            if (errorEl) errorEl.textContent = "None";
 
             if (profile) {
                 // تعبئة البيانات السابقة في الحقول
@@ -66,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         cancelBtn.type = 'button';
                         cancelBtn.className = 'btn';
                         cancelBtn.style.cssText = 'background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-white); margin-top: 10px; font-weight: 600;';
-                        cancelBtn.innerHTML = '<i class="fas fa-arrow-right" style="margin-left: 8px;"></i> إلغاء والعودة للرئيسية';
+                        cancelBtn.innerHTML = '<i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Annuler et retourner à l\'accueil';
                         cancelBtn.addEventListener('click', () => {
                             window.location.href = 'app.html';
                         });
@@ -75,12 +52,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         } catch (err) {
-            console.error("خطأ أثناء جلب البيانات السابقة للبروفايل:", err);
-            alert("DEBUG SELECT EXCEPTION: خطأ في جلب بيانات البروفايل: " + err.message);
-            const statusEl = document.getElementById('debug-profile-status');
-            const errorEl = document.getElementById('debug-error-details');
-            if (statusEl) statusEl.textContent = "Exception";
-            if (errorEl) errorEl.textContent = err.message;
+            console.error("Erreur lors de la récupération des anciennes données du profil :", err);
+            alert("Erreur lors de la récupération des données de votre profil. Veuillez réessayer.");
         }
     }
 
@@ -88,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.preventDefault(); // منع الصفحة من إعادة التحميل
 
         if (!user) {
-            alert("يرجى تسجيل الدخول أولاً!");
+            alert("Veuillez d'abord vous connecter !");
             return;
         }
 
@@ -134,12 +107,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (saveResult.error) throw saveResult.error;
 
-            alert("تم حفظ بياناتك بنجاح!");
+            alert("Vos données ont été enregistrées avec succès !");
             window.location.href = 'app.html'; // حول المستخدم للصفحة الرئيسية
 
         } catch (err) {
-            console.error("خطأ أثناء الحفظ:", err);
-            alert("DEBUG SAVE ERROR: حدث خطأ أثناء حفظ البيانات: " + err.message + "\nCode: " + (err.code || 'None') + "\nDetails: " + (err.details || 'None'));
+            console.error("Erreur lors de l'enregistrement :", err);
+            alert("Une erreur est survenue lors de l'enregistrement de vos données. Veuillez réessayer.");
         }
     });
 });

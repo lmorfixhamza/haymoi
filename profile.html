@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="fr" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حسابي | HayMoi</title>
+    <title>Mon profil | HayMoi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css?v=3.5">
 </head>
@@ -14,26 +14,26 @@
                 <!-- سيتم وضع الأيقونة ديناميكياً بناء على الجنس -->
                 <i class="fas fa-user-circle"></i>
             </div>
-            <h1 id="profile-fullname">جاري التحميل...</h1>
+            <h1 id="profile-fullname">Chargement...</h1>
             <p id="profile-email" class="profile-subtext"></p>
         </div>
 
         <div class="profile-details">
             <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-calendar-day"></i> العمر:</span>
+                <span class="detail-label"><i class="fas fa-calendar-day"></i> Âge :</span>
                 <span class="detail-value" id="profile-age">-</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-venus-mars"></i> الجنس:</span>
+                <span class="detail-label"><i class="fas fa-venus-mars"></i> Genre :</span>
                 <span class="detail-value" id="profile-gender">-</span>
             </div>
             <div class="detail-item bio-item">
-                <span class="detail-label"><i class="fas fa-comment-dots"></i> نبذة عني:</span>
+                <span class="detail-label"><i class="fas fa-comment-dots"></i> À propos de moi :</span>
                 <p class="detail-value bio-text" id="profile-bio">-</p>
             </div>
         </div>
 
-        <button id="logout-btn" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+        <button id="logout-btn" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Se déconnecter</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

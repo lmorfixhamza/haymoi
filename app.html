@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="fr" dir="ltr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HayMoi | استكشف محيطك</title>
+    <title>HayMoi | Explorez votre entourage</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css?v=3.5">
 </head>
@@ -20,8 +20,8 @@
             <div class="splash-logo">
                 <span class="splash-logo-text">HayMoi</span>
             </div>
-            <h1 class="splash-brand">مرحبا بك في موقع HayMoi</h1>
-            <p class="splash-tagline">استكشف الناس القريبة لك بكل ارتياحية</p>
+            <h1 class="splash-brand">Bienvenue sur HayMoi</h1>
+            <p class="splash-tagline">Explorez les personnes proches de vous en toute sérénité</p>
             <div class="splash-loader">
                 <div class="loader-dot"></div>
                 <div class="loader-dot"></div>
@@ -36,22 +36,22 @@
         <!-- التبويب العلوي الخاص بقسم Trouver -->
         <header class="app-header" id="app-header">
             <!-- صورتنا الشخصية في اليسار للوصول السريع للبروفايل -->
-            <div class="header-user-avatar" id="header-user-avatar" title="الملف الشخصي">?</div>
+            <div class="header-user-avatar" id="header-user-avatar" title="Profil">?</div>
 
             <!-- حاوية البحث والتصفية مدمجة في الهيدر -->
             <div class="header-search-container" id="header-search-container">
                 <div class="search-input-wrapper">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="discovery-search-input" placeholder="ابحث بواسطة الـ ID..."
+                    <input type="text" id="discovery-search-input" placeholder="Rechercher par ID..."
                         autocomplete="off">
                     <button id="clear-search-btn"
                         style="display: none; background:none; border:none; color:var(--text-muted); cursor:pointer;"><i
                             class="fas fa-times"></i></button>
                 </div>
-                <button id="advanced-filter-btn" class="header-filter-btn" title="تصفية متقدمة">
+                <button id="advanced-filter-btn" class="header-filter-btn" title="Filtre avancé">
                     <i class="fas fa-filter"></i>
                 </button>
-                <button id="refresh-btn" class="header-filter-btn" title="تحديث">
+                <button id="refresh-btn" class="header-filter-btn" title="Actualiser">
                     <i class="fas fa-rotate-right"></i>
                 </button>
             </div>
@@ -72,7 +72,7 @@
             <section id="view-trouver" class="app-view active">
                 <div class="users-list" id="users-list-container">
                     <div class="loading-spinner">
-                        <i class="fas fa-spinner fa-spin"></i> جاري البحث عن أشخاص قريبين...
+                        <i class="fas fa-spinner fa-spin"></i> Recherche de personnes proches...
                     </div>
                 </div>
             </section>
@@ -82,7 +82,7 @@
                 <div class="chats-list" id="chats-list-container">
                     <div class="empty-state">
                         <i class="fas fa-comments"></i>
-                        <p>لا توجد محادثات نشطة حالياً.</p>
+                        <p>Aucune conversation active pour le moment.</p>
                     </div>
                 </div>
             </section>
@@ -92,7 +92,7 @@
                 <div class="contacts-list" id="contacts-list-container">
                     <div class="empty-state">
                         <i class="fas fa-users"></i>
-                        <p>لا توجد جهات اتصال حالياً.</p>
+                        <p>Aucun contact pour le moment.</p>
                     </div>
                 </div>
             </section>
@@ -101,7 +101,7 @@
             <section id="view-profil" class="app-view">
                 <div class="own-profile" id="own-profile-container">
                     <div class="loading-spinner">
-                        <i class="fas fa-spinner fa-spin"></i> جاري تحميل الملف الشخصي...
+                        <i class="fas fa-spinner fa-spin"></i> Chargement du profil...
                     </div>
                 </div>
             </section>
@@ -149,18 +149,18 @@
     <!-- نافذة الدردشة المباشرة (Chat Window) -->
     <div class="chat-window" id="chat-window">
         <div class="chat-header">
-            <button class="chat-back-btn" id="chat-back-btn" title="رجوع">
+            <button class="chat-back-btn" id="chat-back-btn" title="Retour">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <div class="chat-user-info-header">
-                <span class="chat-user-name" id="chat-user-name">اسم المستخدم</span>
+                <span class="chat-user-name" id="chat-user-name">Nom d'utilisateur</span>
                 <span class="chat-user-status" id="chat-user-status"></span>
             </div>
             <div class="chat-header-actions">
-                <button class="chat-header-btn" id="chat-profile-btn" title="الملف الشخصي">
+                <button class="chat-header-btn" id="chat-profile-btn" title="Profil">
                     <i class="fas fa-user"></i>
                 </button>
-                <button class="chat-header-btn" id="chat-menu-btn" title="المزيد">
+                <button class="chat-header-btn" id="chat-menu-btn" title="Plus">
                     <i class="fas fa-ellipsis-vertical"></i>
                 </button>
             </div>
@@ -169,15 +169,11 @@
             <!-- الرسائل تظهر هنا ديناميكياً -->
         </div>
         <div class="chat-input-area">
-            <button class="chat-mic-btn" id="chat-audio-btn" title="تسجيل صوتي">
-                <i class="fas fa-microphone"></i>
+            <button class="chat-attach-btn" id="chat-img-btn" title="Joindre un fichier">
+                <i class="fas fa-plus"></i>
             </button>
-            <button class="chat-send-btn" id="chat-send-btn" title="إرسال" style="display:none;">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-            <input type="text" id="chat-input" placeholder="Dites quelque chose..." autocomplete="off">
             <div class="emoji-picker-wrapper" style="position: relative; display: flex; align-items: center;">
-                <button class="chat-emoji-btn" id="chat-emoji-btn" title="إيموجي">
+                <button class="chat-emoji-btn" id="chat-emoji-btn" title="Émoticône">
                     <i class="far fa-smile"></i>
                 </button>
                 <div class="emoji-picker-popover" id="emoji-picker-popover" style="display: none;">
@@ -203,19 +199,23 @@
                     <span class="emoji-item">👀</span>
                 </div>
             </div>
-            <button class="chat-attach-btn" id="chat-img-btn" title="إرفاق ملف">
-                <i class="fas fa-plus"></i>
+            <input type="text" id="chat-input" placeholder="Dites quelque chose..." autocomplete="off">
+            <button class="chat-send-btn" id="chat-send-btn" title="Envoyer" style="display:none;">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+            <button class="chat-mic-btn" id="chat-audio-btn" title="Enregistrement vocal">
+                <i class="fas fa-microphone"></i>
             </button>
         </div>
         <!-- مؤشر التسجيل الصوتي -->
         <div class="recording-indicator" id="recording-indicator" style="display:none;">
             <div class="recording-pulse"></div>
             <span class="recording-timer" id="recording-timer">00:00</span>
-            <span class="recording-text">جاري التسجيل...</span>
-            <button class="recording-stop-btn" id="recording-stop-btn" title="إيقاف وإرسال">
+            <span class="recording-text">Enregistrement...</span>
+            <button class="recording-stop-btn" id="recording-stop-btn" title="Arrêter et envoyer">
                 <i class="fas fa-stop"></i>
             </button>
-            <button class="recording-cancel-btn" id="recording-cancel-btn" title="إلغاء">
+            <button class="recording-cancel-btn" id="recording-cancel-btn" title="Annuler">
                 <i class="fas fa-trash-alt"></i>
             </button>
         </div>

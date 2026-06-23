@@ -19,25 +19,7 @@ function debugLog(message, isError = false) {
 }
 
 function initDebugBox() {
-    if (!path.includes('app.html')) return;
-    if (document.getElementById('app-debug-log')) return;
-    
-    const box = document.createElement('div');
-    box.id = 'app-debug-log';
-    box.style.cssText = 'position: fixed; bottom: 80px; left: 10px; right: 10px; height: 180px; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(239, 68, 68, 0.5); border-radius: 12px; padding: 10px; overflow-y: auto; font-family: monospace; font-size: 11px; z-index: 99999; color: #fff; direction: ltr; text-align: left; display: none; box-shadow: 0 4px 20px rgba(0,0,0,0.5);';
-    
-    const toggleBtn = document.createElement('button');
-    toggleBtn.id = 'toggle-debug-btn';
-    toggleBtn.style.cssText = 'position: fixed; bottom: 85px; right: 20px; background: #ef4444; color: white; border: none; border-radius: 20px; padding: 6px 12px; font-size: 11px; font-weight: bold; cursor: pointer; z-index: 100000; box-shadow: 0 4px 10px rgba(0,0,0,0.5);';
-    toggleBtn.textContent = 'Toggle Debug';
-    toggleBtn.addEventListener('click', () => {
-        const isHidden = box.style.display === 'none';
-        box.style.display = isHidden ? 'block' : 'none';
-    });
-    
-    document.body.appendChild(box);
-    document.body.appendChild(toggleBtn);
-    debugLog("Debug Panel Initialized successfully.");
+    // Disabled for security and performance
 }
 
 let appLoaded = false;
@@ -74,7 +56,7 @@ async function loadAppData(user) {
         await requestLocationAndSave();
     } catch (e) {
         debugLog("loadAppData: Error requesting geolocation (Access Denied): " + e.message, true);
-        alert("يجب تفعيل صلاحية الوصول للموقع الجغرافي لاستخدام التطبيق. سيتم تسجيل خروجك الآن.");
+        alert("La permission d'accéder à la géolocalisation est requise pour utiliser l'application. Vous allez être déconnecté.");
         await sb.auth.signOut();
         window.location.href = 'index.html';
         return; // Stop loading app data so they can't enter
@@ -169,6 +151,15 @@ function calculateAge(dobString) {
     return age;
 }
 
+function sanitizeUrl(url) {
+    if (!url) return '';
+    const trimmed = String(url).trim();
+    if (/^(javascript|data|vbscript):/i.test(trimmed)) {
+        return '';
+    }
+    return escapeHtml(trimmed);
+}
+
 function formatRelativeTime(dateString) {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -181,19 +172,19 @@ function formatRelativeTime(dateString) {
     const diffDay = Math.floor(diffHr / 24);
 
     if (diffSec < 60) {
-        return 'الآن';
+        return 'À l\'instant';
     } else if (diffMin < 60) {
-        return `منذ ${diffMin} د`;
+        return `Il y a ${diffMin} min`;
     } else if (diffHr < 24) {
-        return `منذ ${diffHr} س`;
+        return `Il y a ${diffHr} h`;
     } else if (diffDay === 1) {
-        return 'أمس';
+        return 'Hier';
     } else if (diffDay === 2) {
-        return 'قبل يومين';
+        return 'Il y a 2 jours';
     } else if (diffDay < 7) {
-        return `منذ ${diffDay} أيام`;
+        return `Il y a ${diffDay} jours`;
     } else {
-        return date.toLocaleDateString('ar-MA', { month: 'numeric', day: 'numeric' });
+        return date.toLocaleDateString('fr-FR', { month: 'numeric', day: 'numeric' });
     }
 }
 
@@ -702,7 +693,7 @@ async function loadOwnProfile(user) {
         if (profile) {
             currentUserProfile = profile; // حفظ الملف الشخصي الحالي للمستخدم بما فيه الإحداثيات
             const age = calculateAge(profile.dob);
-            const genderText = profile.gender === 'male' ? 'ذكر' : profile.gender === 'female' ? 'أنثى' : '-';
+            const genderText = profile.gender === 'male' ? 'Homme' : profile.gender === 'female' ? 'Femme' : '-';
             const genderIcon = profile.gender === 'male' ? 'fa-mars' : 'fa-venus';
             const genderColor = profile.gender === 'male' ? '#00d2ff' : '#ff6b81';
             const initial = (profile.full_name || 'H').charAt(0).toUpperCase();
@@ -711,7 +702,7 @@ async function loadOwnProfile(user) {
             const headerAvatar = document.getElementById('header-user-avatar');
             if (headerAvatar) {
                 if (profile.avatar_url) {
-                    headerAvatar.innerHTML = `<img src="${profile.avatar_url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+                    headerAvatar.innerHTML = `<img src="${sanitizeUrl(profile.avatar_url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
                 } else {
                     headerAvatar.textContent = initial;
                 }
@@ -725,38 +716,38 @@ async function loadOwnProfile(user) {
             let ownExtraSection = '';
             if (profile.height || profile.residence || profile.profession || profile.company || profile.income || profile.body_type || profile.ethnicity || profile.hair_color) {
                 ownExtraSection = `
-                    <div class="profil-bio-section" style="margin-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 15px; text-align: right; width: 100%;">
-                        <h4 style="margin-bottom: 10px;"><i class="fas fa-info-circle"></i> معلومات إضافية</h4>
+                    <div class="profil-bio-section" style="margin-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 15px; text-align: left; width: 100%;">
+                        <h4 style="margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Informations supplémentaires</h4>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13.5px; color: var(--text-muted);">
-                            ${profile.height ? `<div><strong style="color:var(--text-white);">الطول:</strong> ${escapeHtml(profile.height)}</div>` : ''}
-                            ${profile.residence ? `<div><strong style="color:var(--text-white);">الإقامة:</strong> ${escapeHtml(profile.residence)}</div>` : ''}
-                            ${profile.profession ? `<div><strong style="color:var(--text-white);">المهنة:</strong> ${escapeHtml(profile.profession)}</div>` : ''}
-                            ${profile.company ? `<div><strong style="color:var(--text-white);">الشركة:</strong> ${escapeHtml(profile.company)}</div>` : ''}
-                            ${profile.income ? `<div><strong style="color:var(--text-white);">الدخل:</strong> ${escapeHtml(profile.income)}</div>` : ''}
-                            ${profile.body_type ? `<div><strong style="color:var(--text-white);">بنية الجسم:</strong> ${escapeHtml(profile.body_type)}</div>` : ''}
-                            ${profile.ethnicity ? `<div><strong style="color:var(--text-white);">الأصل:</strong> ${escapeHtml(profile.ethnicity)}</div>` : ''}
-                            ${profile.hair_color ? `<div><strong style="color:var(--text-white);">الشعر:</strong> ${escapeHtml(profile.hair_color)}</div>` : ''}
+                            ${profile.height ? `<div><strong style="color:var(--text-white);">Taille :</strong> ${escapeHtml(profile.height)}</div>` : ''}
+                            ${profile.residence ? `<div><strong style="color:var(--text-white);">Résidence :</strong> ${escapeHtml(profile.residence)}</div>` : ''}
+                            ${profile.profession ? `<div><strong style="color:var(--text-white);">Profession :</strong> ${escapeHtml(profile.profession)}</div>` : ''}
+                            ${profile.company ? `<div><strong style="color:var(--text-white);">Entreprise :</strong> ${escapeHtml(profile.company)}</div>` : ''}
+                            ${profile.income ? `<div><strong style="color:var(--text-white);">Revenu :</strong> ${escapeHtml(profile.income)}</div>` : ''}
+                            ${profile.body_type ? `<div><strong style="color:var(--text-white);">Morphologie :</strong> ${escapeHtml(profile.body_type)}</div>` : ''}
+                            ${profile.ethnicity ? `<div><strong style="color:var(--text-white);">Origine :</strong> ${escapeHtml(profile.ethnicity)}</div>` : ''}
+                            ${profile.hair_color ? `<div><strong style="color:var(--text-white);">Cheveux :</strong> ${escapeHtml(profile.hair_color)}</div>` : ''}
                         </div>
                     </div>
                 `;
             }
 
             const avatarDisplay = profile.avatar_url 
-                ? `<img src="${profile.avatar_url}" alt="" loading="lazy">`
+                ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="" loading="lazy">`
                 : initial;
 
             container.innerHTML = `
                 <div class="profil-card">
                     <div class="profil-avatar-ring">
                         <div class="profil-avatar-letter" style="border-color: ${genderColor};">${avatarDisplay}</div>
-                        <button class="profil-avatar-change-btn" id="change-avatar-btn" title="تغيير الصورة">
+                        <button class="profil-avatar-change-btn" id="change-avatar-btn" title="Changer la photo">
                             <i class="fas fa-camera"></i>
                         </button>
                         <input type="file" id="avatar-file-input" accept="image/*" style="display:none;">
                     </div>
                     <h2 class="profil-name">
-                        ${profile.full_name || 'مستخدم HayMoi'}
-                        ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 14px; margin-right: 6px;" title="عضو VIP"></i>' : ''}
+                        ${profile.full_name || 'Utilisateur HayMoi'}
+                        ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 14px; margin-left: 6px;" title="Membre VIP"></i>' : ''}
                     </h2>
                     <p class="profil-email">${user.email || ''}</p>
                     <div class="profil-stats">
@@ -767,16 +758,16 @@ async function loadOwnProfile(user) {
                         <div class="stat-divider"></div>
                         <div class="stat-item">
                             <i class="fas fa-calendar-day" style="color: var(--color-primary);"></i>
-                            <span>${age} سنة</span>
+                            <span>${age} ans</span>
                         </div>
                     </div>
                     <div class="profil-bio-section">
-                        <h4><i class="fas fa-comment-dots"></i> نبذة عني</h4>
-                        <p>${profile.bio || 'لا توجد نبذة شخصية بعد.'}</p>
+                        <h4><i class="fas fa-comment-dots"></i> À propos de moi</h4>
+                        <p>${profile.bio || 'Aucune biographie pour le moment.'}</p>
                     </div>
                     ${ownExtraSection}
-                    <button id="edit-profile-btn" class="btn btn-submit" style="background: rgba(255, 255, 255, 0.08); color: var(--text-white); margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1);"><i class="fas fa-edit"></i> تعديل البروفايل</button>
-                    <button id="logout-btn-app" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+                    <button id="edit-profile-btn" class="btn btn-submit" style="background: rgba(255, 255, 255, 0.08); color: var(--text-white); margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1);"><i class="fas fa-edit"></i> Modifier le profil</button>
+                    <button id="logout-btn-app" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Se déconnecter</button>
                 </div>
             `;
 
@@ -816,7 +807,7 @@ async function loadOwnProfile(user) {
                     if (newUrl) {
                         // إعادة تحميل البروفايل
                         loadOwnProfile(currentUser);
-                        showToastNotification(null, 'تم التحديث', 'تم تغيير صورتك الشخصية بنجاح!', 'system');
+                        showToastNotification(null, 'Profil mis à jour', 'Votre photo de profil a été modifiée avec succès !', 'system');
                     } else {
                         // إزالة مؤشر التحميل
                         const overlay = avatarEl?.querySelector('.avatar-upload-overlay');
@@ -828,7 +819,7 @@ async function loadOwnProfile(user) {
         }
     } catch (err) {
         console.error("خطأ أثناء جلب الملف الشخصي:", err);
-        container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">حدث خطأ أثناء تحميل البيانات.</p>';
+        container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">Une erreur est survenue lors du chargement des données.</p>';
     }
 }
 
@@ -926,7 +917,7 @@ async function loadDiscoveryUsers(currentUser) {
         container.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; padding:40px 0; gap:12px;">
                 <div class="loading-spinner"></div>
-                <p style="color:var(--text-muted); font-size:13px;">جاري تحميل الأعضاء القريبين...</p>
+                <p style="color:var(--text-muted); font-size:13px;">Chargement des membres à proximité...</p>
             </div>
         `;
     }
@@ -948,7 +939,7 @@ async function loadDiscoveryUsers(currentUser) {
             container.innerHTML = `
                 <div style="display:flex; flex-direction:column; align-items:center; padding:50px 20px; gap:12px; text-align:center;">
                     <i class="fas fa-users" style="font-size:40px; color:var(--text-muted); opacity:0.4;"></i>
-                    <p style="color:var(--text-muted); font-size:14px;">لا يوجد أعضاء بعد.<br>كن أول من يدعو أصدقاءه!</p>
+                    <p style="color:var(--text-muted); font-size:14px;">Aucun membre pour le moment.<br>Soyez le premier à inviter vos amis !</p>
                 </div>
             `;
             return;
@@ -1004,7 +995,7 @@ async function loadDiscoveryUsers(currentUser) {
     } catch (err) {
         console.error("خطأ أثناء جلب الأعضاء:", err);
         debugLog("loadDiscoveryUsers: Error fetching profiles: " + err.message, true);
-        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:40px 0;">حدث خطأ أثناء تحميل الأعضاء.</p>`;
+        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:40px 0;">Une erreur est survenue lors du chargement des membres.</p>`;
     }
 }
 
@@ -1159,76 +1150,62 @@ function createUserCard(profile, index) {
     const bio = profile.bio || 'Je suis libre pour chat! 💬';
     const isOnline = onlineUsers.has(profile.user_id);
 
-
-
     // حساب المسافة بدقة مع الأيقونة
     let distanceTextHTML = '';
     if (currentUserProfile && currentUserProfile.latitude && currentUserProfile.longitude && profile.latitude && profile.longitude) {
         const dist = calculateDistance(currentUserProfile.latitude, currentUserProfile.longitude, profile.latitude, profile.longitude);
         if (dist !== null) {
-            const distValue = dist < 1 ? `${Math.round(dist * 1000)} متر` : `${dist.toFixed(1)} كلم`;
+            const distValue = dist < 1 ? `${Math.round(dist * 1000)} m` : `${dist.toFixed(1)} km`;
             distanceTextHTML = `<span style="display:inline-flex; align-items:center; gap:3px;"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px;"></i>${distValue}</span>`;
         }
     }
 
     const avatarContent = profile.avatar_url 
-        ? `<img src="${profile.avatar_url}" alt="${escapeHtml(profile.full_name || '')}" loading="lazy">`
+        ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="${escapeHtml(profile.full_name || '')}" class="user-avatar" loading="lazy">`
         : initial;
 
     const lastSeenTime = profile.last_seen || profile.created_at;
     const statusText = isOnline 
-        ? '<span style="color:#22c55e; font-weight:700;">متصل الآن</span>' 
+        ? '<span style="color:#22c55e; font-weight:700;">En ligne</span>' 
         : formatRelativeTime(lastSeenTime);
 
+    // محتوى الأفاتار: صورة أو حروف أولية
+    const avatarInner = profile.avatar_url
+        ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="${escapeHtml(profile.full_name || '')}">`
+        : `<div class="avatar-initials">${initial}</div>`;
+
+    // نص المسافة
+    const distBadgeHTML = distanceTextHTML
+        ? `<span class="distance-badge">${distanceTextHTML}</span>`
+        : `<span class="distance-badge"><i class="fas fa-location-dot"></i> ?</span>`;
+
     card.innerHTML = `
-        <!-- جهة اليسار: الاسم والوصف والمعلومات -->
-        <div class="card-left-panel">
-            <div class="user-name-row">
-                <span class="user-name">${escapeHtml(profile.full_name || 'مستخدم')}</span>
-                <span class="gender-age-pill ${genderClass}">
-                    <i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i> ${age !== '-' ? age : ''}
-                </span>
-                ${profile.is_vip ? '<i class="fas fa-gem card-vip-icon" title="عضو VIP"></i>' : ''}
-            </div>
-            <div class="user-bio-box">
-                <p class="user-bio">${escapeHtml(bio)}</p>
-            </div>
-        </div>
-
-        <!-- الوسط: صورة الشخص الدائرية وتحتها المسافة -->
-        <div class="card-center-panel">
-            <div class="user-avatar-wrapper ${genderClass} ${profile.is_vip ? 'vip-ring' : ''}">
-                <div class="user-avatar-inner">
-                    ${avatarContent}
+        <!-- قسم المعلومات: أفاتار + نص -->
+        <div class="card-main">
+            <div class="avatar-section">
+                <div class="avatar-ring">
+                    ${avatarInner}
+                    ${isOnline ? '<span class="online-status"></span>' : ''}
                 </div>
-                ${isOnline ? '<span class="online-dot"></span>' : ''}
+                ${distBadgeHTML}
             </div>
-            <div class="card-distance-row">
-                <span class="distance-text">${distanceTextHTML || '<span dir="ltr"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px; margin-right:3px;"></i>?</span>'}</span>
+            <div class="info-section">
+                <div class="name-row">
+                    <h3>${escapeHtml(profile.full_name || 'Utilisateur')}</h3>
+                    <span class="age-tag">${age !== '-' ? age : '?'} <i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i></span>
+                    ${profile.is_vip ? '<i class="fas fa-gem card-vip-icon" title="VIP" style="color:#fbbf24;font-size:13px;"></i>' : ''}
+                </div>
+                <p class="bio-text">${escapeHtml(bio)}</p>
+                <span class="time-ago ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
             </div>
         </div>
 
-        <!-- جهة اليمين: حالة الاتصال والدردشة والإعجاب والمفضلة -->
-        <div class="card-right-panel">
-            <div class="card-right-stats">
-                <span class="card-status-text ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
-            </div>
-            <div class="card-top-actions-row" style="display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; width: 100%;">
-                <button class="card-action-btn chat-btn" title="دردشة" style="margin: 0;">
-                    <i class="far fa-comment"></i>
-                </button>
-                <button class="card-action-btn ignore-btn" title="تجاهل" style="margin: 0;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="card-actions-row" style="display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; width: 100%;">
-                <button class="card-action-btn like-btn" title="إعجاب" style="margin: 0;">
-                    <i class="far fa-heart"></i>
-                </button>
-                <button class="card-action-btn favorite-btn" title="المفضلة" style="margin: 0;">
-                    <i class="far fa-star"></i>
-                </button>
-            </div>
+        <!-- شبكة الأزرار 2×2 -->
+        <div class="card-actions-grid">
+            <button class="action-btn chat chat-btn" title="Chat"><i class="far fa-comment"></i></button>
+            <button class="action-btn close ignore-btn" title="Ignorer"><i class="fas fa-times"></i></button>
+            <button class="action-btn heart like-btn" title="J'aime"><i class="far fa-heart"></i></button>
+            <button class="action-btn star favorite-btn" title="Favoris"><i class="far fa-star"></i></button>
         </div>
     `;
 
@@ -1254,8 +1231,8 @@ function createUserCard(profile, index) {
 
                 showToastNotification(
                     { name: profile.full_name, gender: profile.gender, avatar_url: profile.avatar_url, user_id: profile.user_id },
-                    profile.full_name || 'مستخدم',
-                    'لقد أرسلت إعجاباً!',
+                    profile.full_name || 'Utilisateur',
+                    "Vous avez envoyé un j'aime !",
                     'like'
                 );
             } else {
@@ -1278,7 +1255,7 @@ function createUserCard(profile, index) {
     if (ignoreBtn) {
         ignoreBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
-            if (confirm(`هل أنت متأكد أنك لا تريد رؤية هذا المستخدم (${profile.full_name || 'هذا الحساب'})؟`)) {
+            if (confirm(`Êtes-vous sûr de ne plus vouloir voir cet utilisateur (${profile.full_name || 'ce compte'}) ?`)) {
                 await blockUser(profile.user_id);
             }
         });
@@ -1312,7 +1289,7 @@ function openUserModal(profile) {
 
     const age = calculateAge(profile.dob);
     const genderClass = profile.gender === 'female' ? 'female' : 'male';
-    const genderText = profile.gender === 'male' ? 'ذكر' : profile.gender === 'female' ? 'أنثى' : '-';
+    const genderText = profile.gender === 'male' ? 'Homme' : profile.gender === 'female' ? 'Femme' : '-';
     const genderSymbol = profile.gender === 'female' ? '♀' : '♂';
     const initial = (profile.full_name || '?').charAt(0).toUpperCase();
 
@@ -1322,9 +1299,9 @@ function openUserModal(profile) {
         const dist = calculateDistance(currentUserProfile.latitude, currentUserProfile.longitude, profile.latitude, profile.longitude);
         if (dist !== null) {
             if (dist < 1) {
-                distanceText = `على بعد ${Math.round(dist * 1000)} متر`;
+                distanceText = `à ${Math.round(dist * 1000)} m`;
             } else {
-                distanceText = `على بعد ${dist.toFixed(1)} كم`;
+                distanceText = `à ${dist.toFixed(1)} km`;
             }
         }
     }
@@ -1334,7 +1311,7 @@ function openUserModal(profile) {
     if (profile.height) {
         extraBoxes += `
             <div class="modal-detail-box">
-                <span class="detail-label-modal"><i class="fas fa-arrows-alt-v" style="color:var(--color-primary); margin-left:4px;"></i>الطول</span>
+                <span class="detail-label-modal"><i class="fas fa-arrows-alt-v" style="color:var(--color-primary); margin-right:4px;"></i>Taille</span>
                 <span class="detail-value-modal">${escapeHtml(profile.height)}</span>
             </div>
         `;
@@ -1342,7 +1319,7 @@ function openUserModal(profile) {
     if (profile.residence) {
         extraBoxes += `
             <div class="modal-detail-box">
-                <span class="detail-label-modal"><i class="fas fa-home" style="color:var(--color-primary); margin-left:4px;"></i>الإقامة</span>
+                <span class="detail-label-modal"><i class="fas fa-home" style="color:var(--color-primary); margin-right:4px;"></i>Résidence</span>
                 <span class="detail-value-modal">${escapeHtml(profile.residence)}</span>
             </div>
         `;
@@ -1350,7 +1327,7 @@ function openUserModal(profile) {
     if (profile.profession) {
         extraBoxes += `
             <div class="modal-detail-box">
-                <span class="detail-label-modal"><i class="fas fa-briefcase" style="color:var(--color-primary); margin-left:4px;"></i>المهنة</span>
+                <span class="detail-label-modal"><i class="fas fa-briefcase" style="color:var(--color-primary); margin-right:4px;"></i>Profession</span>
                 <span class="detail-value-modal">${escapeHtml(profile.profession)}</span>
             </div>
         `;
@@ -1358,7 +1335,7 @@ function openUserModal(profile) {
     if (profile.company) {
         extraBoxes += `
             <div class="modal-detail-box">
-                <span class="detail-label-modal"><i class="fas fa-building" style="color:var(--color-primary); margin-left:4px;"></i>المؤسسة</span>
+                <span class="detail-label-modal"><i class="fas fa-building" style="color:var(--color-primary); margin-right:4px;"></i>Entreprise</span>
                 <span class="detail-value-modal">${escapeHtml(profile.company)}</span>
             </div>
         `;
@@ -1366,7 +1343,7 @@ function openUserModal(profile) {
     if (profile.income) {
         extraBoxes += `
             <div class="modal-detail-box">
-                <span class="detail-label-modal"><i class="fas fa-wallet" style="color:var(--color-primary); margin-left:4px;"></i>الدخل</span>
+                <span class="detail-label-modal"><i class="fas fa-wallet" style="color:var(--color-primary); margin-right:4px;"></i>Revenu</span>
                 <span class="detail-value-modal">${escapeHtml(profile.income)}</span>
             </div>
         `;
@@ -1374,7 +1351,7 @@ function openUserModal(profile) {
     if (profile.body_type) {
         extraBoxes += `
             <div class="modal-detail-box">
-                <span class="detail-label-modal"><i class="fas fa-child" style="color:var(--color-primary); margin-left:4px;"></i>البنية</span>
+                <span class="detail-label-modal"><i class="fas fa-child" style="color:var(--color-primary); margin-right:4px;"></i>Morphologie</span>
                 <span class="detail-value-modal">${escapeHtml(profile.body_type)}</span>
             </div>
         `;
@@ -1382,7 +1359,7 @@ function openUserModal(profile) {
     if (profile.ethnicity) {
         extraBoxes += `
             <div class="modal-detail-box">
-                <span class="detail-label-modal"><i class="fas fa-globe" style="color:var(--color-primary); margin-left:4px;"></i>الأصل</span>
+                <span class="detail-label-modal"><i class="fas fa-globe" style="color:var(--color-primary); margin-right:4px;"></i>Origine</span>
                 <span class="detail-value-modal">${escapeHtml(profile.ethnicity)}</span>
             </div>
         `;
@@ -1390,7 +1367,7 @@ function openUserModal(profile) {
     if (profile.hair_color) {
         extraBoxes += `
             <div class="modal-detail-box">
-                <span class="detail-label-modal"><i class="fas fa-cut" style="color:var(--color-primary); margin-left:4px;"></i>الشعر</span>
+                <span class="detail-label-modal"><i class="fas fa-cut" style="color:var(--color-primary); margin-right:4px;"></i>Cheveux</span>
                 <span class="detail-value-modal">${escapeHtml(profile.hair_color)}</span>
             </div>
         `;
@@ -1411,21 +1388,21 @@ function openUserModal(profile) {
             <!-- الصورة الكبيرة -->
             <div style="width:100%; height:380px; position:relative; background: ${profile.gender === 'female' ? 'linear-gradient(135deg, #f97316, #ec4899)' : 'linear-gradient(135deg, #0ea5e9, #6366f1)'}; border-radius:24px 24px 0 0; overflow:hidden;">
                 <!-- خلفية ضبابية إذا كانت هناك صورة -->
-                ${profile.avatar_url ? `<img src="${profile.avatar_url}" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; filter:blur(20px) brightness(0.5); z-index:0;" loading="lazy">` : ''}
+                ${profile.avatar_url ? `<img src="${sanitizeUrl(profile.avatar_url)}" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; filter:blur(20px) brightness(0.5); z-index:0;" loading="lazy">` : ''}
                 
                 <!-- دائرة الصورة المركزية مثل القصص (Stories) -->
                 <div style="position:absolute; top:45%; left:50%; transform:translate(-50%, -50%); z-index:1; width:140px; height:140px; border-radius:50%; border:4px solid ${profile.gender === 'female' ? '#ff3399' : '#1a75ff'}; box-shadow:0 0 25px rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; background:#1c1c1e; overflow:hidden;">
-                    ${profile.avatar_url ? `<img src="${profile.avatar_url}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">` : `<span style="font-size:60px; color:white; font-weight:bold;">${initial}</span>`}
+                    ${profile.avatar_url ? `<img src="${sanitizeUrl(profile.avatar_url)}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">` : `<span style="font-size:60px; color:white; font-weight:bold;">${initial}</span>`}
                 </div>
 
                 <!-- طبقة التدرج السفلى لاسم المستخدم -->
                 <div style="position:absolute; bottom:0; left:0; right:0; height:150px; background:linear-gradient(to top, #1c1c1e, transparent); padding:20px; display:flex; flex-direction:column; justify-content:flex-end; z-index:2;">
                     <div style="display:flex; align-items:center; gap:8px;" dir="ltr">
                         <h2 style="margin:0; font-size:26px; font-weight:800; color:white; line-height:1.2;">
-                            ${escapeHtml(profile.full_name || 'مستخدم')}
+                            ${escapeHtml(profile.full_name || 'Utilisateur')}
                         </h2>
                         <span style="font-size:22px; font-weight:400; color:#e4e4e7; margin-left:6px;">${age !== '-' ? age : ''}</span>
-                        ${profile.is_vip ? '<i class="fas fa-gem" style="color: #fbbf24; font-size: 18px;" title="عضو VIP"></i>' : ''}
+                        ${profile.is_vip ? '<i class="fas fa-gem" style="color: #fbbf24; font-size: 18px;" title="Membre VIP"></i>' : ''}
                     </div>
                     <div style="display:flex; align-items:center; gap:10px; margin-top:6px;">
                         <span class="gender-age-pill ${genderClass}" style="box-shadow:none; padding:2px 8px; font-size:11px;">
@@ -1440,29 +1417,29 @@ function openUserModal(profile) {
             <div style="padding:20px;">
             <div class="modal-details-grid">
                 <div class="modal-detail-box">
-                    <span class="detail-label-modal">الجنس</span>
+                    <span class="detail-label-modal">Genre</span>
                     <span class="detail-value-modal">${genderText}</span>
                 </div>
                 <div class="modal-detail-box">
-                    <span class="detail-label-modal">العمر</span>
-                    <span class="detail-value-modal">${age !== '-' ? age : '-'}</span>
+                    <span class="detail-label-modal">Âge</span>
+                    <span class="detail-value-modal">${age !== '-' ? age + ' ans' : '-'}</span>
                 </div>
                 ${extraBoxes}
             </div>
             <div class="modal-bio-box">
-                <h4><i class="fas fa-comment-dots"></i> نبذة شخصية</h4>
-                <p>${profile.bio || 'هذا المستخدم لم يكتب نبذة شخصية بعد.'}</p>
+                <h4><i class="fas fa-comment-dots" style="margin-right: 6px;"></i> À propos de moi</h4>
+                <p>${escapeHtml(profile.bio || "Cet utilisateur n'a pas encore rédigé de biographie.")}</p>
             </div>
             <button class="btn-chat-start" id="btn-start-chat">
                 <i class="fas fa-paper-plane"></i>
-                بدء محادثة
+                Démarrer un chat
             </button>
             <div class="modal-action-row">
                 <button class="btn-modal-action" id="btn-modal-block">
-                    <i class="fas fa-ban"></i> حظر
+                    <i class="fas fa-ban"></i> Bloquer
                 </button>
                 <button class="btn-modal-action danger" id="btn-modal-report">
-                    <i class="fas fa-flag"></i> إبلاغ
+                    <i class="fas fa-flag"></i> Signaler
                 </button>
             </div>
             </div> <!-- نهاية حاوية التفاصيل -->
@@ -1484,7 +1461,7 @@ function openUserModal(profile) {
 
     // زر الحظر
     document.getElementById('btn-modal-block').addEventListener('click', async () => {
-        if (confirm(`هل تريد حظر ${profile.full_name || 'هذا المستخدم'}؟\nلن يظهر في قائمتك ولن تستطيع التواصل معه.`)) {
+        if (confirm(`Voulez-vous bloquer ${profile.full_name || 'cet utilisateur'} ?\nIl ne figurera plus dans votre liste et vous ne pourrez plus communiquer avec lui.`)) {
             await blockUser(profile.user_id);
             modal.remove();
         }
@@ -1519,13 +1496,13 @@ async function openChatWindow(receiverProfile) {
     const chatStatusEl = document.getElementById('chat-user-status');
     const chatWindow = document.getElementById('chat-window');
 
-    if (chatNameEl) chatNameEl.textContent = receiverProfile.full_name || 'مستخدم';
+    if (chatNameEl) chatNameEl.textContent = receiverProfile.full_name || 'Utilisateur';
     if (chatAvatarEl) {
         const initial = (receiverProfile.full_name || '?').charAt(0).toUpperCase();
         const genderClass = receiverProfile.gender === 'female' ? 'female' : 'male';
         chatAvatarEl.className = `chat-user-avatar ${genderClass}`;
         if (receiverProfile.avatar_url) {
-            chatAvatarEl.innerHTML = `<img src="${receiverProfile.avatar_url}" alt="" loading="lazy">`;
+            chatAvatarEl.innerHTML = `<img src="${sanitizeUrl(receiverProfile.avatar_url)}" alt="" loading="lazy">`;
         } else {
             chatAvatarEl.textContent = initial;
         }
@@ -1533,12 +1510,12 @@ async function openChatWindow(receiverProfile) {
     if (chatStatusEl) {
         const isOnline = onlineUsers.has(receiverProfile.user_id);
         if (isOnline) {
-            chatStatusEl.textContent = 'متصل الآن';
+            chatStatusEl.textContent = 'En ligne';
             chatStatusEl.style.color = '#22c55e';
             lastSeenTimeMap.set(receiverProfile.user_id, new Date().toISOString());
         } else {
             const lastSeen = lastSeenTimeMap.get(receiverProfile.user_id) || receiverProfile.last_seen || receiverProfile.created_at;
-            chatStatusEl.textContent = lastSeen ? `آخر ظهور: ${formatRelativeTime(lastSeen)}` : 'غير متصل';
+            chatStatusEl.textContent = lastSeen ? `Dernière connexion: ${formatRelativeTime(lastSeen)}` : 'Hors ligne';
             chatStatusEl.style.color = 'var(--text-muted)';
         }
     }
@@ -1551,7 +1528,7 @@ async function openChatWindow(receiverProfile) {
     if (messagesContainer) {
         messagesContainer.innerHTML = `
             <div style="display:flex; justify-content:center; align-items:center; height:100%; color:var(--text-muted);">
-                <i class="fas fa-spinner fa-spin" style="margin-left:8px;"></i> جاري تحميل الرسائل...
+                <i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i> Chargement des messages...
             </div>
         `;
     }
@@ -1605,7 +1582,7 @@ async function loadChatMessages() {
             container.innerHTML = `
                 <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:var(--text-muted); gap:8px;">
                     <i class="far fa-comments" style="font-size:24px; opacity:0.5;"></i>
-                    <p style="font-size:13px;">لا توجد رسائل سابقة. ابدأ المحادثة الآن!</p>
+                    <p style="font-size:13px;">Aucun message. Démarrer la conversation maintenant !</p>
                 </div>
             `;
         }
@@ -1615,7 +1592,7 @@ async function loadChatMessages() {
 
     } catch (err) {
         console.error("خطأ أثناء جلب الرسائل:", err);
-        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:20px;">فشل تحميل الرسائل.</p>`;
+        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:20px;">Échec du chargement des messages.</p>`;
     }
 }
 
@@ -1659,7 +1636,7 @@ async function sendChatMessage() {
 
     } catch (err) {
         console.error("خطأ أثناء إرسال الرسالة:", err);
-        alert("فشل إرسال الرسالة: " + err.message);
+        alert("Échec de l'envoi du message : " + err.message);
     }
 }
 
@@ -1741,11 +1718,11 @@ function appendMessageBubble(msg) {
     if (msgType === 'image' && msg.media_url) {
         bubble.className = `msg-bubble ${isMyMsg ? 'sent' : 'received'} image-msg`;
         bubble.innerHTML = `
-            <img src="${msg.media_url}" alt="صورة" loading="lazy">
+            <img src="${sanitizeUrl(msg.media_url)}" alt="image" loading="lazy">
             <span class="msg-time">${timeStr} ${readBadge}</span>
         `;
         bubble.querySelector('img').addEventListener('click', () => {
-            openImageLightbox(msg.media_url);
+            openImageLightbox(sanitizeUrl(msg.media_url));
         });
 
     // === رسالة صوتية ===
@@ -1760,7 +1737,7 @@ function appendMessageBubble(msg) {
         const durationText = durationMatch ? durationMatch[1] : '00:00';
         bubble.innerHTML = `
             <div class="audio-player-wrapper">
-                <button class="audio-play-btn" data-url="${msg.media_url}" data-playing="false">
+                <button class="audio-play-btn" data-url="${sanitizeUrl(msg.media_url)}" data-playing="false">
                     <i class="fas fa-play"></i>
                 </button>
                 <div class="audio-waveform">${waveBars}</div>
@@ -1770,7 +1747,7 @@ function appendMessageBubble(msg) {
         `;
         const playBtn = bubble.querySelector('.audio-play-btn');
         playBtn.addEventListener('click', () => {
-            playAudioMessage(playBtn, msg.media_url, bubble);
+            playAudioMessage(playBtn, sanitizeUrl(msg.media_url), bubble);
         });
 
     // === رسالة نصية ===
@@ -1888,7 +1865,7 @@ async function loadActiveChats() {
     container.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; padding:40px 0; gap:12px;">
             <div class="loading-spinner"></div>
-            <p style="color:var(--text-muted); font-size:13px;">جاري تحميل المحادثات...</p>
+            <p style="color:var(--text-muted); font-size:13px;">Chargement des discussions...</p>
         </div>
     `;
 
@@ -1906,7 +1883,7 @@ async function loadActiveChats() {
             container.innerHTML = `
                 <div class="empty-state" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; text-align:center;">
                     <i class="fas fa-comments" style="font-size:40px; color:var(--text-muted); opacity:0.4; margin-bottom:12px;"></i>
-                    <p style="color:var(--text-muted); font-size:14px;">لا توجد محادثات نشطة حالياً.<br>ابدأ الدردشة مع أشخاص قريبين منك!</p>
+                    <p style="color:var(--text-muted); font-size:14px;">Aucune discussion active pour le moment.<br>Commencez à discuter avec des personnes à proximité !</p>
                 </div>
             `;
             return;
@@ -1931,7 +1908,7 @@ async function loadActiveChats() {
             container.innerHTML = `
                 <div class="empty-state" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; text-align:center;">
                     <i class="fas fa-comments" style="font-size:40px; color:var(--text-muted); opacity:0.4; margin-bottom:12px;"></i>
-                    <p style="color:var(--text-muted); font-size:14px;">لا توجد محادثات نشطة حالياً.<br>ابدأ الدردشة مع أشخاص قريبين منك!</p>
+                    <p style="color:var(--text-muted); font-size:14px;">Aucune discussion active pour le moment.<br>Commencez à discuter avec des personnes à proximité !</p>
                 </div>
             `;
             return;
@@ -1987,30 +1964,30 @@ async function loadActiveChats() {
 
                 const lastSeenTime = profile.last_seen || profile.created_at;
                 let statusText = isOnline 
-                    ? '<span style="color:#22c55e; font-weight:700;">متصل الآن</span>' 
-                    : `آخر ظهور: ${formatRelativeTime(lastSeenTime).replace("منذ ", "")}`;
+                    ? '<span style="color:#22c55e; font-weight:700;">En ligne</span>' 
+                    : `Connexion : ${formatRelativeTime(lastSeenTime)}`;
                 
                 // إذا كان النص طويلا، يمكننا التخلي عن كلمة "آخر ظهور:" لتوفير المساحة
                 if (!isOnline && distanceTextHTML) {
-                    statusText = `منذ ${formatRelativeTime(lastSeenTime)}`;
+                    statusText = `${formatRelativeTime(lastSeenTime)}`;
                 }
 
                 const rightMetaText = distanceTextHTML 
-                    ? `<span dir="rtl" style="display:inline-flex; align-items:center; gap:6px; font-size:11px;">${statusText} <span style="opacity:0.3;">•</span> <span dir="ltr">${distanceTextHTML}</span></span>` 
+                    ? `<span dir="ltr" style="display:inline-flex; align-items:center; gap:6px; font-size:11px;">${statusText} <span style="opacity:0.3;">•</span> <span>${distanceTextHTML}</span></span>` 
                     : `<span style="font-size:11px;">${statusText}</span>`;
 
                 item.innerHTML = `
                     <div class="chat-item-avatar-wrapper" style="position: relative; flex-shrink: 0;">
                         <div class="chat-item-avatar ${genderClass}">
-                            ${profile.avatar_url ? `<img src="${profile.avatar_url}" alt="" loading="lazy">` : initial}
+                            ${profile.avatar_url ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="" loading="lazy">` : initial}
                         </div>
                         ${isOnline ? '<span class="online-dot"></span>' : ''}
                     </div>
                     <div class="chat-item-details">
                         <div class="chat-item-name-row">
                             <span class="chat-item-name">
-                                ${profile.full_name || 'مستخدم'}
-                                ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 10px; margin-right: 4px;" title="عضو VIP"></i>' : ''}
+                                ${escapeHtml(profile.full_name || 'Utilisateur')}
+                                ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 10px; margin-right: 4px;" title="Membre VIP"></i>' : ''}
                             </span>
                         </div>
                         <div class="chat-item-badge-row" style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
@@ -2033,14 +2010,14 @@ async function loadActiveChats() {
             container.innerHTML = `
                 <div class="empty-state" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; text-align:center;">
                     <i class="fas fa-comments" style="font-size:40px; color:var(--text-muted); opacity:0.4; margin-bottom:12px;"></i>
-                    <p style="color:var(--text-muted); font-size:14px;">لا توجد محادثات نشطة حالياً.<br>ابدأ الدردشة مع أشخاص قريبين منك!</p>
+                    <p style="color:var(--text-muted); font-size:14px;">Aucune discussion active pour le moment.<br>Commencez à discuter avec des personnes à proximité !</p>
                 </div>
             `;
         }
 
     } catch (err) {
         console.error("خطأ أثناء جلب قائمة المحادثات:", err);
-        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:20px;">فشل تحميل المحادثات.</p>`;
+        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:20px;">Échec du chargement des discussions.</p>`;
     }
 }
 
@@ -2070,7 +2047,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (tiktokBtn) {
         tiktokBtn.addEventListener('click', () => {
-            alert('تسجيل الدخول عبر TikTok غير مدعوم مباشرة من Supabase. خاصك تفعّل OAuth مخصص من لوحة التحكم.');
+            alert("La connexion via TikTok n'est pas prise en charge directement par Supabase. Vous devez configurer un fournisseur OAuth personnalisé dans la console Supabase.");
         });
     }
 
@@ -2122,14 +2099,14 @@ document.addEventListener('DOMContentLoaded', () => {
             menu.className = 'chat-dropdown-menu';
             menu.innerHTML = `
                 <button class="dropdown-item" id="dd-view-profile">
-                    <i class="fas fa-user"></i> الملف الشخصي
+                    <i class="fas fa-user" style="margin-right:8px;"></i> Voir le profil
                 </button>
                 <div class="dropdown-divider"></div>
                 <button class="dropdown-item danger" id="dd-block-user">
-                    <i class="fas fa-ban"></i> حظر هذا المستخدم
+                    <i class="fas fa-ban" style="margin-right:8px;"></i> Bloquer cet utilisateur
                 </button>
                 <button class="dropdown-item danger" id="dd-report-user">
-                    <i class="fas fa-flag"></i> إبلاغ
+                    <i class="fas fa-flag" style="margin-right:8px;"></i> Signaler
                 </button>
             `;
             chatMenuBtn.parentElement.style.position = 'relative';
@@ -2142,7 +2119,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             menu.querySelector('#dd-block-user').addEventListener('click', async () => {
                 menu.remove();
-                if (activeChatUserProfile && confirm(`هل تريد حظر ${activeChatUserProfile.full_name || 'هذا المستخدم'}؟`)) {
+                if (activeChatUserProfile && confirm(`Voulez-vous bloquer ${activeChatUserProfile.full_name || 'cet utilisateur'} ?`)) {
                     await blockUser(activeChatUserId);
                     closeChatWindow();
                 }
@@ -2331,7 +2308,7 @@ async function uploadAndSendImage(file) {
 
     // التحقق من حجم الملف (الحد الأقصى 5MB)
     if (file.size > 5 * 1024 * 1024) {
-        alert('حجم الصورة كبير! الحد الأقصى 5 ميغابايت.');
+        alert("La taille de l'image est trop grande ! Le maximum autorisé est de 5 Mo.");
         return;
     }
 
@@ -2344,7 +2321,7 @@ async function uploadAndSendImage(file) {
         <div style="width:200px; height:150px; background:rgba(255,255,255,0.05); border-radius:12px; display:flex; align-items:center; justify-content:center;">
             <i class="fas fa-spinner fa-spin" style="font-size:24px; color:var(--color-primary);"></i>
         </div>
-        <span class="msg-time">جاري الرفع...</span>
+        <span class="msg-time">Envoi en cours...</span>
     `;
     container.appendChild(tempBubble);
     container.scrollTop = container.scrollHeight;
@@ -2377,7 +2354,7 @@ async function uploadAndSendImage(file) {
             .insert([{
                 sender_id: currentUser.id,
                 receiver_id: activeChatUserId,
-                content: '📷 صورة',
+                content: '📷 Photo',
                 type: 'image',
                 media_url: publicUrl
             }]);
@@ -2390,7 +2367,7 @@ async function uploadAndSendImage(file) {
     } catch (err) {
         console.error('خطأ أثناء رفع الصورة:', err);
         tempBubble.remove();
-        alert('فشل رفع الصورة: ' + err.message);
+        alert("Échec de l'envoi de la photo : " + err.message);
     }
 }
 
@@ -2400,7 +2377,7 @@ function openImageLightbox(imageUrl) {
     lightbox.className = 'image-lightbox';
     lightbox.innerHTML = `
         <button class="lightbox-close"><i class="fas fa-times"></i></button>
-        <img src="${imageUrl}" alt="صورة">
+        <img src="${sanitizeUrl(imageUrl)}" alt="image">
     `;
     document.body.appendChild(lightbox);
 
@@ -2463,7 +2440,7 @@ async function startAudioRecording() {
 
     } catch (err) {
         console.error('فشل الوصول للميكروفون:', err);
-        alert('يرجى السماح بالوصول للميكروفون!');
+        alert("Veuillez autoriser l'accès au microphone !");
     }
 }
 
@@ -2535,7 +2512,7 @@ async function uploadAndSendAudio(audioBlob, durationSec) {
     tempBubble.innerHTML = `
         <div class="audio-player-wrapper">
             <div class="audio-play-btn"><i class="fas fa-spinner fa-spin"></i></div>
-            <span style="color:rgba(255,255,255,0.5); font-size:13px;">جاري الرفع...</span>
+            <span style="color:rgba(255,255,255,0.5); font-size:13px;">Envoi en cours...</span>
         </div>
     `;
     container.appendChild(tempBubble);
@@ -2581,7 +2558,7 @@ async function uploadAndSendAudio(audioBlob, durationSec) {
     } catch (err) {
         console.error('خطأ أثناء رفع الملف الصوتي:', err);
         tempBubble.remove();
-        alert('فشل رفع الملف الصوتي: ' + err.message);
+        alert("Échec de l'envoi du fichier audio : " + err.message);
     }
 }
 
@@ -2637,13 +2614,13 @@ async function blockUser(userId) {
         if (currentUser) loadDiscoveryUsers(currentUser);
         loadActiveChats();
         
-        showToastNotification(null, 'تم الحظر', 'تم حظر هذا المستخدم بنجاح', 'system');
+        showToastNotification(null, 'Bloqué', 'Cet utilisateur a été bloqué avec succès.', 'system');
     } catch (err) {
         console.error('خطأ أثناء الحظر:', err);
         if (err.code === '42P01') {
-            alert('فشل الحظر:\nيرجى تشغيل كود SQL في Supabase أولاً لإنشاء جدول blocks!');
+            alert('Échec du blocage :\nVeuillez d\'abord créer la table blocks dans Supabase !');
         } else {
-            alert('فشل الحظر: ' + err.message);
+            alert('Échec du blocage : ' + err.message);
         }
     }
 }
@@ -2667,9 +2644,9 @@ async function unblockUser(userId) {
     } catch (err) {
         console.error('خطأ أثناء إلغاء الحظر:', err);
         if (err.code === '42P01') {
-            alert('فشل إلغاء الحظر:\nيرجى تشغيل كود SQL في Supabase أولاً لإنشاء جدول blocks!');
+            alert('Échec du déblocage :\nVeuillez d\'abord créer la table blocks dans Supabase !');
         } else {
-            alert('فشل إلغاء الحظر: ' + err.message);
+            alert('Échec du déblocage : ' + err.message);
         }
     }
 }
@@ -2683,26 +2660,26 @@ function openReportModal(profile) {
     overlay.className = 'report-modal-overlay';
 
     const reasons = [
-        'محتوى مسيء أو مضايقة',
-        'ملف شخصي مزيف',
-        'رسائل غير مرغوب فيها (Spam)',
-        'محتوى غير لائق',
-        'احتيال أو نصب',
-        'سبب آخر'
+        'Contenu offensant ou harcèlement',
+        'Faux profil',
+        'Messages indésirables (Spam)',
+        'Contenu inapproprié',
+        'Fraude ou arnaque',
+        'Autre raison'
     ];
 
     overlay.innerHTML = `
         <div class="report-modal">
-            <h3><i class="fas fa-flag" style="color:#ef4444; margin-left:8px;"></i> إبلاغ عن ${escapeHtml(profile.full_name || 'مستخدم')}</h3>
+            <h3><i class="fas fa-flag" style="color:#ef4444; margin-right:8px;"></i> Signaler ${escapeHtml(profile.full_name || 'Utilisateur')}</h3>
             <div class="report-reason-list">
                 ${reasons.map((r, i) => `<button class="report-reason-btn" data-reason="${escapeHtml(r)}">${r}</button>`).join('')}
             </div>
-            <textarea class="report-details-input" placeholder="أضف تفاصيل إضافية (اختياري)..."></textarea>
+            <textarea class="report-details-input" placeholder="Ajouter des détails supplémentaires (optionnel)..."></textarea>
             <div class="report-actions">
                 <button class="btn-report-submit" id="submit-report-btn">
-                    <i class="fas fa-paper-plane" style="margin-left:6px;"></i> إرسال البلاغ
+                    <i class="fas fa-paper-plane" style="margin-right:6px;"></i> Envoyer le signalement
                 </button>
-                <button class="btn-report-cancel" id="cancel-report-btn">إلغاء</button>
+                <button class="btn-report-cancel" id="cancel-report-btn">Annuler</button>
             </div>
         </div>
     `;
@@ -2723,7 +2700,7 @@ function openReportModal(profile) {
     // إرسال البلاغ
     overlay.querySelector('#submit-report-btn').addEventListener('click', async () => {
         if (!selectedReason) {
-            alert('يرجى اختيار سبب الإبلاغ!');
+            alert('Veuillez sélectionner un motif de signalement !');
             return;
         }
         const details = overlay.querySelector('.report-details-input').value.trim();
@@ -2741,13 +2718,13 @@ function openReportModal(profile) {
             if (error) throw error;
             
             overlay.remove();
-            showToastNotification(null, 'تم الإبلاغ', 'شكراً! سيتم مراجعة البلاغ قريباً', 'system');
+            showToastNotification(null, 'Signalement envoyé', 'Merci ! Le signalement sera examiné prochainement.', 'system');
         } catch (err) {
             console.error('خطأ أثناء الإبلاغ:', err);
             if (err.code === '42P01') {
-                alert('فشل إرسال البلاغ:\nيرجى تشغيل كود SQL في Supabase أولاً لإنشاء جدول reports!');
+                alert('Échec de l\'envoi du signalement :\nVeuillez d\'abord créer la table reports dans Supabase !');
             } else {
-                alert('فشل إرسال البلاغ: ' + err.message);
+                alert('Échec de l\'envoi du signalement : ' + err.message);
             }
         }
     });
@@ -2796,7 +2773,7 @@ function initGlobalMessageNotifier() {
                     .limit(1);
                 
                 const sender = senderProfiles && senderProfiles.length > 0 ? senderProfiles[0] : null;
-                const senderName = sender ? sender.full_name : 'مستخدم';
+                const senderName = sender ? sender.full_name : 'Utilisateur';
                 const senderGender = sender ? sender.gender : 'male';
                 const senderAvatar = sender ? sender.avatar_url : null;
 
@@ -2804,7 +2781,7 @@ function initGlobalMessageNotifier() {
                 showToastNotification(
                     { name: senderName, gender: senderGender, avatar_url: senderAvatar, user_id: newMsg.sender_id },
                     senderName,
-                    newMsg.content || '📷 صورة',
+                    newMsg.content || '📷 Photo',
                     'message'
                 );
 
@@ -2903,7 +2880,7 @@ function showToastNotification(senderInfo, title, message, type) {
         const initial = (senderInfo.name || '?').charAt(0).toUpperCase();
         const genderClass = senderInfo.gender === 'female' ? 'female' : 'male';
         if (senderInfo.avatar_url) {
-            avatarHtml = `<div class="toast-avatar ${genderClass}"><img src="${senderInfo.avatar_url}" alt=""></div>`;
+            avatarHtml = `<div class="toast-avatar ${genderClass}"><img src="${sanitizeUrl(senderInfo.avatar_url)}" alt=""></div>`;
         } else {
             avatarHtml = `<div class="toast-avatar ${genderClass}">${initial}</div>`;
         }
@@ -2915,7 +2892,7 @@ function showToastNotification(senderInfo, title, message, type) {
             <div class="toast-name">${escapeHtml(title)}</div>
             <div class="toast-message">${escapeHtml(message)}</div>
         </div>
-        <span class="toast-time">الآن</span>
+        <span class="toast-time">À l'instant</span>
     `;
 
     // عند النقر على الـ toast
@@ -3025,9 +3002,9 @@ async function uploadAvatar(file) {
     } catch (err) {
         console.error('خطأ أثناء رفع الصورة الشخصية:', err);
         if (err.code === '42703' || (err.message && err.message.includes('avatar_url'))) {
-            alert('فشل رفع الصورة:\nيرجى تشغيل كود SQL في Supabase أولاً لإضافة عمود avatar_url لجدول profiles!');
+            alert('Échec du chargement de l\'avatar :\nVeuillez d\'abord exécuter le script SQL dans Supabase pour ajouter la colonne avatar_url à la table profiles !');
         } else {
-            alert('فشل رفع الصورة: ' + err.message);
+            alert('Échec du chargement de l\'avatar : ' + err.message);
         }
         return null;
     }
@@ -3036,7 +3013,7 @@ async function uploadAvatar(file) {
 // دالة مساعدة لعرض الأفاتار (صورة أو حرف)
 function getAvatarHtml(profile, sizeClass = '') {
     if (profile && profile.avatar_url) {
-        return `<img src="${profile.avatar_url}" alt="${escapeHtml(profile.full_name || '')}" loading="lazy">`;
+        return `<img src="${sanitizeUrl(profile.avatar_url)}" alt="${escapeHtml(profile.full_name || '')}" loading="lazy">`;
     }
     return (profile && profile.full_name ? profile.full_name : '?').charAt(0).toUpperCase();
 }
@@ -3047,11 +3024,11 @@ function getAvatarHtml(profile, sizeClass = '') {
 
 async function upgradeToVIP() {
     if (!currentUser) {
-        alert("يرجى تسجيل الدخول أولاً!");
+        alert("Veuillez vous connecter d'abord !");
         return;
     }
 
-    if (!confirm("هل تريد الاشتراك في العضوية المميزة HayMoi VIP؟\nستحصل على شارة 💎 بجانب اسمك وتظهر في مقدمة قائمة الأعضاء!")) {
+    if (!confirm("Voulez-vous vous abonner à l'offre Premium HayMoi VIP ?\nVous obtiendrez un badge 💎 à côté de votre nom et apparaîtrez en tête de liste !")) {
         return;
     }
 
@@ -3067,7 +3044,7 @@ async function upgradeToVIP() {
             currentUserProfile.is_vip = true;
         }
 
-        showToastNotification(null, 'تهانينا! 🎉', 'لقد أصبحت عضواً VIP مميزاً الآن!', 'system');
+        showToastNotification(null, 'Félicitations ! 🎉', 'Vous êtes maintenant un membre VIP !', 'system');
         
         // إعادة تحميل البروفايل وقائمة الأعضاء
         await loadOwnProfile(currentUser);
@@ -3076,9 +3053,9 @@ async function upgradeToVIP() {
     } catch (err) {
         console.error('خطأ أثناء ترقية VIP:', err);
         if (err.code === '42703' || (err.message && err.message.includes('is_vip'))) {
-            alert('فشل الترقية لـ VIP:\nيرجى تشغيل كود SQL في Supabase أولاً لإضافة عمود is_vip لجدول profiles!');
+            alert('Échec de la mise à niveau VIP :\nVeuillez d\'abord exécuter le script SQL dans Supabase pour ajouter la colonne is_vip à la table profiles !');
         } else {
-            alert('فشل الترقية لـ VIP: ' + err.message);
+            alert('Échec de la mise à niveau VIP : ' + err.message);
         }
     }
 }
@@ -3086,7 +3063,7 @@ async function upgradeToVIP() {
 async function downgradeFromVIP() {
     if (!currentUser) return;
 
-    if (!confirm("هل تريد إلغاء اشتراك VIP والعودة للحساب العادي؟")) {
+    if (!confirm("Voulez-vous annuler votre abonnement VIP et revenir au compte standard ?")) {
         return;
     }
 
@@ -3102,7 +3079,7 @@ async function downgradeFromVIP() {
             currentUserProfile.is_vip = false;
         }
 
-        showToastNotification(null, 'تم إلغاء الاشتراك', 'تمت العودة للحساب العادي بنجاح', 'system');
+        showToastNotification(null, 'Abonnement annulé', 'Retour au compte standard effectué avec succès.', 'system');
         
         await loadOwnProfile(currentUser);
         if (currentUser) loadDiscoveryUsers(currentUser);
@@ -3110,9 +3087,9 @@ async function downgradeFromVIP() {
     } catch (err) {
         console.error('خطأ أثناء إلغاء VIP:', err);
         if (err.code === '42703' || (err.message && err.message.includes('is_vip'))) {
-            alert('فشل إلغاء VIP:\nيرجى تشغيل كود SQL في Supabase أولاً لإضافة عمود is_vip لجدول profiles!');
+            alert('Échec de l\'annulation VIP :\nVeuillez d\'abord exécuter le script SQL dans Supabase pour ajouter la colonne is_vip à la table profiles !');
         } else {
-            alert('فشل إلغاء VIP: ' + err.message);
+            alert('Échec de l\'annulation VIP : ' + err.message);
         }
     }
 }
@@ -3132,17 +3109,17 @@ setInterval(() => {
             const userId = card ? card.getAttribute('data-user-id') : null;
             const lastSeen = userId ? lastSeenTimeMap.get(userId) : (el.getAttribute('data-last-seen') || el.getAttribute('data-created-at'));
             if (lastSeen) {
-                el.textContent = `آخر ظهور: ${formatRelativeTime(lastSeen)}`;
+                el.textContent = `Dernière visite : ${formatRelativeTime(lastSeen)}`;
             }
         }
     });
     // وتحديث ترويسة الشات المفتوح حالياً إذا كان غير متصل
     if (activeChatUserId) {
         const chatStatusEl = document.getElementById('chat-user-status');
-        if (chatStatusEl && chatStatusEl.textContent !== 'متصل الآن') {
+        if (chatStatusEl && chatStatusEl.textContent !== 'En ligne') {
             const lastSeen = lastSeenTimeMap.get(activeChatUserId) || (activeChatUserProfile ? activeChatUserProfile.created_at : null);
             if (lastSeen) {
-                chatStatusEl.textContent = `آخر ظهور: ${formatRelativeTime(lastSeen)}`;
+                chatStatusEl.textContent = `Dernière visite : ${formatRelativeTime(lastSeen)}`;
             }
         }
     }
@@ -3158,34 +3135,34 @@ function openAdvancedFilterModal(profiles, listContainer) {
         <div class="user-modal-card" style="width:100%; max-width:400px; background:#1c1c1e; border-radius:24px; overflow:hidden; color:var(--text-white); animation:slideUpModal 0.3s ease; padding:0;">
             <!-- Header Tabs -->
             <div style="display:flex; background:rgba(255,255,255,0.03); color:var(--text-white); font-weight:bold;">
-                <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">بالـ ID</div>
-                <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">متقدم</div>
-                <div style="flex:1; text-align:center; padding:15px; border-bottom:3px solid var(--color-primary); cursor:pointer;">بسيط</div>
+                <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">Par ID</div>
+                <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">Avancé</div>
+                <div style="flex:1; text-align:center; padding:15px; border-bottom:3px solid var(--color-primary); cursor:pointer;">Simple</div>
             </div>
 
             <div style="padding:24px;">
                 <!-- Gender -->
-                <h4 style="margin-top:0; color:var(--text-muted); font-weight:normal; margin-bottom:12px;">الجنس</h4>
+                <h4 style="margin-top:0; color:var(--text-muted); font-weight:normal; margin-bottom:12px;">Genre</h4>
                 <div class="ios-segmented-control">
                     <div class="adv-gender-btn ${currentGenderFilter==='all'?'active':''}" data-val="all">
-                        الكل
+                        Tous
                     </div>
                     <div class="adv-gender-btn ${currentGenderFilter==='female'?'active':''}" data-val="female">
-                        <i class="fas fa-venus" style="color:#ec4899; margin-left:4px;"></i> أنثى
+                        <i class="fas fa-venus" style="color:#ec4899; margin-right:4px;"></i> Femmes
                     </div>
                     <div class="adv-gender-btn ${currentGenderFilter==='male'?'active':''}" data-val="male">
-                        <i class="fas fa-mars" style="color:#3b82f6; margin-left:4px;"></i> ذكر
+                        <i class="fas fa-mars" style="color:#3b82f6; margin-right:4px;"></i> Hommes
                     </div>
                 </div>
 
                 <!-- Distance -->
-                <h4 style="color:#666; font-weight:normal; margin-bottom:12px;">المسافة القصوى</h4>
+                <h4 style="color:#666; font-weight:normal; margin-bottom:12px;">Distance maximale</h4>
                 <select id="adv-dist" style="width:100%; padding:12px; border:1px solid rgba(255,255,255,0.1); background:#2a2a2d; border-radius:12px;; font-size:16px; margin-bottom:24px; outline:none; color:var(--text-white); cursor:pointer;">
-                    <option value="10" ${currentDistanceFilter===10?'selected':''}>10 كم</option>
-                    <option value="50" ${currentDistanceFilter===50?'selected':''}>50 كم</option>
-                    <option value="100" ${currentDistanceFilter===100?'selected':''}>100 كم</option>
-                    <option value="500" ${currentDistanceFilter===500?'selected':''}>500 كم</option>
-                    <option value="10000" ${currentDistanceFilter===10000?'selected':''}>أي مسافة</option>
+                    <option value="10" ${currentDistanceFilter===10?'selected':''}>10 km</option>
+                    <option value="50" ${currentDistanceFilter===50?'selected':''}>50 km</option>
+                    <option value="100" ${currentDistanceFilter===100?'selected':''}>100 km</option>
+                    <option value="500" ${currentDistanceFilter===500?'selected':''}>500 km</option>
+                    <option value="10000" ${currentDistanceFilter===10000?'selected':''}>Toute distance</option>
                 </select>
 
                 <!-- Verified VIP Checkbox -->
@@ -3201,8 +3178,8 @@ function openAdvancedFilterModal(profiles, listContainer) {
 
                 <!-- Action Buttons -->
                 <div style="display:flex; gap:12px;">
-                    <button id="adv-cancel" style="flex:1; padding:14px; background:rgba(255,255,255,0.08); color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">إلغاء</button>
-                    <button id="adv-search" style="flex:1; padding:14px; background:${currentGenderFilter==='female' ? '#ec4899' : currentGenderFilter==='male' ? '#3b82f6' : 'linear-gradient(45deg, #3b82f6, #ec4899)'}; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.5s;">بحث</button>
+                    <button id="adv-cancel" style="flex:1; padding:14px; background:rgba(255,255,255,0.08); color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">Annuler</button>
+                    <button id="adv-search" style="flex:1; padding:14px; background:${currentGenderFilter==='female' ? '#ec4899' : currentGenderFilter==='male' ? '#3b82f6' : 'linear-gradient(45deg, #3b82f6, #ec4899)'}; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.5s;">Rechercher</button>
                 </div>
             </div>
         </div>

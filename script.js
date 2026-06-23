@@ -618,6 +618,27 @@ function initHeaderSearch() {
     const advancedFilterBtn = document.getElementById('advanced-filter-btn');
     const clearBtn = document.getElementById('clear-search-btn');
 
+    // زر Refresh - يعيد تحميل المستخدمين من Supabase مباشرة
+    const refreshBtn = document.getElementById('refresh-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', async () => {
+            if (!currentUser) return;
+            // إعادة ضبط الكاش باش يجلب من Supabase من جديد
+            discoveryLastFetchTime = 0;
+            // أنيميشن دوران على الأيقونة
+            const icon = refreshBtn.querySelector('i');
+            if (icon) {
+                icon.style.transition = 'transform 0.6s ease';
+                icon.style.transform = 'rotate(360deg)';
+                setTimeout(() => {
+                    icon.style.transition = 'none';
+                    icon.style.transform = 'rotate(0deg)';
+                }, 650);
+            }
+            await loadDiscoveryUsers(currentUser);
+        });
+    }
+
     if (input) {
         input.addEventListener('input', (e) => {
             searchFilterQuery = e.target.value;

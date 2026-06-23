@@ -716,13 +716,9 @@ body {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    margin-bottom: 0;
-    padding: 6px 6px 6px 6px;
+    padding: 6px 6px 120px 6px;
     position: relative;
     z-index: 1;
-    /* الارتفاع يحسب: الشاشة - الهيدر (60px) - الـ bottom-nav (70px) - مسافته من الأسفل (20px) - هامش (10px) */
-    max-height: calc(100dvh - 60px - 100px);
-    /* باش البطاقات تجي فوق الضوء */
 }
 
 .app-view {

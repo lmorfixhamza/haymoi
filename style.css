@@ -338,7 +338,7 @@ body {
     color: var(--color-primary);
     margin-bottom: 10px;
     filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.3));
-    animation: floatAvatar 3s ease-in-out infinite alternate;
+    /* animation: floatAvatar 3s ease-in-out infinite alternate; */
 }
 
 @keyframes floatAvatar {
@@ -590,18 +590,8 @@ body {
 /* تصاوبو جوج أضواء خافتة (واحد أزرق وواحد غوز/بنفسجي) */
 .app-container::before,
 .app-container::after {
-    content: '';
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    filter: blur(100px);
-    /* سر المهنة كاين فهاد التضبيب العالي */
-    z-index: 0;
-    /* كيبقاو مورا البطاقات */
-    opacity: 0.15;
-    /* الضوء خاصو يكون خافت بزاف باش ما يبرزطش العين */
-    pointer-events: none;
+    content: none;
+    display: none;
 }
 
 /* الضوء اللي فوق على اليسار */
@@ -967,7 +957,7 @@ body {
 
 .profil-avatar-ring {
     margin-bottom: 15px;
-    animation: floatAvatar 3s ease-in-out infinite alternate;
+    /* animation: floatAvatar 3s ease-in-out infinite alternate; */
 }
 
 .profil-avatar-letter {
@@ -1071,7 +1061,6 @@ body {
     justify-content: space-between;
     align-items: center;
     background: rgba(255, 255, 255, 0.03) !important;
-    backdrop-filter: blur(20px);
     border-radius: 30px;
     padding: 12px 16px;
     margin-bottom: 10px;
@@ -3433,7 +3422,7 @@ body {
     justify-content: center;
     margin: 0 auto 24px auto;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    animation: logoPulse 2s infinite ease-in-out;
+    /* animation: logoPulse 2s infinite ease-in-out; */
 }
 
 @keyframes logoPulse {
@@ -3659,18 +3648,11 @@ body {
     --text-muted: rgba(255, 255, 255, 0.6);
 }
 
-/* Add glowing orbs to chat background to match main app */
+/* Orbs disabled on mobile for performance */
 .chat-window::before,
 .chat-window::after {
-    content: '';
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    filter: blur(100px);
-    z-index: 0;
-    opacity: 0.15;
-    pointer-events: none;
+    content: none;
+    display: none;
 }
 .chat-window::before {
     background: #3b82f6;
@@ -3969,4 +3951,49 @@ body {
 .header-filter-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: scale(1.03);
+}
+
+
+/* ===== MOBILE PERFORMANCE OPTIMIZATIONS ===== */
+@media (max-width: 600px) {
+    /* شيل كل backdrop-filter على الموبايل - أثقل شي على GPU */
+    * {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    /* أوقف الأنيميشنات اللي تدور بلا توقف */
+    .splash-logo-text,
+    .loader-dot,
+    .profile-avatar {
+        animation: none !important;
+    }
+
+    /* contain باش يحسب الـ layout مرة واحدة */
+    .users-list,
+    .chats-list,
+    .contacts-list {
+        contain: layout style;
+    }
+
+    /* حذف pseudo-elements غير ضرورية */
+    .app-container::before,
+    .app-container::after,
+    .chat-window::before,
+    .chat-window::after {
+        display: none !important;
+        content: none !important;
+    }
+
+    /* تبسيط الـ transition لبطاقات المستخدمين */
+    .user-card {
+        transition: none !important;
+    }
+
+    /* overscroll باش يكون scroll سلس */
+    .users-list,
+    .app-content {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
 }

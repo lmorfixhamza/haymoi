@@ -1,3 +1,12 @@
+
+// Debounce utility للموبايل
+function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+}
 const SUPABASE_URL = 'https://lytiyycerpoogkgqofpk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5dGl5eWNlcnBvb2drZ3FvZnBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNzQ5OTksImV4cCI6MjA5Njg1MDk5OX0.bgv9vL0Pb4Xp8wyAR65DrPiGe-rELBL9JqikHgzZLUQ';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -631,7 +640,7 @@ function initHeaderSearch() {
     }
 
     if (input) {
-        input.addEventListener('input', (e) => {
+        input.addEventListener('input', debounce((e) => {
             searchFilterQuery = e.target.value;
             
             // تحديث زر مسح البحث
@@ -644,7 +653,7 @@ function initHeaderSearch() {
             if (listContainer) {
                 renderFilteredList(latestDiscoveryProfiles, listContainer);
             }
-        });
+        }, 300));
     }
 
     if (clearBtn && input) {
@@ -1171,7 +1180,7 @@ function createUserCard(profile, index) {
 
     // محتوى الأفاتار: صورة أو حروف أولية
     const avatarInner = profile.avatar_url
-        ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="${escapeHtml(profile.full_name || '')}">`
+        ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="${escapeHtml(profile.full_name || '')}" loading="lazy" decoding="async">`
         : `<div class="avatar-initials">${initial}</div>`;
 
     // نص المسافة
@@ -3123,7 +3132,7 @@ setInterval(() => {
             }
         }
     }
-}, 60000); // تحديث كل 60 ثانية بدل 30 لتخفيف الضغط على المعالج
+}, 120000); // تحديث كل 120 ثانية للموبايل على المعالج
 
 // === نافذة الفلترة المتقدمة ===
 function openAdvancedFilterModal(profiles, listContainer) {

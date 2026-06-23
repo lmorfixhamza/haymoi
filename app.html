@@ -166,9 +166,13 @@
             <!-- الرسائل تظهر هنا ديناميكياً -->
         </div>
         <div class="chat-input-area">
-            <button class="chat-attach-btn" id="chat-img-btn" title="إرفاق ملف">
-                <i class="fas fa-plus"></i>
+            <button class="chat-mic-btn" id="chat-audio-btn" title="تسجيل صوتي">
+                <i class="fas fa-microphone"></i>
             </button>
+            <button class="chat-send-btn" id="chat-send-btn" title="إرسال" style="display:none;">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+            <input type="text" id="chat-input" placeholder="Dites quelque chose..." autocomplete="off">
             <div class="emoji-picker-wrapper" style="position: relative; display: flex; align-items: center;">
                 <button class="chat-emoji-btn" id="chat-emoji-btn" title="إيموجي">
                     <i class="far fa-smile"></i>
@@ -196,12 +200,8 @@
                     <span class="emoji-item">👀</span>
                 </div>
             </div>
-            <input type="text" id="chat-input" placeholder="Dites quelque chose..." autocomplete="off">
-            <button class="chat-mic-btn" id="chat-audio-btn" title="تسجيل صوتي">
-                <i class="fas fa-microphone"></i>
-            </button>
-            <button class="chat-send-btn" id="chat-send-btn" title="إرسال" style="display:none;">
-                <i class="fas fa-paper-plane"></i>
+            <button class="chat-attach-btn" id="chat-img-btn" title="إرفاق ملف">
+                <i class="fas fa-plus"></i>
             </button>
         </div>
         <!-- مؤشر التسجيل الصوتي -->

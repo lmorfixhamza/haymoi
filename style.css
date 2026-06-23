@@ -1136,6 +1136,108 @@ body {
     background: #18181a !important;
 }
 
+/* تنسيق الأقسام الثلاثة لكارت الاستكشاف */
+.card-left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    direction: ltr;
+    text-align: left;
+    align-self: stretch;
+    justify-content: flex-start;
+    min-width: 0;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.user-bio-box {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.25) !important;
+    border-radius: 12px;
+    padding: 6px 10px;
+    margin-top: 6px;
+    flex: 1;
+    min-height: 48px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.user-bio-box .user-bio {
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: #cbd5e1 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    margin: 0;
+    text-align: left;
+}
+
+.card-center-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-shrink: 0;
+    width: 100px; /* اتساع مناسب للصورة والمسافة */
+}
+
+.card-center-panel .user-avatar-wrapper {
+    width: 86px !important;
+    height: 86px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    float: none !important;
+}
+
+.card-center-panel .user-avatar-inner {
+    font-size: 26px !important;
+}
+
+.card-center-panel .user-avatar-wrapper .online-dot {
+    width: 13px;
+    height: 13px;
+    bottom: 2px;
+    right: 2px;
+    border-width: 2px;
+}
+
+
+.card-distance-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.distance-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+.card-right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    align-self: stretch;
+    min-width: 0;
+    padding-top: 8px;
+}
+
+.card-right-panel .card-right-stats {
+    position: static !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
 /* ØºÙ„Ø§Ù Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø´Ø®ØµÙŠØ© Ù…Ø¹ Ø¥Ø·Ø§Ø± Ù…ØªÙˆÙ‡Ø¬ Ø«Ù„Ø§Ø«ÙŠ Ø§Ù„Ø£Ø¨Ø¹Ø§Ø¯ */
 .user-avatar-wrapper {
     width: 60px;
@@ -1286,6 +1388,20 @@ body {
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
 }
 
+.card-action-btn.favorite-btn.favorited {
+    background: #eab308 !important;
+    border-color: #eab308 !important;
+    color: white !important;
+    box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+}
+
+.card-action-btn.ignore-btn:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: white !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
 /* أنيميشن القلب الطائر عند الإعجاب */
 .floating-heart-anim {
     position: fixed;
@@ -1361,7 +1477,7 @@ body {
 }
 
 .user-name {
-    font-size: 17px;
+    font-size: 25px;
     font-weight: 800;
     letter-spacing: -0.5px;
     /* تضييق المسافة بين الحروف */
@@ -1371,21 +1487,23 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 140px;
 }
 
-/* Ø´Ø§Ø±Ø© Ø§Ù„Ø¬Ù†Ø³ ÙˆØ§Ù„Ø¹Ù…Ø± */
+/* شارة الجنس والعمر */
 .gender-age-pill {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     font-size: 11px;
     font-weight: 700;
-    padding: 3px 8px;
+    padding: 2.5px 7px;
     border-radius: 12px;
     color: #ffffff !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
 }
+
 
 .gender-age-pill.male {
     background: #3b82f6;
@@ -1953,7 +2071,7 @@ body {
 .emoji-picker-popover {
     position: absolute;
     bottom: 44px;
-    right: 0;
+    left: 0;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 8px;
@@ -3653,33 +3771,95 @@ body {
 /* ==============================================================
    MOBILE UI SCALING OVERRIDES
    ============================================================== */
-/* Header */
-.app-header { height: 52px !important; }
-.app-header h3 { font-size: 18px !important; }
+@media (max-width: 768px) {
+    /* Header */
+    .app-header { height: 52px !important; }
+    .app-header h3 { font-size: 18px !important; }
 
-/* User Card (Discovery List) */
-.user-card { padding: 5px 10px !important; gap: 8px !important; border-radius: 18px !important; }
-.user-avatar-wrapper { width: 42px !important; height: 42px !important; padding: 2px !important; }
-.user-avatar-inner, .user-avatar { font-size: 14px !important; }
-.card-action-btn { width: 28px !important; height: 28px !important; font-size: 12px !important; }
-.user-name { font-size: 13.5px !important; }
-.gender-age-pill, .card-distance { padding: 2px 6px !important; font-size: 9px !important; }
-.user-bio { font-size: 11px !important; margin-top: 0px !important; }
-.card-right-stats { top: 8px !important; right: 10px !important; font-size: 11px !important; }
-.user-card-bottom { margin-top: 1px !important; }
+    /* User Card (Discovery List) Mobile Responsive styles */
+    .user-card {
+        padding: 8px 10px !important;
+        gap: 6px !important;
+        border-radius: 20px !important;
+    }
+    
+    .card-left-panel {
+        gap: 4px !important;
+        padding-bottom: 8px !important;
+    }
+    
+    .user-name {
+        font-size: 21px !important;
+        max-width: 95px !important;
+    }
+    
+    .gender-age-pill {
+        padding: 1.5px 4px !important;
+        font-size: 9.5px !important;
+    }
+    
+    .user-bio-box {
+        padding: 5px 8px !important;
+        flex: 1 !important;
+        min-height: 42px !important;
+        margin-top: 4px !important;
+        border-radius: 10px !important;
+    }
+    
+    .user-bio-box .user-bio {
+        font-size: 11px !important;
+    }
+    
+    .card-center-panel {
+        width: 72px !important;
+        gap: 4px !important;
+    }
+    
+    .card-center-panel .user-avatar-wrapper {
+        width: 62px !important;
+        height: 62px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
 
-/* Chats List Item */
-.chat-item { padding: 12px 10px !important; gap: 12px !important; }
-.chat-item-avatar { width: 48px !important; height: 48px !important; }
-.chat-item-name { font-size: 14px !important; }
+    .card-center-panel .user-avatar-inner {
+        font-size: 20px !important;
+    }
 
-/* Search Bar */
-.search-filter-container { padding: 10px 15px !important; }
-.search-input-wrapper { height: 40px !important; }
-.search-input-wrapper input { font-size: 13px !important; }
+    .card-center-panel .user-avatar-wrapper .online-dot {
+        width: 11px !important;
+        height: 11px !important;
+        bottom: 1.5px !important;
+        right: 1.5px !important;
+    }
+    
+    .distance-text {
+        font-size: 10px !important;
+    }
+    
+    .card-right-panel {
+        width: 80px !important;
+    }
 
-/* Bottom Nav Scale Down */
-.bottom-nav { transform: scale(0.9); transform-origin: bottom center; bottom: 5px !important; }
+    .card-action-btn {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 13px !important;
+    }
+
+    /* Chats List Item */
+    .chat-item { padding: 12px 10px !important; gap: 12px !important; }
+    .chat-item-avatar { width: 48px !important; height: 48px !important; }
+    .chat-item-name { font-size: 14px !important; }
+
+    /* Search Bar */
+    .search-filter-container { padding: 10px 15px !important; }
+    .search-input-wrapper { height: 40px !important; }
+    .search-input-wrapper input { font-size: 13px !important; }
+
+    /* Bottom Nav Scale Down */
+    .bottom-nav { transform: scale(0.9); transform-origin: bottom center; bottom: 5px !important; }
+}
 
 /* Header Search & Filter Integration */
 .header-user-avatar {

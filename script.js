@@ -1113,34 +1113,15 @@ function createUserCard(profile, index) {
     const bio = profile.bio || 'لا يوجد وصف';
     const isOnline = onlineUsers.has(profile.user_id);
 
-    // حساب وسيلة التسجيل بشكل تلقائي وجمالي ليطابق لقطة الشاشة
-    let provider = 'google';
-    if (profile.email) {
-        if (profile.email.includes('gmail')) provider = 'google';
-        else if (profile.email.includes('facebook') || profile.email.includes('fb')) provider = 'facebook';
-        else if (profile.email.includes('tiktok')) provider = 'tiktok';
-    } else {
-        const hash = profile.user_id ? profile.user_id.charCodeAt(0) + (profile.full_name ? profile.full_name.charCodeAt(0) : 0) : index;
-        const providers = ['facebook', 'google', 'tiktok'];
-        provider = providers[hash % providers.length];
-    }
 
-    let socialIconHtml = '';
-    if (provider === 'facebook') {
-        socialIconHtml = `<span class="social-badge facebook" title="سجل عبر Facebook"><i class="fab fa-facebook-f"></i></span>`;
-    } else if (provider === 'google') {
-        socialIconHtml = `<span class="social-badge google" title="سجل عبر Google"><i class="fab fa-google"></i></span>`;
-    } else if (provider === 'tiktok') {
-        socialIconHtml = `<span class="social-badge tiktok" title="سجل عبر TikTok"><i class="fab fa-tiktok"></i></span>`;
-    }
 
     // حساب المسافة بدقة مع الأيقونة
     let distanceTextHTML = '';
     if (currentUserProfile && currentUserProfile.latitude && currentUserProfile.longitude && profile.latitude && profile.longitude) {
         const dist = calculateDistance(currentUserProfile.latitude, currentUserProfile.longitude, profile.latitude, profile.longitude);
         if (dist !== null) {
-            const distValue = dist < 1 ? `${Math.round(dist * 1000)}m` : `${dist.toFixed(1)}km`;
-            distanceTextHTML = `<span style="display:inline-flex; align-items:center; gap:3px;" dir="ltr"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px;"></i>${distValue}</span>`;
+            const distValue = dist < 1 ? `${Math.round(dist * 1000)} متر` : `${dist.toFixed(1)} كلم`;
+            distanceTextHTML = `<span style="display:inline-flex; align-items:center; gap:3px;"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px;"></i>${distValue}</span>`;
         }
     }
 
@@ -1154,39 +1135,54 @@ function createUserCard(profile, index) {
         : formatRelativeTime(lastSeenTime);
 
     card.innerHTML = `
-        <div class="user-avatar-wrapper ${genderClass} ${profile.is_vip ? 'vip-ring' : ''}">
-            <div class="user-avatar-inner">
-                ${avatarContent}
-            </div>
-            ${isOnline ? '<span class="online-dot"></span>' : ''}
-        </div>
-        <div class="user-info">
+        <!-- جهة اليسار: الاسم والوصف والمعلومات -->
+        <div class="card-left-panel">
             <div class="user-name-row">
                 <span class="user-name">${escapeHtml(profile.full_name || 'مستخدم')}</span>
-                ${profile.is_vip ? '<i class="fas fa-gem card-vip-icon" title="عضو VIP"></i>' : ''}
-            </div>
-            <div class="user-meta-row">
                 <span class="gender-age-pill ${genderClass}">
                     <i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i> ${age !== '-' ? age : ''}
                 </span>
-                ${socialIconHtml}
+                ${profile.is_vip ? '<i class="fas fa-gem card-vip-icon" title="عضو VIP"></i>' : ''}
             </div>
-            <p class="user-bio">${escapeHtml(bio)}</p>
-            <div class="user-card-bottom">
-                <div class="card-actions">
-                    <button class="card-action-btn like-btn" title="إعجاب">
-                        <i class="far fa-heart"></i>
-                    </button>
-                    <button class="card-action-btn chat-btn" title="دردشة">
-                        <i class="far fa-comment"></i>
-                    </button>
-                </div>
+            <div class="user-bio-box">
+                <p class="user-bio">${escapeHtml(bio)}</p>
             </div>
         </div>
-        <div class="card-right-stats">
-            <span class="distance-text">${distanceTextHTML || '<span dir="ltr"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px; margin-right:3px;"></i>?</span>'}</span>
-            <span class="card-status-sep"> · </span>
-            <span class="card-status-text ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
+
+        <!-- الوسط: صورة الشخص الدائرية وتحتها المسافة -->
+        <div class="card-center-panel">
+            <div class="user-avatar-wrapper ${genderClass} ${profile.is_vip ? 'vip-ring' : ''}">
+                <div class="user-avatar-inner">
+                    ${avatarContent}
+                </div>
+                ${isOnline ? '<span class="online-dot"></span>' : ''}
+            </div>
+            <div class="card-distance-row">
+                <span class="distance-text">${distanceTextHTML || '<span dir="ltr"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px; margin-right:3px;"></i>?</span>'}</span>
+            </div>
+        </div>
+
+        <!-- جهة اليمين: حالة الاتصال والدردشة والإعجاب والمفضلة -->
+        <div class="card-right-panel">
+            <div class="card-right-stats">
+                <span class="card-status-text ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
+            </div>
+            <div class="card-top-actions-row" style="display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; width: 100%;">
+                <button class="card-action-btn ignore-btn" title="تجاهل" style="margin: 0;">
+                    <i class="fas fa-times"></i>
+                </button>
+                <button class="card-action-btn chat-btn" title="دردشة" style="margin: 0;">
+                    <i class="far fa-comment"></i>
+                </button>
+            </div>
+            <div class="card-actions-row" style="display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; width: 100%;">
+                <button class="card-action-btn favorite-btn" title="المفضلة" style="margin: 0;">
+                    <i class="far fa-star"></i>
+                </button>
+                <button class="card-action-btn like-btn" title="إعجاب" style="margin: 0;">
+                    <i class="far fa-heart"></i>
+                </button>
+            </div>
         </div>
     `;
 
@@ -1229,6 +1225,33 @@ function createUserCard(profile, index) {
         chatBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             openChatWindow(profile);
+        });
+    }
+
+    const ignoreBtn = card.querySelector('.ignore-btn');
+    if (ignoreBtn) {
+        ignoreBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (confirm(`هل أنت متأكد أنك لا تريد رؤية هذا المستخدم (${profile.full_name || 'هذا الحساب'})؟`)) {
+                await blockUser(profile.user_id);
+            }
+        });
+    }
+
+    const favoriteBtn = card.querySelector('.favorite-btn');
+    if (favoriteBtn) {
+        favoriteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const icon = favoriteBtn.querySelector('i');
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                favoriteBtn.classList.add('favorited');
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                favoriteBtn.classList.remove('favorited');
+            }
         });
     }
 
@@ -1900,26 +1923,7 @@ async function loadActiveChats() {
                 const isOnline = onlineUsers.has(profile.user_id);
                 const age = calculateAge(profile.dob);
 
-                // حساب وسيلة التسجيل بشكل تلقائي وجمالي ليطابق لقطة الشاشة
-                let provider = 'google';
-                if (profile.email) {
-                    if (profile.email.includes('gmail')) provider = 'google';
-                    else if (profile.email.includes('facebook') || profile.email.includes('fb')) provider = 'facebook';
-                    else if (profile.email.includes('tiktok')) provider = 'tiktok';
-                } else {
-                    const hash = profile.user_id ? profile.user_id.charCodeAt(0) + (profile.full_name ? profile.full_name.charCodeAt(0) : 0) : index;
-                    const providers = ['facebook', 'google', 'tiktok'];
-                    provider = providers[hash % providers.length];
-                }
 
-                let socialIconHtml = '';
-                if (provider === 'facebook') {
-                    socialIconHtml = `<span class="social-badge facebook" title="سجل عبر Facebook"><i class="fab fa-facebook-f"></i></span>`;
-                } else if (provider === 'google') {
-                    socialIconHtml = `<span class="social-badge google" title="سجل عبر Google"><i class="fab fa-google"></i></span>`;
-                } else if (provider === 'tiktok') {
-                    socialIconHtml = `<span class="social-badge tiktok" title="سجل عبر TikTok"><i class="fab fa-tiktok"></i></span>`;
-                }
 
                 // حساب المسافة بدقة وتنسيق حالة الاتصال
                 let distanceTextHTML = '';
@@ -1961,7 +1965,6 @@ async function loadActiveChats() {
                         </div>
                         <div class="chat-item-badge-row" style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
                             <span class="gender-badge ${genderClass}"><i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i> ${age !== '-' ? age : ''}</span>
-                            ${socialIconHtml}
                         </div>
                         <p class="chat-item-lastmsg">${escapeHtml(lastChat.content)}</p>
                     </div>

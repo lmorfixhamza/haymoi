@@ -1477,7 +1477,7 @@ body {
 }
 
 .user-name {
-    font-size: 25px;
+    font-size: 22px;
     font-weight: 800;
     letter-spacing: -0.5px;
     /* تضييق المسافة بين الحروف */
@@ -3789,7 +3789,7 @@ body {
     }
     
     .user-name {
-        font-size: 21px !important;
+        font-size: 17.5px !important;
         max-width: 95px !important;
     }
     
@@ -3838,13 +3838,13 @@ body {
     }
     
     .card-right-panel {
-        width: 80px !important;
+        width: 86px !important;
     }
 
     .card-action-btn {
-        width: 30px !important;
-        height: 30px !important;
-        font-size: 13px !important;
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 14.5px !important;
     }
 
     /* Chats List Item */

@@ -1051,7 +1051,7 @@ body {
     flex-direction: column;
     gap: 10px;
     /* مسافة قريبة ومريحة بين الكروت */
-    padding: 6px 7px;
+    padding: 6px 4px;
     /* تحسين الأداء - لا يرسم العناصر خارج الشاشة */
     contain: layout style;
 }

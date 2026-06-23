@@ -716,7 +716,7 @@ body {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 6px 6px 120px 6px;
+    padding: 6px 6px 160px 6px;
     position: relative;
     z-index: 1;
 }

@@ -714,8 +714,8 @@ body {
 .app-content {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 80px;
-    padding: 10px 2px 15px 2px;
+    margin-bottom: 0;
+    padding: 8px 6px 110px 6px;
     position: relative;
     z-index: 1;
     /* باش البطاقات تجي فوق الضوء */
@@ -1060,9 +1060,9 @@ body {
 .users-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
     /* مسافة قريبة ومريحة بين الكروت */
-    padding: 10px 5px;
+    padding: 4px 5px;
 }
 
 .user-card {
@@ -1071,7 +1071,7 @@ body {
     width: 100%;
     margin-bottom: 6px;
     gap: 8px;
-    padding: 6px 10px;
+    padding: 4px 8px;
     background: #1c1c1e !important;
     /* تمت إزالة التأثير الزجاجي لتسريع التصفح في الهواتف */
     border: 1px solid rgba(255, 255, 255, 0.05);

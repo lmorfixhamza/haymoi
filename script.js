@@ -75,7 +75,8 @@ async function loadAppData(user) {
     } catch (e) {
         debugLog("loadAppData: Error requesting geolocation (Access Denied): " + e.message, true);
         alert("يجب تفعيل صلاحية الوصول للموقع الجغرافي لاستخدام التطبيق. سيتم تسجيل خروجك الآن.");
-        if (typeof handleLogout === 'function') handleLogout();
+        await sb.auth.signOut();
+        window.location.href = 'index.html';
         return; // Stop loading app data so they can't enter
     }
 

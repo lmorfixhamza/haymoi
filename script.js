@@ -2,7 +2,7 @@
 // Debounce utility للموبايل
 function debounce(fn, delay) {
     let timer;
-    return function(...args) {
+    return function (...args) {
         clearTimeout(timer);
         timer = setTimeout(() => fn.apply(this, args), delay);
     };
@@ -54,10 +54,8 @@ async function loadAppData(user) {
         await requestLocationAndSave();
     } catch (e) {
         debugLog("loadAppData: Error requesting geolocation (Access Denied): " + e.message, true);
-        alert("La permission d'accéder à la géolocalisation est requise pour utiliser l'application. Vous allez être déconnecté.");
-        await sb.auth.signOut();
-        window.location.href = 'index.html';
-        return; // Stop loading app data so they can't enter
+        // لا نطرد المستخدم إذا رفض الموقع، فقط نعرض له تنبيهاً ونكمل
+        showToast("📍 Activez la localisation pour voir les personnes proches de vous.");
     }
 
     try {
@@ -94,8 +92,8 @@ async function loadAppData(user) {
 const redirectTo = window.location.origin + window.location.pathname.replace(/[^/]*$/, 'app.html');
 
 const path = window.location.pathname;
-const isIndexPage   = path.includes('index') || path === '/' || path.endsWith('/') || path === '';
-const isSetupPage   = path.includes('profile-setup');
+const isIndexPage = path.includes('index') || path === '/' || path.endsWith('/') || path === '';
+const isSetupPage = path.includes('profile-setup');
 const isProfilePage = path.includes('profile.html') || path.includes('app.html');
 
 let currentUser = null;
@@ -244,7 +242,7 @@ async function handleRouting(user) {
 
                 if (fullNameEl) fullNameEl.textContent = profile.full_name || 'مستخدم HayMoi';
                 if (ageEl) ageEl.textContent = calculateAge(profile.dob) + ' سنة';
-                
+
                 if (genderEl) {
                     if (profile.gender === 'male') {
                         genderEl.textContent = 'ذكر';
@@ -256,7 +254,7 @@ async function handleRouting(user) {
                         genderEl.textContent = profile.gender || '-';
                     }
                 }
-                
+
                 if (bioEl) bioEl.textContent = profile.bio || 'لا توجد نبذة شخصية بعد.';
             } else {
                 // إذا لم يتم العثور على ملف شخصي، يتم تحويله لصفحة إدخال البيانات
@@ -370,7 +368,7 @@ function updateOnlineDotsInUI() {
             const avatar = card.querySelector('.user-avatar-wrapper') || card.querySelector('.user-avatar');
             const metaTextEl = card.querySelector('.user-meta-text');
             const statusTextEl = card.querySelector('.card-status-text');
-            
+
             let dot = avatar ? avatar.querySelector('.online-dot') : null;
             if (isOnline) {
                 if (avatar && !dot) {
@@ -458,7 +456,7 @@ function initAppTabs() {
     if (!navBtns.length || !views.length) return;
 
     // دالة تبديل الأقسام
-    window.switchAppView = function(viewId) {
+    window.switchAppView = function (viewId) {
         // إخفاء كل الأقسام
         views.forEach(v => v.classList.remove('active'));
         navBtns.forEach(b => b.classList.remove('active'));
@@ -471,7 +469,7 @@ function initAppTabs() {
         const targetBtn = document.getElementById('btn-nav-' + viewId);
         if (targetBtn) {
             targetBtn.classList.add('active');
-            
+
             // تحديث مكان المؤشر السحري
             const bottomNav = document.querySelector('.bottom-nav');
             if (bottomNav) {
@@ -487,7 +485,7 @@ function initAppTabs() {
         if (appHeader) {
             const showHeader = viewId === 'trouver' || viewId === 'chats' || viewId === 'contacts';
             appHeader.style.display = showHeader ? 'flex' : 'none';
-            
+
             const headerTitle = document.getElementById('header-title');
             const headerSearch = document.getElementById('header-search-container');
             if (headerTitle) {
@@ -496,7 +494,14 @@ function initAppTabs() {
                 } else {
                     headerTitle.style.display = '';
                     if (viewId === 'chats') {
-                        headerTitle.textContent = 'Chats';
+                        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                        const titleColor = isLight ? '#111827' : '#ffffff';
+                        headerTitle.innerHTML = `
+                            <div class="chats-section-title-block" style="text-align: left; display: flex; flex-direction: column; gap: 2px;">
+                                <h2 class="chats-section-title" style="color: ${titleColor}; font-size: 26px; font-weight: 800; margin: 0; line-height: 1.1;">Chats</h2>
+                                <span id="header-chats-count" class="chats-section-count" style="font-size: 13px; font-weight: 600; color: var(--text-muted); opacity: 0.8;">...</span>
+                            </div>
+                        `;
                     } else if (viewId === 'contacts') {
                         headerTitle.textContent = 'Contacts';
                     }
@@ -631,12 +636,12 @@ function initHeaderSearch() {
     if (input) {
         input.addEventListener('input', debounce((e) => {
             searchFilterQuery = e.target.value;
-            
+
             // تحديث زر مسح البحث
             if (clearBtn) {
                 clearBtn.style.display = searchFilterQuery ? 'inline-block' : 'none';
             }
-            
+
             // إعادة تصفية القائمة
             const listContainer = document.querySelector('.users-list-sub-container');
             if (listContainer) {
@@ -650,7 +655,7 @@ function initHeaderSearch() {
             searchFilterQuery = '';
             input.value = '';
             clearBtn.style.display = 'none';
-            
+
             const listContainer = document.querySelector('.users-list-sub-container');
             if (listContainer) {
                 renderFilteredList(latestDiscoveryProfiles, listContainer);
@@ -730,7 +735,7 @@ async function loadOwnProfile(user) {
                 `;
             }
 
-            const avatarDisplay = profile.avatar_url 
+            const avatarDisplay = profile.avatar_url
                 ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="" loading="lazy">`
                 : initial;
 
@@ -764,12 +769,53 @@ async function loadOwnProfile(user) {
                         <p>${profile.bio || 'Aucune biographie pour le moment.'}</p>
                     </div>
                     ${ownExtraSection}
-                    <button id="edit-profile-btn" class="btn btn-submit" style="background: rgba(255, 255, 255, 0.08); color: var(--text-white); margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1);"><i class="fas fa-edit"></i> Modifier le profil</button>
-                    <button id="logout-btn-app" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Se déconnecter</button>
+                    <button id="edit-profile-btn" class="btn profil-edit-btn"><i class="fas fa-edit"></i> Modifier le profil</button>
+                    <button id="open-settings-btn" class="btn profil-settings-btn"><i class="fas fa-sliders"></i> Paramètres</button>
+
+                    <!-- Settings Bottom Sheet -->
+                    <div id="settings-sheet-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:3000;"></div>
+                    <div id="settings-sheet" class="settings-sheet-panel">
+                        <!-- Handle bar -->
+                        <div class="settings-sheet-handle"></div>
+                        <h3 class="settings-sheet-title">Paramètres</h3>
+
+                        <!-- Theme Toggle -->
+                        <div class="settings-row">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <div class="settings-icon-box">
+                                    <i class="fas fa-moon" id="theme-icon" style="font-size:16px;color:#a78bfa;"></i>
+                                </div>
+                                <div>
+                                    <div class="settings-row-label">Apparence</div>
+                                    <div class="settings-row-sublabel" id="theme-label">Mode sombre</div>
+                                </div>
+                            </div>
+                            <!-- iOS Toggle -->
+                            <label style="position:relative;width:50px;height:28px;cursor:pointer;flex-shrink:0;">
+                                <input type="checkbox" id="theme-toggle-checkbox" style="opacity:0;width:0;height:0;position:absolute;">
+                                <div id="theme-toggle-track" style="position:absolute;inset:0;border-radius:14px;background:rgba(255,255,255,0.15);transition:background 0.3s;"></div>
+                                <div id="theme-toggle-thumb" style="position:absolute;top:4px;left:4px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);"></div>
+                            </label>
+                        </div>
+
+                        <!-- Logout -->
+                        <div id="logout-btn-app" class="settings-logout-row">
+                            <div class="settings-logout-icon-box">
+                                <i class="fas fa-sign-out-alt" style="font-size:16px;color:#ef4444;"></i>
+                            </div>
+                            <div>
+                                <div class="settings-logout-label">Se déconnecter</div>
+                                <div class="settings-logout-sublabel">Fermer la session</div>
+                            </div>
+                        </div>
+
+                        <!-- Cancel -->
+                        <button id="close-settings-btn" class="settings-cancel-btn">Annuler</button>
+                    </div>
                 </div>
             `;
 
-            // ربط زر تعديل البروفايل وزر تسجيل الخروج
+            // ربط زر تعديل البروفايل
             const editBtn = document.getElementById('edit-profile-btn');
             if (editBtn) {
                 editBtn.addEventListener('click', () => {
@@ -777,7 +823,64 @@ async function loadOwnProfile(user) {
                 });
             }
 
+            // === Settings Bottom Sheet ===
+            const openSettingsBtn = document.getElementById('open-settings-btn');
+            const settingsSheet = document.getElementById('settings-sheet');
+            const settingsOverlay = document.getElementById('settings-sheet-overlay');
+            const closeSettingsBtn = document.getElementById('close-settings-btn');
             const logoutBtnApp = document.getElementById('logout-btn-app');
+            const themeCheckbox = document.getElementById('theme-toggle-checkbox');
+            const themeTrack = document.getElementById('theme-toggle-track');
+            const themeThumb = document.getElementById('theme-toggle-thumb');
+            const themeIcon = document.getElementById('theme-icon');
+            const themeLabel = document.getElementById('theme-label');
+
+            function openSettingsSheet() {
+                if (!settingsSheet || !settingsOverlay) return;
+                settingsOverlay.style.display = 'block';
+                settingsSheet.style.bottom = '0';
+            }
+            function closeSettingsSheet() {
+                if (!settingsSheet || !settingsOverlay) return;
+                settingsSheet.style.bottom = '-400px';
+                setTimeout(() => { settingsOverlay.style.display = 'none'; }, 350);
+            }
+
+            if (openSettingsBtn) openSettingsBtn.addEventListener('click', openSettingsSheet);
+            if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', closeSettingsSheet);
+            if (settingsOverlay) settingsOverlay.addEventListener('click', closeSettingsSheet);
+
+            // === Dark / Light Mode Toggle ===
+            function applyTheme(isDark) {
+                if (isDark) {
+                    document.documentElement.removeAttribute('data-theme');
+                    if (themeIcon) { themeIcon.className = 'fas fa-moon'; themeIcon.style.color = '#a78bfa'; }
+                    if (themeLabel) themeLabel.textContent = 'Mode sombre';
+                    if (themeTrack) themeTrack.style.background = 'rgba(255,255,255,0.15)';
+                    if (themeThumb) themeThumb.style.transform = 'translateX(0)';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    if (themeIcon) { themeIcon.className = 'fas fa-sun'; themeIcon.style.color = '#fbbf24'; }
+                    if (themeLabel) themeLabel.textContent = 'Mode clair';
+                    if (themeTrack) themeTrack.style.background = '#a78bfa';
+                    if (themeThumb) themeThumb.style.transform = 'translateX(22px)';
+                }
+                localStorage.setItem('haymoi-theme', isDark ? 'dark' : 'light');
+            }
+
+            // تطبيق الثيم المحفوظ عند الدخول
+            const savedTheme = localStorage.getItem('haymoi-theme') || 'dark';
+            const isCurrentlyDark = savedTheme === 'dark';
+            if (themeCheckbox) themeCheckbox.checked = !isCurrentlyDark;
+            applyTheme(isCurrentlyDark);
+
+            if (themeCheckbox) {
+                themeCheckbox.addEventListener('change', () => {
+                    applyTheme(!themeCheckbox.checked);
+                });
+            }
+
+            // زر تسجيل الخروج
             if (logoutBtnApp) {
                 logoutBtnApp.addEventListener('click', async () => {
                     await updateLastSeenInDB();
@@ -794,7 +897,7 @@ async function loadOwnProfile(user) {
                 avatarFileInput.addEventListener('change', async (e) => {
                     const file = e.target.files[0];
                     if (!file) return;
-                    
+
                     // عرض مؤشر التحميل
                     const avatarEl = document.querySelector('.profil-avatar-letter');
                     if (avatarEl) {
@@ -1077,15 +1180,15 @@ function renderDiscoveryView(profiles, container) {
 // دالة رسم القائمة المصفاة للبحث
 function renderFilteredList(profiles, listContainer) {
     listContainer.innerHTML = '';
-    
+
     const query = searchFilterQuery.trim().toLowerCase();
     let filtered = [...profiles];
-    
+
     // فلترة الجنس أولاً
     if (currentGenderFilter !== 'all') {
         filtered = filtered.filter(p => p.gender === currentGenderFilter);
     }
-    
+
     // فلترة المسافة
     if (currentDistanceFilter !== 10000 && currentUserProfile && currentUserProfile.latitude && currentUserProfile.longitude) {
         filtered = filtered.filter(p => {
@@ -1099,7 +1202,7 @@ function renderFilteredList(profiles, listContainer) {
     if (requireVerifiedFilter) {
         filtered = filtered.filter(p => p.is_vip);
     }
-    
+
     if (query) {
         filtered = filtered.filter(p => {
             const name = (p.full_name || '').toLowerCase();
@@ -1107,7 +1210,7 @@ function renderFilteredList(profiles, listContainer) {
             const residence = (p.residence || '').toLowerCase();
             const profession = (p.profession || '').toLowerCase();
             const userId = (p.user_id || '').toLowerCase();
-            return userId.includes(query);
+            return userId.includes(query) || name.includes(query) || bio.includes(query) || residence.includes(query) || profession.includes(query);
         });
     }
 
@@ -1158,13 +1261,13 @@ function createUserCard(profile, index) {
         }
     }
 
-    const avatarContent = profile.avatar_url 
+    const avatarContent = profile.avatar_url
         ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="${escapeHtml(profile.full_name || '')}" class="user-avatar" loading="lazy">`
         : initial;
 
     const lastSeenTime = profile.last_seen || profile.created_at;
-    const statusText = isOnline 
-        ? '<span style="color:#22c55e; font-weight:700;">En ligne</span>' 
+    const statusText = isOnline
+        ? '<span style="color:#22c55e; font-weight:700;">En ligne</span>'
         : formatRelativeTime(lastSeenTime);
 
     // محتوى الأفاتار: صورة أو حروف أولية
@@ -1533,11 +1636,11 @@ async function openChatWindow(receiverProfile) {
         `;
     }
 
+    // تعليم كل الرسائل كمقروءة أولاً قبل التحميل
+    await markAllMessagesAsRead(receiverProfile.user_id);
+
     // تحميل الرسائل السابقة
     await loadChatMessages();
-
-    // تعليم كل الرسائل كمقروءة
-    markAllMessagesAsRead(receiverProfile.user_id);
 
     // الاشتراك في الوقت الحقيقي للميساجات الجديدة
     subscribeToMessages();
@@ -1547,10 +1650,10 @@ async function openChatWindow(receiverProfile) {
 function closeChatWindow() {
     const chatWindow = document.getElementById('chat-window');
     if (chatWindow) chatWindow.classList.remove('active');
-    
+
     activeChatUserId = null;
     activeChatUserProfile = null;
-    
+
     // إزالة الاشتراك لتفادي استهلاك الموارد
     if (chatSubscription) {
         sb.removeChannel(chatSubscription);
@@ -1586,7 +1689,7 @@ async function loadChatMessages() {
                 </div>
             `;
         }
-        
+
         // النزول لأسفل الشات تلقائياً
         container.scrollTop = container.scrollHeight;
 
@@ -1651,7 +1754,7 @@ function subscribeToMessages() {
             table: 'messages'
         }, payload => {
             const newMsg = payload.new;
-            
+
             // هل الرسالة تخص الشات المفتوح حالياً؟
             if (activeChatUserId && (
                 (newMsg.sender_id === currentUser.id && newMsg.receiver_id === activeChatUserId) ||
@@ -1725,7 +1828,7 @@ function appendMessageBubble(msg) {
             openImageLightbox(sanitizeUrl(msg.media_url));
         });
 
-    // === رسالة صوتية ===
+        // === رسالة صوتية ===
     } else if (msgType === 'audio' && msg.media_url) {
         bubble.className = `msg-bubble ${isMyMsg ? 'sent' : 'received'} audio-msg`;
         let waveBars = '';
@@ -1750,7 +1853,7 @@ function appendMessageBubble(msg) {
             playAudioMessage(playBtn, sanitizeUrl(msg.media_url), bubble);
         });
 
-    // === رسالة نصية ===
+        // === رسالة نصية ===
     } else {
         bubble.className = `msg-bubble ${isMyMsg ? 'sent' : 'received'}`;
         bubble.innerHTML = `
@@ -1854,7 +1957,7 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return str.replace(/[&<>"']/g, function(m) { return map[m]; });
+    return str.replace(/[&<>"']/g, function (m) { return map[m]; });
 }
 
 // 7. جلب قائمة المحادثات النشطة (Chats Tab)
@@ -1889,16 +1992,25 @@ async function loadActiveChats() {
             return;
         }
 
-        // استخراج قائمة المستخدمين الفريدين وآخر رسالة
+        // استخراج قائمة المستخدمين الفريدين وآخر رسالة + إحصائيات
         const chatPartnersMap = new Map();
         messages.forEach(msg => {
             const partnerId = msg.sender_id === currentUser.id ? msg.receiver_id : msg.sender_id;
-            if (partnerId === currentUser.id) return; // تخطي الدردشة مع النفس
+            if (partnerId === currentUser.id) return;
             if (!chatPartnersMap.has(partnerId)) {
                 chatPartnersMap.set(partnerId, {
                     content: msg.content,
-                    time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    created_at: msg.created_at,
+                    time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    sentCount: 0,
+                    receivedCount: 0
                 });
+            }
+            const entry = chatPartnersMap.get(partnerId);
+            if (msg.sender_id === currentUser.id) {
+                entry.sentCount = (entry.sentCount || 0) + 1;
+            } else {
+                entry.receivedCount = (entry.receivedCount || 0) + 1;
             }
         });
 
@@ -1914,7 +2026,7 @@ async function loadActiveChats() {
             return;
         }
 
-        // جلب الملفات الشخصية لهؤلاء المستخدمين
+        // جلب الملفات الشخصية
         const { data: profiles, error: profileErr } = await sb
             .from('profiles')
             .select('*')
@@ -1922,9 +2034,24 @@ async function loadActiveChats() {
 
         if (profileErr) throw profileErr;
 
+        // جلب عدد الرسائل غير المقروءة
+        const { data: unreadData } = await sb
+            .from('messages')
+            .select('sender_id')
+            .eq('receiver_id', currentUser.id)
+            .eq('is_read', false)
+            .in('sender_id', partnerIds);
+
+        const unreadCountMap = new Map();
+        if (unreadData) {
+            unreadData.forEach(row => {
+                unreadCountMap.set(row.sender_id, (unreadCountMap.get(row.sender_id) || 0) + 1);
+            });
+        }
+
         container.innerHTML = '';
+
         if (profiles && profiles.length > 0) {
-            // تصفية التكرارات (إبقاء البروفايل الأول الفريد لكل شريك)
             const uniqueProfiles = [];
             const seenUserIds = new Set();
             profiles.forEach(p => {
@@ -1937,46 +2064,88 @@ async function loadActiveChats() {
                 }
             });
 
+            // === Update Global App Header Title ===
+            const headerTitleCount = document.getElementById('header-chats-count');
+            if (headerTitleCount) {
+                headerTitleCount.textContent = `${uniqueProfiles.length} conversation${uniqueProfiles.length !== 1 ? 's' : ''}`;
+            } else {
+                const headerTitle = document.getElementById('header-title');
+                if (headerTitle) {
+                    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                    const titleColor = isLight ? '#111827' : '#ffffff';
+                    headerTitle.innerHTML = `
+                        <div class="chats-section-title-block" style="text-align: left; display: flex; flex-direction: column; gap: 2px;">
+                            <h2 class="chats-section-title" style="color: ${titleColor}; font-size: 26px; font-weight: 800; margin: 0; line-height: 1.1;">Chats</h2>
+                            <span id="header-chats-count" class="chats-section-count" style="font-size: 13px; font-weight: 600; color: var(--text-muted); opacity: 0.8;">${uniqueProfiles.length} conversation${uniqueProfiles.length !== 1 ? 's' : ''}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            // === بطاقة تحتوي على كل الـ items ===
+            const listCard = document.createElement('div');
+            listCard.className = 'chats-list-card';
+            container.appendChild(listCard);
+
             uniqueProfiles.forEach((profile, index) => {
                 const lastChat = chatPartnersMap.get(profile.user_id);
                 const initial = (profile.full_name || '?').charAt(0).toUpperCase();
                 const genderClass = profile.gender === 'female' ? 'female' : 'male';
-                const genderSymbol = profile.gender === 'female' ? '♀' : '♂';
+                const unreadCount = unreadCountMap.get(profile.user_id) || 0;
+                const hasUnread = unreadCount > 0;
 
                 const item = document.createElement('div');
-                item.className = `chat-item ${genderClass}`;
+                item.className = `chat-item ${genderClass}${hasUnread ? ' chat-item-unread' : ''}`;
                 item.setAttribute('data-user-id', profile.user_id);
 
                 const isOnline = onlineUsers.has(profile.user_id);
                 const age = calculateAge(profile.dob);
 
-
-
-                // حساب المسافة بدقة وتنسيق حالة الاتصال
-                let distanceTextHTML = '';
-                if (currentUserProfile && currentUserProfile.latitude && currentUserProfile.longitude && profile.latitude && profile.longitude) {
-                    const dist = calculateDistance(currentUserProfile.latitude, currentUserProfile.longitude, profile.latitude, profile.longitude);
-                    if (dist !== null) {
-                        const distValue = dist < 1 ? `${Math.round(dist * 1000)}m` : `${dist.toFixed(1)}km`;
-                        distanceTextHTML = `<span style="color: var(--text-white); font-weight: 600; display:inline-flex; align-items:center; gap:3px;"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px;"></i>${distValue}</span>`;
+                // حساب الوقت منذ آخر رسالة بالدقائق
+                const lastMsgDate = lastChat.created_at ? new Date(lastChat.created_at) : null;
+                let timeBadgeText = '0m';
+                if (lastMsgDate) {
+                    const diffMs = Date.now() - lastMsgDate.getTime();
+                    const diffMins = Math.floor(diffMs / 60000);
+                    const diffHrs = Math.floor(diffMins / 60);
+                    if (diffMins < 60) {
+                        timeBadgeText = `${diffMins}m`;
+                    } else if (diffHrs < 24) {
+                        timeBadgeText = `${diffHrs}h`;
+                    } else {
+                        timeBadgeText = `${Math.floor(diffHrs / 24)}j`;
                     }
                 }
 
-                const lastSeenTime = profile.last_seen || profile.created_at;
-                let statusText = isOnline 
-                    ? '<span style="color:#22c55e; font-weight:700;">En ligne</span>' 
-                    : `Connexion : ${formatRelativeTime(lastSeenTime)}`;
-                
-                // إذا كان النص طويلا، يمكننا التخلي عن كلمة "آخر ظهور:" لتوفير المساحة
-                if (!isOnline && distanceTextHTML) {
-                    statusText = `${formatRelativeTime(lastSeenTime)}`;
+                // حساب المسافة (km)
+                let distBadgeHtml = '';
+                if (currentUserProfile && currentUserProfile.latitude && currentUserProfile.longitude && profile.latitude && profile.longitude) {
+                    const dist = calculateDistance(
+                        currentUserProfile.latitude, currentUserProfile.longitude,
+                        profile.latitude, profile.longitude
+                    );
+                    if (dist !== null) {
+                        const distValue = dist < 1
+                            ? `${Math.round(dist * 1000)}m`
+                            : `${dist.toFixed(1)}km`;
+                        distBadgeHtml = `<span class="chat-stat-badge chat-stat-km ${genderClass}"><i class="fas fa-location-dot"></i>${distValue}</span>`;
+                    }
                 }
 
-                const rightMetaText = distanceTextHTML 
-                    ? `<span dir="ltr" style="display:inline-flex; align-items:center; gap:6px; font-size:11px;">${statusText} <span style="opacity:0.3;">•</span> <span>${distanceTextHTML}</span></span>` 
-                    : `<span style="font-size:11px;">${statusText}</span>`;
+                // شارة الجنس والعمر
+                const isFemale = profile.gender === 'female';
+                const genderIcon = isFemale ? 'fa-venus' : 'fa-mars';
+                const ageDisplay = age !== '-' ? age : '?';
+
+                // نص الوقت اليميني
+                const lastSeenTime = profile.last_seen || profile.created_at;
+                const relativeTime = formatRelativeTime(lastSeenTime);
+                const timeDisplay = isOnline
+                    ? '<span class="chat-item-online-text">En ligne</span>'
+                    : relativeTime;
 
                 item.innerHTML = `
+                    <div class="chat-item-left-border ${genderClass}"></div>
                     <div class="chat-item-avatar-wrapper" style="position: relative; flex-shrink: 0;">
                         <div class="chat-item-avatar ${genderClass}">
                             ${profile.avatar_url ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="" loading="lazy">` : initial}
@@ -1985,18 +2154,24 @@ async function loadActiveChats() {
                     </div>
                     <div class="chat-item-details">
                         <div class="chat-item-name-row">
-                            <span class="chat-item-name">
+                            <span class="chat-item-name${hasUnread ? ' chat-item-name-bold' : ''}">
                                 ${escapeHtml(profile.full_name || 'Utilisateur')}
-                                ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 10px; margin-right: 4px;" title="Membre VIP"></i>' : ''}
+                                ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 10px;" title="VIP"></i>' : ''}
                             </span>
+                            <span class="chat-item-time-right">${timeDisplay}</span>
                         </div>
-                        <div class="chat-item-badge-row" style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
-                            <span class="gender-badge ${genderClass}"><i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i> ${age !== '-' ? age : ''}</span>
+                        <div class="chat-item-badge-row">
+                            <span class="chat-stat-badge chat-stat-gender ${genderClass}">
+                                <i class="fas ${genderIcon}"></i>
+                                ${ageDisplay}
+                            </span>
+                            ${distBadgeHtml}
                         </div>
-                        <p class="chat-item-lastmsg">${escapeHtml(lastChat.content)}</p>
+                        <p class="chat-item-lastmsg${hasUnread ? ' chat-item-lastmsg-unread' : ''}">${escapeHtml(lastChat.content)}</p>
                     </div>
-                    <div class="chat-item-meta" style="text-align: left; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; flex-shrink: 0;">
-                        <span class="chat-item-time">${rightMetaText}</span>
+                    <div class="chat-item-chevron">
+                        ${hasUnread ? `<span class="chat-item-unread-badge">${unreadCount > 99 ? '99+' : unreadCount}</span>` : ''}
+                        <i class="fas fa-chevron-right chat-item-arrow"></i>
                     </div>
                 `;
 
@@ -2004,7 +2179,7 @@ async function loadActiveChats() {
                     openChatWindow(profile);
                 });
 
-                container.appendChild(item);
+                listCard.appendChild(item);
             });
         } else {
             container.innerHTML = `
@@ -2021,11 +2196,89 @@ async function loadActiveChats() {
     }
 }
 
+// === CSS ديال الرسائل غير المقروءة ===
+(function injectUnreadStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        /* خلفية حمراء خفيفة للمحادثة اللي فيها رسائل جديدة */
+        .chat-item.chat-item-unread {
+            background: rgba(239, 68, 68, 0.08) !important;
+            border-left: 3px solid #ef4444 !important;
+        }
+        /* اسم المرسل بولد */
+        .chat-item-name.chat-item-name-bold {
+            font-weight: 800 !important;
+            color: #fff !important;
+        }
+        /* آخر رسالة بلون أبيض أكثر وضوحاً */
+        .chat-item-lastmsg.chat-item-lastmsg-unread {
+            color: rgba(255,255,255,0.85) !important;
+            font-weight: 600 !important;
+        }
+        /* شارة عدد الرسائل الحمراء */
+        .chat-item-unread-badge {
+            background: #ef4444;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            box-shadow: 0 2px 8px rgba(239,68,68,0.5);
+        }
+        /* شارة تبويب Chats بالأحمر — نقطة صغيرة فوق الأيقونة */
+        #chats-unread-badge {
+            background: #ef4444 !important;
+            color: #fff !important;
+            font-size: 9px !important;
+            font-weight: 800 !important;
+            min-width: 16px !important;
+            height: 16px !important;
+            border-radius: 8px !important;
+            padding: 0 4px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: absolute !important;
+            top: -5px !important;
+            right: -7px !important;
+            box-shadow: 0 1px 5px rgba(239,68,68,0.6) !important;
+            border: 1.5px solid #0f172a !important;
+            line-height: 1 !important;
+        }
+        /* نضمن أن .icon فيها position:relative */
+        #btn-nav-chats .icon {
+            position: relative !important;
+        }
+        /* شارة الجرس بالأحمر */
+        #notif-bell-badge {
+            background: #ef4444 !important;
+            color: #fff !important;
+            font-size: 9px !important;
+            font-weight: 800 !important;
+            min-width: 16px !important;
+            height: 16px !important;
+            border-radius: 8px !important;
+            padding: 0 4px !important;
+            position: absolute !important;
+            top: -5px !important;
+            right: -7px !important;
+            box-shadow: 0 1px 5px rgba(239,68,68,0.6) !important;
+            border: 1.5px solid #0f172a !important;
+        }
+    `;
+    document.head.appendChild(style);
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
-    const loginBtn    = document.getElementById('login-btn');
-    const tiktokBtn   = document.getElementById('tiktok-btn');
+    const loginBtn = document.getElementById('login-btn');
+    const tiktokBtn = document.getElementById('tiktok-btn');
     const facebookBtn = document.getElementById('facebook-btn');
-    const logoutBtn   = document.getElementById('logout-btn');
+    const logoutBtn = document.getElementById('logout-btn');
 
     if (loginBtn) {
         loginBtn.addEventListener('click', async () => {
@@ -2094,27 +2347,60 @@ document.addEventListener('DOMContentLoaded', () => {
             // إزالة أي قائمة مفتوحة
             const oldMenu = document.querySelector('.chat-dropdown-menu');
             if (oldMenu) { oldMenu.remove(); return; }
-            
+
             const menu = document.createElement('div');
             menu.className = 'chat-dropdown-menu';
             menu.innerHTML = `
-                <button class="dropdown-item" id="dd-view-profile">
-                    <i class="fas fa-user" style="margin-right:8px;"></i> Voir le profil
+                <button class="dropdown-item" id="dd-add-fav">
+                    <span class="dd-icon dd-icon-fav"><i class="fas fa-star"></i></span>
+                    <span>Ajouter à Mes favoris</span>
                 </button>
                 <div class="dropdown-divider"></div>
-                <button class="dropdown-item danger" id="dd-block-user">
-                    <i class="fas fa-ban" style="margin-right:8px;"></i> Bloquer cet utilisateur
+                <button class="dropdown-item" id="dd-clear-history">
+                    <span class="dd-icon dd-icon-clear"><i class="fas fa-trash-can"></i></span>
+                    <span>Effacer l'historique du chat</span>
                 </button>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" id="dd-block-user">
+                    <span class="dd-icon dd-icon-block"><i class="fas fa-ban"></i></span>
+                    <span>Bloquer</span>
+                </button>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" id="dd-shortcut">
+                    <span class="dd-icon dd-icon-shortcut"><i class="fas fa-share-from-square"></i></span>
+                    <span>Créer un raccourci</span>
+                </button>
+                <div class="dropdown-divider"></div>
                 <button class="dropdown-item danger" id="dd-report-user">
-                    <i class="fas fa-flag" style="margin-right:8px;"></i> Signaler
+                    <span class="dd-icon dd-icon-report"><i class="fas fa-flag"></i></span>
+                    <span>Signaler un abus</span>
                 </button>
             `;
             chatMenuBtn.parentElement.style.position = 'relative';
             chatMenuBtn.parentElement.appendChild(menu);
 
-            menu.querySelector('#dd-view-profile').addEventListener('click', () => {
+            // إضافة للمفضلة
+            menu.querySelector('#dd-add-fav').addEventListener('click', async () => {
                 menu.remove();
-                if (activeChatUserProfile) openUserModal(activeChatUserProfile);
+                if (!activeChatUserId || !currentUser) return;
+                try {
+                    await sb.from('favorites').upsert([{ user_id: currentUser.id, favorite_user_id: activeChatUserId }]);
+                    showToast('Ajouté aux favoris ⭐');
+                } catch (e) { showToast('Erreur lors de l\'ajout aux favoris'); }
+            });
+
+            // مسح سجل الشات
+            menu.querySelector('#dd-clear-history').addEventListener('click', async () => {
+                menu.remove();
+                if (!activeChatUserId || !currentUser) return;
+                if (!confirm('Effacer tout l\'historique de cette conversation ?')) return;
+                try {
+                    await sb.from('messages').delete()
+                        .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatUserId}),and(sender_id.eq.${activeChatUserId},receiver_id.eq.${currentUser.id})`);
+                    const container = document.getElementById('chat-messages-container');
+                    if (container) container.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-muted);gap:8px;"><i class="far fa-comments" style="font-size:24px;opacity:0.5;"></i><p style="font-size:13px;">Aucun message. Démarrer la conversation maintenant !</p></div>`;
+                    showToast('Historique effacé 🗑️');
+                } catch (e) { showToast('Erreur lors de la suppression'); }
             });
 
             menu.querySelector('#dd-block-user').addEventListener('click', async () => {
@@ -2122,6 +2408,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (activeChatUserProfile && confirm(`Voulez-vous bloquer ${activeChatUserProfile.full_name || 'cet utilisateur'} ?`)) {
                     await blockUser(activeChatUserId);
                     closeChatWindow();
+                }
+            });
+
+            // إنشاء اختصار (Shortcut) — يفتح الشات مباشرة عبر URL
+            menu.querySelector('#dd-shortcut').addEventListener('click', () => {
+                menu.remove();
+                if (!activeChatUserId) return;
+                const shortcutUrl = `${window.location.origin}${window.location.pathname}?chat=${activeChatUserId}`;
+                if (navigator.share) {
+                    navigator.share({ title: 'HayMoi Chat', url: shortcutUrl }).catch(() => { });
+                } else {
+                    navigator.clipboard.writeText(shortcutUrl).then(() => showToast('Lien copié 📋')).catch(() => showToast('Impossible de copier le lien'));
                 }
             });
 
@@ -2187,7 +2485,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatInput.value = text.substring(0, start) + emoji + text.substring(end);
                 chatInput.selectionStart = chatInput.selectionEnd = start + emoji.length;
                 chatInput.focus();
-                
+
                 // تفعيل زر الإرسال وإخفاء الميكروفون
                 chatInput.dispatchEvent(new Event('input'));
             }
@@ -2214,7 +2512,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chatImgBtn.addEventListener('click', () => {
             attachmentMenu.classList.toggle('open');
         });
-        
+
         // إغلاق القائمة عند النقر في أي مكان آخر
         document.addEventListener('click', (e) => {
             if (!attachmentMenu.contains(e.target) && !chatImgBtn.contains(e.target)) {
@@ -2227,7 +2525,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (attachPhotoBtn && chatImgInput) {
         attachPhotoBtn.addEventListener('click', () => {
             chatImgInput.click();
-            if(attachmentMenu) attachmentMenu.classList.remove('open');
+            if (attachmentMenu) attachmentMenu.classList.remove('open');
         });
 
         chatImgInput.addEventListener('change', async (e) => {
@@ -2573,7 +2871,7 @@ async function loadBlockedUsers() {
             .from('blocks')
             .select('blocker_id, blocked_id')
             .or(`blocker_id.eq.${currentUser.id},blocked_id.eq.${currentUser.id}`);
-        
+
         if (error) {
             if (error.code === '42P01') {
                 debugLog("loadBlockedUsers: Table 'blocks' does not exist in DB yet.", true);
@@ -2581,7 +2879,7 @@ async function loadBlockedUsers() {
             }
             throw error;
         }
-        
+
         blockedUserIds.clear();
         if (data) {
             data.forEach(row => {
@@ -2604,16 +2902,16 @@ async function blockUser(userId) {
         const { error } = await sb
             .from('blocks')
             .insert([{ blocker_id: currentUser.id, blocked_id: userId }]);
-        
+
         if (error) throw error;
-        
+
         blockedUserIds.add(userId);
         debugLog(`blockUser: Blocked user ${userId}`);
-        
+
         // إعادة تحميل القوائم
         if (currentUser) loadDiscoveryUsers(currentUser);
         loadActiveChats();
-        
+
         showToastNotification(null, 'Bloqué', 'Cet utilisateur a été bloqué avec succès.', 'system');
     } catch (err) {
         console.error('خطأ أثناء الحظر:', err);
@@ -2633,12 +2931,12 @@ async function unblockUser(userId) {
             .delete()
             .eq('blocker_id', currentUser.id)
             .eq('blocked_id', userId);
-        
+
         if (error) throw error;
-        
+
         blockedUserIds.delete(userId);
         debugLog(`unblockUser: Unblocked user ${userId}`);
-        
+
         if (currentUser) loadDiscoveryUsers(currentUser);
         loadActiveChats();
     } catch (err) {
@@ -2704,7 +3002,7 @@ function openReportModal(profile) {
             return;
         }
         const details = overlay.querySelector('.report-details-input').value.trim();
-        
+
         try {
             const { error } = await sb
                 .from('reports')
@@ -2714,9 +3012,9 @@ function openReportModal(profile) {
                     reason: selectedReason,
                     details: details || null
                 }]);
-            
+
             if (error) throw error;
-            
+
             overlay.remove();
             showToastNotification(null, 'Signalement envoyé', 'Merci ! Le signalement sera examiné prochainement.', 'system');
         } catch (err) {
@@ -2771,7 +3069,7 @@ function initGlobalMessageNotifier() {
                     .select('full_name, gender, avatar_url')
                     .eq('user_id', newMsg.sender_id)
                     .limit(1);
-                
+
                 const sender = senderProfiles && senderProfiles.length > 0 ? senderProfiles[0] : null;
                 const senderName = sender ? sender.full_name : 'Utilisateur';
                 const senderGender = sender ? sender.gender : 'male';
@@ -2793,9 +3091,9 @@ function initGlobalMessageNotifier() {
             }
         })
         .subscribe();
-    
+
     debugLog("initGlobalMessageNotifier: Subscribed to global messages.");
-    
+
     // تحديث العدد الأولي للرسائل غير المقروءة
     updateUnreadBadge();
 }
@@ -2803,21 +3101,22 @@ function initGlobalMessageNotifier() {
 async function updateUnreadBadge() {
     if (!currentUser) return;
     try {
-        const { data, error } = await sb
+        const { count, error } = await sb
             .from('messages')
             .select('id', { count: 'exact', head: true })
             .eq('receiver_id', currentUser.id)
             .eq('is_read', false);
-        
-        const count = data ? data.length : 0;
-        
+
+        const unreadCount = (count && count > 0) ? count : 0;
+
         // تحديث شارة تبويب Chats
         const chatsBadge = document.getElementById('chats-unread-badge');
         if (chatsBadge) {
-            if (count > 0) {
-                chatsBadge.textContent = count > 99 ? '99+' : count;
+            if (unreadCount > 0) {
+                chatsBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
                 chatsBadge.style.display = 'flex';
             } else {
+                chatsBadge.textContent = '';
                 chatsBadge.style.display = 'none';
             }
         }
@@ -2825,14 +3124,18 @@ async function updateUnreadBadge() {
         // تحديث أيقونة الجرس
         const bellBadge = document.getElementById('notif-bell-badge');
         if (bellBadge) {
-            if (count > 0) {
-                bellBadge.textContent = count > 99 ? '99+' : count;
+            if (unreadCount > 0) {
+                bellBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
                 bellBadge.style.display = 'flex';
             } else {
+                bellBadge.textContent = '';
                 bellBadge.style.display = 'none';
             }
         }
     } catch (err) {
+        // في حالة الخطأ نخفي الشارة
+        const chatsBadge = document.getElementById('chats-unread-badge');
+        if (chatsBadge) { chatsBadge.style.display = 'none'; chatsBadge.textContent = ''; }
         debugLog("updateUnreadBadge: Error: " + err.message, true);
     }
 }
@@ -2858,8 +3161,10 @@ async function markAllMessagesAsRead(senderId) {
             .eq('receiver_id', currentUser.id)
             .eq('sender_id', senderId)
             .eq('is_read', false);
-        
-        updateUnreadBadge();
+
+        // تحديث الشارة وإعادة رسم قائمة الشات باش تتحيد الخلفية الحمراء
+        await updateUnreadBadge();
+        loadActiveChats();
     } catch (err) {
         debugLog("markAllMessagesAsRead: Error: " + err.message, true);
     }
@@ -2925,6 +3230,18 @@ function showToastNotification(senderInfo, title, message, type) {
     }, 5000);
 }
 
+// دالة Toast بسيطة للإشعارات السريعة
+function showToast(msg) {
+    const old = document.querySelector('.simple-toast');
+    if (old) old.remove();
+    const t = document.createElement('div');
+    t.className = 'simple-toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.classList.add('show'), 10);
+    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 2800);
+}
+
 // ═══════════════════════════════════════════════════
 // === نظام الصور والأفاتار (Avatar System) ===
 // ═══════════════════════════════════════════════════
@@ -2965,7 +3282,7 @@ async function uploadAvatar(file) {
     try {
         // ضغط الصورة
         const compressed = await compressImage(file, 400, 0.85);
-        
+
         const fileName = `avatar_${currentUser.id}_${Date.now()}.jpg`;
         const filePath = `avatars/${fileName}`;
 
@@ -3045,11 +3362,11 @@ async function upgradeToVIP() {
         }
 
         showToastNotification(null, 'Félicitations ! 🎉', 'Vous êtes maintenant un membre VIP !', 'system');
-        
+
         // إعادة تحميل البروفايل وقائمة الأعضاء
         await loadOwnProfile(currentUser);
         if (currentUser) loadDiscoveryUsers(currentUser);
-        
+
     } catch (err) {
         console.error('خطأ أثناء ترقية VIP:', err);
         if (err.code === '42703' || (err.message && err.message.includes('is_vip'))) {
@@ -3080,10 +3397,10 @@ async function downgradeFromVIP() {
         }
 
         showToastNotification(null, 'Abonnement annulé', 'Retour au compte standard effectué avec succès.', 'system');
-        
+
         await loadOwnProfile(currentUser);
         if (currentUser) loadDiscoveryUsers(currentUser);
-        
+
     } catch (err) {
         console.error('خطأ أثناء إلغاء VIP:', err);
         if (err.code === '42703' || (err.message && err.message.includes('is_vip'))) {
@@ -3129,92 +3446,319 @@ setInterval(updateRelativeTimes, 120000); // كل 120 ثانية
 
 // === نافذة الفلترة المتقدمة ===
 function openAdvancedFilterModal(profiles, listContainer) {
+    // إزالة أي مودال موجود مسبقاً
+    const existing = document.getElementById('adv-filter-modal');
+    if (existing) existing.remove();
+
+    const initialSearchBg = currentGenderFilter === 'female'
+        ? '#ec4899'
+        : currentGenderFilter === 'male'
+            ? '#3b82f6'
+            : 'linear-gradient(135deg, #3b82f6, #ec4899)';
+
     const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:2000; display:flex; align-items:center; justify-content:center; animation:fadeInModal 0.2s ease; padding: 20px;';
+    modal.id = 'adv-filter-modal';
+    modal.style.cssText = [
+        'position:fixed',
+        'inset:0',
+        'background:rgba(0,0,0,0.72)',
+        'z-index:2000',
+        'display:flex',
+        'align-items:center',
+        'justify-content:center',
+        'padding:20px',
+        'animation:fadeInModal 0.2s ease',
+    ].join(';');
 
     modal.innerHTML = `
-        <div class="user-modal-card" style="width:100%; max-width:400px; background:#1c1c1e; border-radius:24px; overflow:hidden; color:var(--text-white); animation:slideUpModal 0.3s ease; padding:0;">
-            <!-- Header Tabs -->
-            <div style="display:flex; background:rgba(255,255,255,0.03); color:var(--text-white); font-weight:bold;">
-                <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">Par ID</div>
-                <div style="flex:1; text-align:center; padding:15px; opacity:0.7; cursor:pointer;">Avancé</div>
-                <div style="flex:1; text-align:center; padding:15px; border-bottom:3px solid var(--color-primary); cursor:pointer;">Simple</div>
+    <style>
+        @keyframes haymoi-modal-pop {
+            from { transform: scale(0.85); opacity: 0; }
+            to   { transform: scale(1);    opacity: 1; }
+        }
+        #adv-filter-modal .hm-card {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(20, 20, 26, 0.98);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 38px;
+            overflow: hidden;
+            color: #fff;
+            animation: haymoi-modal-pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        /* ── التبويبات ── */
+        #adv-filter-modal .hm-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 0 4px;
+        }
+        #adv-filter-modal .hm-tab {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 16px 8px 13px;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+            font-family: inherit;
+        }
+        #adv-filter-modal .hm-tab.active { color: #fff; }
+        #adv-filter-modal .hm-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 10%;
+            width: 80%;
+            height: 2.5px;
+            background: #3b82f6;
+            border-radius: 10px;
+            box-shadow: 0 0 8px #3b82f6;
+        }
+        /* ── pills الجنس ── */
+        #adv-filter-modal .hm-pills {
+            display: flex;
+            gap: 9px;
+            margin-bottom: 22px;
+        }
+        #adv-filter-modal .hm-pill {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.75);
+            padding: 11px 6px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: inherit;
+            text-align: center;
+        }
+        #adv-filter-modal .hm-pill.active {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+        /* ── label فوق الـ select ── */
+        #adv-filter-modal .hm-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.38);
+            margin-bottom: 9px;
+        }
+        /* ── select المسافة ── */
+        #adv-filter-modal .hm-select {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 14px;
+            outline: none;
+            appearance: none;
+            cursor: pointer;
+            font-family: inherit;
+            margin-bottom: 20px;
+        }
+        #adv-filter-modal .hm-select option { background:#1a1a22; }
+        /* ── بطاقة VIP ── */
+        #adv-filter-modal .hm-vip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(251,191,36,0.09), rgba(20,20,22,0.85));
+            border: 1px solid rgba(251,191,36,0.28);
+            border-radius: 22px;
+            padding: 14px 18px;
+            margin-bottom: 28px;
+            cursor: pointer;
+        }
+        #adv-filter-modal .hm-vip-label {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #fbbf24;
+            font-weight: 800;
+            font-size: 13px;
+        }
+        /* ── Toggle iOS ── */
+        #adv-filter-modal .hm-toggle-wrap {
+            position: relative;
+            width: 44px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+        #adv-filter-modal .hm-toggle-wrap input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+        #adv-filter-modal .hm-toggle-track {
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.15);
+            border-radius: 13px;
+            transition: background 0.3s;
+        }
+        #adv-filter-modal .hm-toggle-wrap input:checked + .hm-toggle-track {
+            background: #fbbf24;
+        }
+        #adv-filter-modal .hm-toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+            pointer-events: none;
+        }
+        #adv-filter-modal .hm-toggle-wrap input:checked ~ .hm-toggle-thumb {
+            transform: translateX(18px);
+        }
+        /* ── أزرار الأكشن ── */
+        #adv-filter-modal .hm-footer {
+            display: flex;
+            gap: 12px;
+        }
+        #adv-filter-modal .hm-btn-cancel {
+            flex: 1;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.09);
+            color: rgba(255,255,255,0.55);
+            padding: 14px;
+            border-radius: 22px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+        #adv-filter-modal .hm-btn-cancel:hover { background: rgba(255,255,255,0.1); }
+        #adv-filter-modal .hm-btn-search {
+            flex: 1.5;
+            border: none;
+            color: #fff;
+            padding: 14px;
+            border-radius: 22px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.4s, box-shadow 0.4s;
+            box-shadow: 0 8px 20px rgba(59,130,246,0.25);
+        }
+    </style>
+
+    <div class="hm-card">
+        <!-- التبويبات -->
+        <div class="hm-tabs">
+            <button class="hm-tab active" data-tab="simple">Simple</button>
+            <button class="hm-tab" data-tab="advanced">Avancé</button>
+            <button class="hm-tab" data-tab="id">Par ID</button>
+        </div>
+
+        <div style="padding:24px 22px 22px;">
+            <!-- الجنس -->
+            <span class="hm-label">Genre</span>
+            <div class="hm-pills">
+                <button class="hm-pill ${currentGenderFilter === 'all' ? 'active' : ''}" data-val="all">Tous</button>
+                <button class="hm-pill ${currentGenderFilter === 'female' ? 'active' : ''}" data-val="female">
+                    <i class="fas fa-venus" style="color:#ec4899;margin-right:4px;"></i>Femmes
+                </button>
+                <button class="hm-pill ${currentGenderFilter === 'male' ? 'active' : ''}" data-val="male">
+                    <i class="fas fa-mars" style="color:#3b82f6;margin-right:4px;"></i>Hommes
+                </button>
             </div>
 
-            <div style="padding:24px;">
-                <!-- Gender -->
-                <h4 style="margin-top:0; color:var(--text-muted); font-weight:normal; margin-bottom:12px;">Genre</h4>
-                <div class="ios-segmented-control">
-                    <div class="adv-gender-btn ${currentGenderFilter==='all'?'active':''}" data-val="all">
-                        Tous
-                    </div>
-                    <div class="adv-gender-btn ${currentGenderFilter==='female'?'active':''}" data-val="female">
-                        <i class="fas fa-venus" style="color:#ec4899; margin-right:4px;"></i> Femmes
-                    </div>
-                    <div class="adv-gender-btn ${currentGenderFilter==='male'?'active':''}" data-val="male">
-                        <i class="fas fa-mars" style="color:#3b82f6; margin-right:4px;"></i> Hommes
-                    </div>
-                </div>
-
-                <!-- Distance -->
-                <h4 style="color:#666; font-weight:normal; margin-bottom:12px;">Distance maximale</h4>
-                <select id="adv-dist" style="width:100%; padding:12px; border:1px solid rgba(255,255,255,0.1); background:#2a2a2d; border-radius:12px;; font-size:16px; margin-bottom:24px; outline:none; color:var(--text-white); cursor:pointer;">
-                    <option value="10" ${currentDistanceFilter===10?'selected':''}>10 km</option>
-                    <option value="50" ${currentDistanceFilter===50?'selected':''}>50 km</option>
-                    <option value="100" ${currentDistanceFilter===100?'selected':''}>100 km</option>
-                    <option value="500" ${currentDistanceFilter===500?'selected':''}>500 km</option>
-                    <option value="10000" ${currentDistanceFilter===10000?'selected':''}>Toute distance</option>
+            <!-- المسافة -->
+            <span class="hm-label">Distance maximale</span>
+            <div style="position:relative;">
+                <select id="adv-dist" class="hm-select">
+                    <option value="10"    ${currentDistanceFilter === 10 ? 'selected' : ''}>10 km</option>
+                    <option value="50"    ${currentDistanceFilter === 50 ? 'selected' : ''}>50 km</option>
+                    <option value="100"   ${currentDistanceFilter === 100 ? 'selected' : ''}>100 km</option>
+                    <option value="500"   ${currentDistanceFilter === 500 ? 'selected' : ''}>500 km</option>
+                    <option value="10000" ${currentDistanceFilter === 10000 ? 'selected' : ''}>Toute distance</option>
                 </select>
+                <i class="fas fa-chevron-down" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.35);font-size:12px;pointer-events:none;"></i>
+            </div>
 
-                <!-- Verified VIP Checkbox -->
-                <label class="vip-filter-label" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; font-size:16px; margin-bottom:30px; font-weight:800; background:linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(20, 20, 22, 0.8)); padding:18px 15px; border-radius:14px; border:1px solid rgba(251, 191, 36, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                    <div class="ios-toggle vip-toggle">
-                        <input type="checkbox" id="adv-verified" ${requireVerifiedFilter?'checked':''}>
-                        <div class="toggle-bg"></div>
-                    </div>
-                    <span style="color:#fbbf24; display:flex; align-items:center; gap:8px;">
-                        Réservé aux membres VIP <i class="fas fa-gem" style="font-size:14px;"></i>
-                    </span>
-                </label>
-
-                <!-- Action Buttons -->
-                <div style="display:flex; gap:12px;">
-                    <button id="adv-cancel" style="flex:1; padding:14px; background:rgba(255,255,255,0.08); color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.2s;">Annuler</button>
-                    <button id="adv-search" style="flex:1; padding:14px; background:${currentGenderFilter==='female' ? '#ec4899' : currentGenderFilter==='male' ? '#3b82f6' : 'linear-gradient(45deg, #3b82f6, #ec4899)'}; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer; transition:0.5s;">Rechercher</button>
+            <!-- VIP -->
+            <div class="hm-vip" id="adv-vip-card">
+                <div class="hm-vip-label">
+                    <i class="fas fa-gem"></i>
+                    Réservé aux membres VIP
                 </div>
+                <label class="hm-toggle-wrap">
+                    <input type="checkbox" id="adv-verified" ${requireVerifiedFilter ? 'checked' : ''}>
+                    <div class="hm-toggle-track"></div>
+                    <div class="hm-toggle-thumb"></div>
+                </label>
+            </div>
+
+            <!-- الأزرار -->
+            <div class="hm-footer">
+                <button class="hm-btn-cancel" id="adv-cancel">Annuler</button>
+                <button class="hm-btn-search" id="adv-search" style="background:${initialSearchBg};">Rechercher</button>
             </div>
         </div>
+    </div>
     `;
 
     document.body.appendChild(modal);
 
-    const genderBtns = modal.querySelectorAll('.adv-gender-btn');
+    // ── منطق التبويبات (ديكوراتيف - Simple هو الافتراضي) ──
+    modal.querySelectorAll('.hm-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            modal.querySelectorAll('.hm-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+        });
+    });
+
+    // ── منطق pills الجنس ──
+    const pillBtns = modal.querySelectorAll('.hm-pill');
     let tempGender = currentGenderFilter;
-    genderBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            genderBtns.forEach(b => b.classList.remove('active'));
-            const target = e.currentTarget;
-            target.classList.add('active');
-            tempGender = target.getAttribute('data-val');
-            
+    pillBtns.forEach(pill => {
+        pill.addEventListener('click', () => {
+            pillBtns.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            tempGender = pill.getAttribute('data-val');
+
             const searchBtn = modal.querySelector('#adv-search');
             if (tempGender === 'female') {
                 searchBtn.style.background = '#ec4899';
+                searchBtn.style.boxShadow = '0 8px 20px rgba(236,72,153,0.3)';
             } else if (tempGender === 'male') {
                 searchBtn.style.background = '#3b82f6';
+                searchBtn.style.boxShadow = '0 8px 20px rgba(59,130,246,0.3)';
             } else {
-                searchBtn.style.background = 'linear-gradient(45deg, #3b82f6, #ec4899)';
+                searchBtn.style.background = 'linear-gradient(135deg, #3b82f6, #ec4899)';
+                searchBtn.style.boxShadow = '0 8px 20px rgba(59,130,246,0.25)';
             }
         });
     });
 
+    // ── إغلاق بالضغط على الخلفية ──
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+
     modal.querySelector('#adv-cancel').addEventListener('click', () => modal.remove());
+
     modal.querySelector('#adv-search').addEventListener('click', () => {
         currentGenderFilter = tempGender;
         currentDistanceFilter = parseInt(modal.querySelector('#adv-dist').value);
         requireVerifiedFilter = modal.querySelector('#adv-verified').checked;
-        
         modal.remove();
         renderFilteredList(profiles, listContainer);
     });

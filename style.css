@@ -10,6 +10,14 @@
 :root {
     --font-primary: 'Outfit', 'Tajawal', sans-serif;
     --bg-glass: #111726;
+
+    /* === خلفية الواترمارك المشتركة === */
+    --watermark-svg: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50%25' y='50%25' font-family='Arial%2C sans-serif' font-weight='900' font-size='12' fill='%23ff4b4b' fill-opacity='0.13' text-anchor='middle' transform='rotate(-25%2C 60%2C 60)'%3EHay Moi%3C%2Ftext%3E%3C%2Fsvg%3E");
+    --watermark-bg:
+        var(--watermark-svg),
+        radial-gradient(at 0% 0%, rgba(255, 75, 75, 0.04) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(255, 75, 75, 0.025) 0px, transparent 50%);
+    --watermark-size: 120px 120px, 100% 100%, 100% 100%;
     /* ØµÙ„Ø¨ Ø¯Ø§ÙƒÙ† ÙˆØªØ¬Ù†Ø¨ Ø§Ù„Ø²Ø¬Ø§Ø¬ÙŠ Ù„Ù„Ø­ØµÙˆÙ„ Ø¹Ù„Ù‰ Ø§Ù„Ø¯ÙŠØ²Ø§ÙŠÙ† Ø§Ù„Ù…Ø·Ù„ÙˆØ¨ */
     --bg-glass-hover: #161e30;
     --border-glass: rgba(255, 255, 255, 0.06);
@@ -39,7 +47,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #0b0f19;
+    background-color: #0d0f14;
+    background-image: var(--watermark-bg);
+    background-repeat: repeat, no-repeat, no-repeat;
+    background-size: var(--watermark-size);
     /* Ù„ÙˆÙ† Ø¯Ø§ÙƒÙ† Ø§Ø­ØªØ±Ø§Ù ÙŠ ÙƒØ®Ù„Ù ÙŠØ© Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© */
     color: var(--text-white);
     padding: 20px;
@@ -63,9 +74,11 @@ body {
 .video-overlay {
     position: fixed;
     inset: 0;
-    background: linear-gradient(135deg, #0f172a, #090d16); /* Solid background to hide the app underneath */
+    background-color: #0d0f14;
+    background-image: var(--watermark-bg);
+    background-repeat: repeat, no-repeat, no-repeat;
+    background-size: var(--watermark-size);
     z-index: -1;
-    /* ÙŠÙˆØ¶Ø¹ Ù ÙˆÙ‚ Ø§Ù„Ù ÙŠØ¯ÙŠÙˆ ÙˆØªØ­Øª Ø£Ø²Ø±Ø§Ø± ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ */
 }
 
 /* 2. Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã˜Â¨Ã˜Â¹ Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å  (Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã™â€ Ã˜ÂªÃ™Å Ã™â€ Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â²Ã˜Â¬Ã˜Â§Ã˜Â¬Ã™Å ) */
@@ -545,7 +558,7 @@ body {
 
 /* --- 8. Ã˜ÂªÃ™â€ Ã˜Â³Ã™Å Ã™â€š Ã™Ë†Ã˜Â§Ã˜Â¬Ã™â€¡Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â·Ã˜Â¨Ã™Å Ã™â€š Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â© (app.html) --- */
 .app-body {
-    background: #090c12;
+    background: #0d0f14;
     color: var(--text-white);
     margin: 0;
     padding: 0;
@@ -558,26 +571,23 @@ body {
     overflow: hidden;
 }
 
-.header-title {
-    display: none !important;
-}
-
 .app-container {
     width: 100%;
     max-width: 480px;
     height: 100vh;
     height: 100dvh;
-    background: rgba(15, 18, 24, 0.85);
-    /* نردوها شفافة شوية باش يبان فيديو الخلفية */
+    background-color: #0d0f14;
+    background-image: var(--watermark-bg);
+    background-repeat: repeat, no-repeat, no-repeat;
+    background-size: var(--watermark-size);
     border-left: 1px solid rgba(255, 255, 255, 0.08);
     border-right: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
     position: relative;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 100px rgba(255, 75, 75, 0.02);
     color: #ffffff;
     overflow: hidden;
-    /* باش الضوء ما يخرجش على الجناب */
 
     --text-white: #ffffff;
     --text-muted: #a3a3a3;
@@ -586,27 +596,20 @@ body {
     --bg-glass-hover: #333333;
 }
 
-/* تصاوبو جوج أضواء خافتة (واحد أزرق وواحد غوز/بنفسجي) */
-.app-container::before,
+/* طبقة neon حمراء خفيفة فوق الواترمارك */
+.app-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow: inset 0 0 80px rgba(255, 75, 75, 0.025);
+    z-index: 0;
+}
+
 .app-container::after {
     content: none;
     display: none;
-}
-
-/* الضوء اللي فوق على اليسار */
-.app-container::before {
-    background: #3b82f6;
-    /* أزرق */
-    top: -50px;
-    left: -100px;
-}
-
-/* الضوء اللي تحت على اليمين */
-.app-container::after {
-    background: #ec4899;
-    /* وردي/غوز */
-    bottom: 100px;
-    right: -100px;
 }
 
 .app-header {
@@ -645,6 +648,7 @@ body {
 }
 
 .header-title {
+    display: inline-block;
     font-size: 18px;
     font-weight: 700;
     color: var(--text-white);
@@ -1069,15 +1073,24 @@ body {
     cursor: pointer;
     position: relative;
     direction: ltr;
-    transition: opacity 0.2s ease, border-color 0.2s ease; /* أسرع وأخف من all */
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+    /* أسرع وأخف من all */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    will-change: transform; /* GPU compositor لسكرول سلس */
+    will-change: transform;
+    /* GPU compositor لسكرول سلس */
 }
 
 /* أنيميشن ظهور بطاقات الأعضاء */
 @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .user-card.female {
@@ -1240,13 +1253,19 @@ body {
 }
 
 .bio-text {
-    font-size: 12.5px;
+    font-size: 12px;
     color: #94a3b8;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 190px;
-    margin: 0;
+    max-width: 185px;
+    margin: 2px 0 0 0;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 20px;
+    padding: 3px 10px;
+    display: inline-block;
+    letter-spacing: 0.01em;
 }
 
 .time-ago {
@@ -1289,10 +1308,30 @@ body {
     .action-btn:hover {
         transform: scale(1.12);
     }
-    .action-btn.chat:hover  { background: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 12px rgba(59,130,246,0.5); }
-    .action-btn.close:hover { background: #ef4444; border-color: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.5); }
-    .action-btn.heart:hover { background: #ff4b82; border-color: #ff4b82; box-shadow: 0 0 12px rgba(255,75,130,0.5); }
-    .action-btn.star:hover  { background: #eab308; border-color: #eab308; box-shadow: 0 0 12px rgba(234,179,8,0.5); }
+
+    .action-btn.chat:hover {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+    }
+
+    .action-btn.close:hover {
+        background: #ef4444;
+        border-color: #ef4444;
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+    }
+
+    .action-btn.heart:hover {
+        background: #ff4b82;
+        border-color: #ff4b82;
+        box-shadow: 0 0 12px rgba(255, 75, 130, 0.5);
+    }
+
+    .action-btn.star:hover {
+        background: #eab308;
+        border-color: #eab308;
+        box-shadow: 0 0 12px rgba(234, 179, 8, 0.5);
+    }
 }
 
 .action-btn.heart.liked {
@@ -1314,7 +1353,7 @@ body {
     border-radius: 50%;
     padding: 2.5px;
     /* يحدد سمك الإطار المتوهج */
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     /* تدرج لوني فخم افتراضي */
     display: flex;
     align-items: center;
@@ -1407,7 +1446,8 @@ body {
 /* Ø§Ù„ØªØ°ÙŠÙŠÙ„ ÙˆØ§Ù„Ø£Ø²Ø±Ø§Ø± Ø§Ù„Ù…Ø¶Ù…Ù†Ø© Ø¨Ø§Ù„Ø¨Ø·Ø§Ù‚Ø© */
 .user-card-bottom {
     display: flex;
-    justify-content: flex-end; /* تحريك الأزرار لجهة اليمين */
+    justify-content: flex-end;
+    /* تحريك الأزرار لجهة اليمين */
     align-items: center;
     width: 100%;
     margin-top: 3px;
@@ -1487,9 +1527,20 @@ body {
 }
 
 @keyframes flyUpAndFade {
-    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
-    40% { transform: translate(-50%, -120px) scale(1.2); opacity: 1; }
-    100% { transform: translate(-50%, -200px) scale(1); opacity: 0; }
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 1;
+    }
+
+    40% {
+        transform: translate(-50%, -120px) scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -200px) scale(1);
+        opacity: 0;
+    }
 }
 
 
@@ -1583,7 +1634,8 @@ body {
 }
 
 .gender-age-pill.female {
-    background: #ff66a3; /* وردي فاتح */
+    background: #ff66a3;
+    /* وردي فاتح */
 }
 
 /* Ø´Ø§Ø±Ø© Ù…ÙˆÙ‚Ø¹ Ø§Ù„ØªÙˆØ§ØµÙ„ */
@@ -2303,18 +2355,37 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 16px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 13px 16px;
+    border-bottom: none;
+    position: relative;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.18s ease;
     background: transparent;
     direction: rtl;
+}
+
+/* iOS-style separator — يبدأ بعد الأفاتار وليس من الحافة */
+.chat-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    /* مسافة من اليسار بعد الأفاتار */
+    right: 16px;
+    height: 0.5px;
+    background: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+}
+
+.chat-item:last-child::after {
+    display: none;
 }
 
 /* خلفيات ملونة للمحادثات حسب الجنس */
 .chat-item.female {
     background: linear-gradient(to left, rgba(255, 51, 153, 0.08), transparent 70%);
 }
+
 .chat-item.male {
     background: linear-gradient(to left, rgba(26, 117, 255, 0.08), transparent 70%);
 }
@@ -2322,9 +2393,11 @@ body {
 .chat-item:hover {
     background: rgba(255, 255, 255, 0.03);
 }
+
 .chat-item.female:hover {
     background: linear-gradient(to left, rgba(255, 51, 153, 0.15), rgba(255, 51, 153, 0.02) 100%);
 }
+
 .chat-item.male:hover {
     background: linear-gradient(to left, rgba(26, 117, 255, 0.15), rgba(26, 117, 255, 0.02) 100%);
 }
@@ -2701,7 +2774,8 @@ body {
     padding: 10px 4px 16px 4px;
     animation: fadeInView 0.35s ease;
     position: sticky;
-    top: -1px; /* Stick perfectly to the top of the scroll container */
+    top: -1px;
+    /* Stick perfectly to the top of the scroll container */
     z-index: 100;
     /* Removed the solid background as requested by user */
 }
@@ -2727,7 +2801,8 @@ body {
 .search-input-wrapper .search-icon {
     color: rgba(255, 255, 255, 0.4);
     font-size: 14px;
-    margin-left: 10px;
+    margin-left: 0;
+    margin-right: 8px;
 }
 
 .search-input-wrapper input {
@@ -2903,58 +2978,132 @@ body {
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /* Ø§Ù„Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ù…Ù†Ø³Ø¯Ù„Ø© ÙÙŠ Ø§Ù„Ø´Ø§Øª */
+/* ===== Chat Dropdown Menu — iOS Style ===== */
 .chat-dropdown-menu {
     position: absolute;
-    top: 100%;
-    left: 10px;
-    background: #1a2235;
+    top: calc(100% + 8px);
+    right: 0;
+    left: auto;
+    background: rgba(28, 30, 40, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
-    padding: 6px 0;
-    min-width: 200px;
+    border-radius: 18px;
+    padding: 4px 0;
+    min-width: 230px;
     width: max-content;
-    max-width: 280px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    max-width: 300px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.3);
     z-index: 2500;
-    animation: fadeSlideDown 0.2s ease;
+    animation: ddPopIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     overflow: hidden;
+    transform-origin: top right;
+}
+
+@keyframes ddPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0.88);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .chat-dropdown-menu .dropdown-item {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 11px 16px;
-    color: var(--text-white);
-    font-size: 13.5px;
+    padding: 13px 18px;
+    color: #f1f5f9;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.15s;
     border: none;
     background: none;
     width: 100%;
-    text-align: right;
+    text-align: left;
     font-family: inherit;
     white-space: nowrap;
-    direction: rtl;
+    direction: ltr;
     justify-content: flex-start;
 }
 
-.chat-dropdown-menu .dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.06);
+.chat-dropdown-menu .dropdown-item:active {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* أيقونة مصغرة iOS-style */
+.dd-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.dd-icon-fav {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #fff;
+}
+
+.dd-icon-clear {
+    background: linear-gradient(135deg, #6b7280, #9ca3af);
+    color: #fff;
+}
+
+.dd-icon-block {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+}
+
+.dd-icon-shortcut {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+}
+
+.dd-icon-report {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
 }
 
 .chat-dropdown-menu .dropdown-item.danger {
-    color: #ef4444;
-}
-
-.chat-dropdown-menu .dropdown-item.danger:hover {
-    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
 }
 
 .chat-dropdown-menu .dropdown-divider {
     height: 1px;
-    background: rgba(255, 255, 255, 0.06);
-    margin: 4px 0;
+    background: rgba(255, 255, 255, 0.07);
+    margin: 0;
+}
+
+/* Light mode للـ dropdown */
+[data-theme="light"] .chat-dropdown-menu {
+    background: rgba(255, 255, 255, 0.97);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .chat-dropdown-menu .dropdown-item {
+    color: #1f2937;
+}
+
+[data-theme="light"] .chat-dropdown-menu .dropdown-item:active {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .chat-dropdown-menu .dropdown-item.danger {
+    color: #dc2626;
+}
+
+[data-theme="light"] .chat-dropdown-menu .dropdown-divider {
+    background: rgba(0, 0, 0, 0.07);
 }
 
 @keyframes fadeSlideDown {
@@ -3386,7 +3535,8 @@ body {
 .splash-screen {
     position: fixed;
     inset: 0;
-    background: linear-gradient(135deg, #0f172a, #090d16); /* Solid background to hide the app underneath */
+    background: linear-gradient(135deg, #0f172a, #090d16);
+    /* Solid background to hide the app underneath */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3531,6 +3681,7 @@ body {
     color: rgba(255, 255, 255, 0.15);
     margin: 0 4px;
 }
+
 /* iOS Toggle Switch */
 .ios-toggle {
     position: relative;
@@ -3538,28 +3689,40 @@ body {
     height: 30px;
     display: inline-block;
 }
-.ios-toggle input { display: none; }
+
+.ios-toggle input {
+    display: none;
+}
+
 .ios-toggle .toggle-bg {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(255,255,255,0.1);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 30px;
     transition: 0.3s ease;
 }
+
 .ios-toggle .toggle-bg::before {
     content: '';
     position: absolute;
-    top: 2px; left: 2px;
-    width: 26px; height: 26px;
+    top: 2px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
     background: white;
     border-radius: 50%;
     transition: 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-.ios-toggle input:checked + .toggle-bg {
+
+.ios-toggle input:checked+.toggle-bg {
     background: var(--color-primary);
 }
-.ios-toggle input:checked + .toggle-bg::before {
+
+.ios-toggle input:checked+.toggle-bg::before {
     transform: translateX(20px);
 }
 
@@ -3568,18 +3731,21 @@ body {
     background: rgba(251, 191, 36, 0.05);
     border: 1px solid rgba(251, 191, 36, 0.2);
 }
+
 .ios-toggle.vip-toggle .toggle-bg::before {
     background: #666;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
-.ios-toggle.vip-toggle input:checked + .toggle-bg {
+
+.ios-toggle.vip-toggle input:checked+.toggle-bg {
     background: linear-gradient(135deg, #fbbf24, #f59e0b);
     border-color: #fbbf24;
     box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
 }
-.ios-toggle.vip-toggle input:checked + .toggle-bg::before {
+
+.ios-toggle.vip-toggle input:checked+.toggle-bg::before {
     background: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* iOS Segmented Control */
@@ -3589,8 +3755,9 @@ body {
     border-radius: 12px;
     padding: 4px;
     margin-bottom: 24px;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
+
 .adv-gender-btn {
     flex: 1;
     text-align: center;
@@ -3601,19 +3768,28 @@ body {
     transition: all 0.3s ease;
     color: var(--text-white);
 }
+
 .adv-gender-btn.active {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     color: white !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
 .adv-gender-btn i {
     transition: color 0.3s ease;
 }
+
 .adv-gender-btn.active i {
     color: white !important;
 }
-.adv-gender-btn.active[data-val="female"] { background: #ec4899; }
-.adv-gender-btn.active[data-val="male"] { background: #3b82f6; }
+
+.adv-gender-btn.active[data-val="female"] {
+    background: #ec4899;
+}
+
+.adv-gender-btn.active[data-val="male"] {
+    background: #3b82f6;
+}
 
 
 
@@ -3625,18 +3801,21 @@ body {
         border-color: rgba(255, 51, 153, 0.35);
         color: #ff3399;
     }
+
     .user-card.male .card-action-btn.like-btn:hover {
         background: rgba(26, 117, 255, 0.12);
         border-color: rgba(26, 117, 255, 0.35);
         color: #1a75ff;
     }
 }
+
 .user-card.female .card-action-btn.like-btn.liked {
     background: #ff3399 !important;
     border-color: #ff3399 !important;
     color: white !important;
     box-shadow: 0 0 10px rgba(255, 51, 153, 0.4);
 }
+
 .user-card.male .card-action-btn.like-btn.liked {
     background: #1a75ff !important;
     border-color: #1a75ff !important;
@@ -3664,18 +3843,21 @@ body {
     content: none;
     display: none;
 }
+
 .chat-window::before {
     background: #3b82f6;
     top: -50px;
     left: -100px;
 }
+
 .chat-window::after {
     background: #ec4899;
     bottom: 100px;
     right: -100px;
 }
 
-.chat-messages, .chat-input-area {
+.chat-messages,
+.chat-input-area {
     position: relative;
     z-index: 10;
 }
@@ -3760,6 +3942,7 @@ body {
     border-color: rgba(10, 132, 255, 0.4) !important;
     color: #0a84ff !important;
 }
+
 .chat-attach-btn:hover {
     background: rgba(10, 132, 255, 0.1) !important;
     border-color: #0a84ff !important;
@@ -3823,10 +4006,21 @@ body {
 }
 
 /* Individual Icon Colors */
-.attach-icon-photo { background: linear-gradient(135deg, #0ea5e9, #3b82f6); }
-.attach-icon-videochat { background: linear-gradient(135deg, #10b981, #059669); }
-.attach-icon-gift { background: linear-gradient(135deg, #f43f5e, #e11d48); }
-.attach-icon-video { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+.attach-icon-photo {
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+}
+
+.attach-icon-videochat {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.attach-icon-gift {
+    background: linear-gradient(135deg, #f43f5e, #e11d48);
+}
+
+.attach-icon-video {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
 
 /* ==============================================================
    CHATS LIST ITEM (LTR OVERRIDE)
@@ -3847,9 +4041,15 @@ body {
    MOBILE UI SCALING OVERRIDES
    ============================================================== */
 @media (max-width: 768px) {
+
     /* Header */
-    .app-header { height: 52px !important; }
-    .app-header h3 { font-size: 18px !important; }
+    .app-header {
+        height: 52px !important;
+    }
+
+    .app-header h3 {
+        font-size: 18px !important;
+    }
 
     /* User Card (Discovery List) Mobile Responsive styles */
     .user-card {
@@ -3899,17 +4099,39 @@ body {
     }
 
     /* Chats List Item */
-    .chat-item { padding: 12px 10px !important; gap: 12px !important; }
-    .chat-item-avatar { width: 48px !important; height: 48px !important; }
-    .chat-item-name { font-size: 14px !important; }
+    .chat-item {
+        padding: 12px 10px !important;
+        gap: 12px !important;
+    }
+
+    .chat-item-avatar {
+        width: 48px !important;
+        height: 48px !important;
+    }
+
+    .chat-item-name {
+        font-size: 14px !important;
+    }
 
     /* Search Bar */
-    .search-filter-container { padding: 10px 15px !important; }
-    .search-input-wrapper { height: 40px !important; }
-    .search-input-wrapper input { font-size: 13px !important; }
+    .search-filter-container {
+        padding: 10px 15px !important;
+    }
+
+    .search-input-wrapper {
+        height: 40px !important;
+    }
+
+    .search-input-wrapper input {
+        font-size: 13px !important;
+    }
 
     /* Bottom Nav Scale Down */
-    .bottom-nav { transform: scale(0.9); transform-origin: bottom center; bottom: 5px !important; }
+    .bottom-nav {
+        transform: scale(0.9);
+        transform-origin: bottom center;
+        bottom: 5px !important;
+    }
 }
 
 /* Header Search & Filter Integration */
@@ -3966,6 +4188,7 @@ body {
 
 /* ===== MOBILE PERFORMANCE OPTIMIZATIONS ===== */
 @media (max-width: 600px) {
+
     /* شيل كل backdrop-filter على الموبايل - أثقل شي على GPU */
     * {
         backdrop-filter: none !important;
@@ -4006,4 +4229,1625 @@ body {
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: contain;
     }
+}
+
+
+/* ============================================================
+   LIGHT MODE - [data-theme="light"]
+   ============================================================ */
+[data-theme="light"] {
+    --watermark-svg: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50%25' y='50%25' font-family='Arial%2C sans-serif' font-weight='900' font-size='12' fill='%23cc0000' fill-opacity='0.06' text-anchor='middle' transform='rotate(-25%2C 60%2C 60)'%3EHay Moi%3C%2Ftext%3E%3C%2Fsvg%3E");
+    --watermark-bg:
+        var(--watermark-svg),
+        radial-gradient(at 0% 0%, rgba(200, 50, 50, 0.04) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(200, 50, 50, 0.02) 0px, transparent 50%);
+}
+
+[data-theme="light"] body,
+[data-theme="light"] .app-body {
+    background-color: #e8eaef;
+    background-image: var(--watermark-bg);
+    background-size: var(--watermark-size);
+    color: #111;
+}
+
+[data-theme="light"] .video-overlay {
+    background-color: #e8eaef;
+    background-image: var(--watermark-bg);
+    background-size: var(--watermark-size);
+}
+
+[data-theme="light"] .app-container {
+    background-color: #e8eaef;
+    background-image: var(--watermark-bg);
+    background-size: var(--watermark-size);
+    --text-white: #111827;
+    --text-muted: #6b7280;
+    --bg-glass: #e8eaf0;
+    --bg-glass-hover: #dde0ea;
+    --border-glass: rgba(0, 0, 0, 0.08);
+    color: #111827;
+}
+
+[data-theme="light"] .app-header {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .header-user-avatar {
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .search-input-wrapper {
+    background: rgba(0, 0, 0, 0.06) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .search-input-wrapper .search-icon {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .search-input-wrapper input {
+    color: #111 !important;
+}
+
+[data-theme="light"] .search-input-wrapper input::placeholder {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .bottom-nav {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .nav-item {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .nav-item.active {
+    color: #3b82f6 !important;
+}
+
+/* [REMOVED-DUPLICATE-user-card-1] */
+
+[data-theme="light"] .chat-item {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .profil-card {
+    background: transparent !important;
+}
+
+[data-theme="light"] .profil-stats {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+[data-theme="light"] .profil-bio-section {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+[data-theme="light"] .chat-window {
+    background: #e8eaef !important;
+}
+
+[data-theme="light"] .chat-header {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .chat-input-area {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-top-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .chat-input-area input {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    color: #111 !important;
+}
+
+[data-theme="light"] .msg-bubble.received {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #111827 !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .empty-state {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .header-filter-btn {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #374151 !important;
+}
+
+/* ============================================================
+   LIGHT MODE EXTENDED - كل العناصر المفقودة
+   ============================================================ */
+
+/* [REMOVED-DUPLICATE-user-card-2] */
+[data-theme="light"] .name-row h3 {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .bio-text {
+    color: #6b7280 !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.09) !important;
+    border-radius: 20px !important;
+    padding: 3px 10px !important;
+}
+
+[data-theme="light"] .time-ago {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .online-status {
+    border-color: #e2e5ea !important;
+}
+
+[data-theme="light"] .avatar-ring img,
+[data-theme="light"] .avatar-ring .avatar-initials {
+    border-color: #e5e7eb !important;
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+[data-theme="light"] .distance-badge {
+    background: rgba(59, 130, 246, 0.12) !important;
+    color: #2563eb !important;
+}
+
+[data-theme="light"] .user-card.female .distance-badge {
+    background: rgba(255, 51, 153, 0.12) !important;
+    color: #db2777 !important;
+}
+
+/* --- بطاقة الأكشن (like/message buttons) --- */
+[data-theme="light"] .card-action-btn {
+    background: rgba(0, 0, 0, 0.07) !important;
+    border-color: rgba(0, 0, 0, 0.14) !important;
+    color: #374151 !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .card-action-btn i {
+    filter: none !important;
+    color: #374151 !important;
+}
+
+[data-theme="light"] .card-action-btn:hover {
+    background: rgba(0, 0, 0, 0.12) !important;
+    color: #111827 !important;
+}
+
+[data-theme="light"] .card-action-btn:hover i {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .card-action-btn.like-btn.liked {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+[data-theme="light"] .card-action-btn.like-btn.liked i {
+    color: #fff !important;
+    filter: none !important;
+}
+
+[data-theme="light"] .card-action-btn.favorite-btn.favorited {
+    background: #eab308 !important;
+    border-color: #eab308 !important;
+    color: #fff !important;
+}
+
+[data-theme="light"] .card-action-btn.favorite-btn.favorited i {
+    color: #fff !important;
+    filter: none !important;
+}
+
+[data-theme="light"] .action-btn {
+    background: rgba(0, 0, 0, 0.07) !important;
+    border-color: rgba(0, 0, 0, 0.14) !important;
+    color: #374151 !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .card-actions-grid {
+    border-left-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* --- VIP card --- */
+/* [REMOVED-DUPLICATE-vip2] */
+
+/* --- البروفايل الخاص --- */
+[data-theme="light"] .profil-name {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .profil-email {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .profil-avatar-letter {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #1d4ed8 !important;
+    border-color: #3b82f6 !important;
+}
+
+[data-theme="light"] .stat-item {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .stat-divider {
+    background: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .profil-bio-section p {
+    color: #6b7280 !important;
+}
+
+/* --- أزرار البروفايل (Edit / Paramètres) --- */
+[data-theme="light"] #edit-profile-btn {
+    background: rgba(0, 0, 0, 0.06) !important;
+    color: #111827 !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] #open-settings-btn {
+    background: rgba(0, 0, 0, 0.06) !important;
+    color: #374151 !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] #edit-profile-btn:hover,
+[data-theme="light"] #open-settings-btn:hover {
+    background: rgba(0, 0, 0, 0.09) !important;
+}
+
+/* --- Settings Bottom Sheet --- */
+[data-theme="light"] #settings-sheet {
+    background: #ffffff !important;
+    border-top-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] #settings-sheet h3 {
+    color: #111827 !important;
+}
+
+[data-theme="light"] #settings-sheet>div[style*="handle"],
+[data-theme="light"] #settings-sheet>div:first-child {
+    background: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* صف Apparence */
+[data-theme="light"] #settings-sheet>div[style*="rgba(255,255,255,0.05)"] {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* نص Apparence */
+[data-theme="light"] #theme-icon {
+    /* يبقى بلونه (moon/sun) */
+}
+
+[data-theme="light"] #settings-sheet div[style*="font-size:15px"][style*="font-weight:600"] {
+    color: #111827 !important;
+}
+
+/* زر Annuler */
+[data-theme="light"] #close-settings-btn {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #6b7280 !important;
+}
+
+/* icon box داخل صف Apparence */
+[data-theme="light"] #settings-sheet div[style*="width:38px"] {
+    background: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* --- Chat items (قائمة الشاتات) --- */
+[data-theme="light"] .chat-item {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .chat-item:hover {
+    background: rgba(255, 255, 255, 1) !important;
+}
+
+[data-theme="light"] .chat-item-name {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .chat-item-lastmsg {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .chat-item-time {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .chat-item-avatar {
+    color: #fff !important;
+}
+
+/* --- Contacts list --- */
+[data-theme="light"] .contacts-list .chat-item {
+    background: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* --- Modal (user detail popup) --- */
+[data-theme="light"] .modal-content,
+[data-theme="light"] .glass-card {
+    background: rgba(255, 255, 255, 0.97) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #111827 !important;
+}
+
+[data-theme="light"] .modal-content h2,
+[data-theme="light"] .modal-content h3,
+[data-theme="light"] .modal-content p,
+[data-theme="light"] .modal-content span {
+    color: #111827 !important;
+}
+
+/* --- Loading / Empty states --- */
+[data-theme="light"] .loading-spinner {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .empty-state i {
+    color: #d1d5db !important;
+}
+
+/* --- Profil extra info section (ownExtraSection) --- */
+[data-theme="light"] .profil-extra-section,
+[data-theme="light"] .extra-info-grid,
+[data-theme="light"] .extra-info-item {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.07) !important;
+    color: #374151 !important;
+}
+
+[data-theme="light"] .extra-info-label {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .extra-info-value {
+    color: #111827 !important;
+}
+
+/* --- Advanced filter modal --- */
+[data-theme="light"] .filter-modal-backdrop {
+    background: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="light"] .filter-modal-box,
+[data-theme="light"] .adv-filter-sheet {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #111827 !important;
+}
+
+[data-theme="light"] .filter-tab-btn {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .filter-tab-btn.active {
+    color: #3b82f6 !important;
+}
+
+[data-theme="light"] .filter-gender-pill {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: #374151 !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .filter-gender-pill.active {
+    background: #fff !important;
+    color: #111827 !important;
+    border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .filter-distance-select {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: #111827 !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* --- Chat window messages --- */
+[data-theme="light"] .chat-messages {
+    background: #e8eaef !important;
+}
+
+[data-theme="light"] .msg-time {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .chat-back-btn,
+[data-theme="light"] .chat-header-btn {
+    background: rgba(0, 0, 0, 0.06) !important;
+    color: #374151 !important;
+}
+
+[data-theme="light"] .chat-user-name {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .chat-user-status {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .chat-attach-btn,
+[data-theme="light"] .chat-emoji-btn,
+[data-theme="light"] .chat-mic-btn {
+    color: #6b7280 !important;
+}
+
+/* --- Splash screen --- */
+[data-theme="light"] .splash-screen {
+    background: #e8eaef !important;
+}
+
+[data-theme="light"] .splash-brand,
+[data-theme="light"] .splash-logo-text {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .splash-tagline {
+    color: #6b7280 !important;
+}
+
+/* --- Header avatar --- */
+[data-theme="light"] .header-user-avatar {
+    background: rgba(0, 0, 0, 0.06) !important;
+    color: #374151 !important;
+}
+
+/* --- Tags / badges dans les cards --- */
+[data-theme="light"] .user-card-bottom {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border-top-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ============================================================
+   SETTINGS BOTTOM SHEET - CSS classes (theme-aware)
+   ============================================================ */
+.settings-sheet-panel {
+    position: fixed;
+    bottom: -420px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: #1a1a22;
+    border-radius: 28px 28px 0 0;
+    padding: 20px 20px 40px;
+    z-index: 3001;
+    transition: bottom 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.settings-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    margin: 0 auto 20px;
+}
+
+.settings-sheet-title {
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 24px;
+}
+
+.settings-row {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.settings-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-row-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.settings-row-sublabel {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.settings-logout-row {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 18px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.settings-logout-row:hover {
+    background: rgba(239, 68, 68, 0.18);
+}
+
+.settings-logout-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-logout-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ef4444;
+}
+
+.settings-logout-sublabel {
+    font-size: 12px;
+    color: rgba(239, 68, 68, 0.6);
+}
+
+.settings-cancel-btn {
+    width: 100%;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.settings-cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Light mode overrides للـ settings sheet */
+[data-theme="light"] .settings-sheet-panel {
+    background: #ffffff !important;
+    border-top-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .settings-sheet-handle {
+    background: rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .settings-sheet-title {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .settings-row {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .settings-icon-box {
+    background: rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .settings-row-label {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .settings-row-sublabel {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .settings-cancel-btn {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .settings-cancel-btn:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ============================================================
+   PROFIL PAGE BUTTONS - theme-aware
+   ============================================================ */
+.profil-edit-btn {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-white);
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.2s, color 0.2s;
+}
+
+.profil-edit-btn:hover {
+    background: rgba(255, 255, 255, 0.13);
+}
+
+.profil-settings-btn {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-white);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background 0.2s, color 0.2s;
+}
+
+.profil-settings-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Light mode */
+[data-theme="light"] .profil-edit-btn {
+    background: rgba(0, 0, 0, 0.06) !important;
+    color: #111827 !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .profil-edit-btn:hover {
+    background: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .profil-settings-btn {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: #374151 !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .profil-settings-btn:hover {
+    background: rgba(0, 0, 0, 0.09) !important;
+}
+
+/* ============================================================
+   LIGHT MODE - USER CARDS SOFTENED + ICONS FIX
+   ============================================================ */
+
+/* [REMOVED-DUPLICATE-user-card-3] */
+
+/* إصلاح أيقونات الأكشن — drop-shadow filter كان يمحيهم */
+[data-theme="light"] .card-action-btn i,
+[data-theme="light"] .action-btn i {
+    filter: none !important;
+    color: inherit !important;
+}
+
+/* chat-btn خاص */
+[data-theme="light"] .card-action-btn.chat-btn {
+    background: rgba(59, 130, 246, 0.1) !important;
+    border-color: rgba(59, 130, 246, 0.25) !important;
+    color: #2563eb !important;
+}
+
+[data-theme="light"] .card-action-btn.chat-btn i {
+    color: #2563eb !important;
+}
+
+[data-theme="light"] .card-action-btn.ignore-btn {
+    background: rgba(239, 68, 68, 0.07) !important;
+    border-color: rgba(239, 68, 68, 0.2) !important;
+    color: #dc2626 !important;
+}
+
+[data-theme="light"] .card-action-btn.ignore-btn i {
+    color: #dc2626 !important;
+}
+
+/* online status dot */
+[data-theme="light"] .online-status,
+[data-theme="light"] .online-dot {
+    border-color: #e8eaef !important;
+}
+
+/* bottom nav text colors */
+[data-theme="light"] .nav-item span.text {
+    color: #9ca3af;
+}
+
+[data-theme="light"] .nav-item.active span.text {
+    color: #3b82f6;
+}
+
+[data-theme="light"] .nav-item.active span.icon {
+    color: #3b82f6;
+}
+
+/* header refresh/filter btns */
+[data-theme="light"] .header-filter-btn i {
+    color: #374151 !important;
+}
+
+/* bio text في الكروت */
+[data-theme="light"] .bio-text,
+[data-theme="light"] .bio-preview {
+    color: #6b7280 !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.09) !important;
+    border-radius: 20px !important;
+    padding: 3px 10px !important;
+}
+
+/* [REMOVED-DUPLICATE-vip] */
+
+/* ============================================================
+   LIGHT MODE - BOTTOM NAV FULL FIX
+   ============================================================ */
+
+/* الحاوية */
+[data-theme="light"] .bottom-nav {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* الأيقونات غير النشطة */
+[data-theme="light"] .nav-item .icon {
+    color: #9ca3af !important;
+    filter: none !important;
+}
+
+[data-theme="light"] .nav-item .text {
+    color: #9ca3af !important;
+}
+
+/* الأيقونة النشطة — ترتفع فوق الـ indicator */
+[data-theme="light"] .nav-item.active .icon {
+    color: #ffffff !important;
+    filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.6)) !important;
+}
+
+[data-theme="light"] .nav-item.active .text {
+    color: #3b82f6 !important;
+}
+
+/* Indicator circle — border يتطابق مع الـ nav background */
+[data-theme="light"] .bottom-nav .indicator-circle {
+    border-color: #ffffff !important;
+    background: #3b82f6 !important;
+}
+
+/* الزوايا المقوسة للـ indicator — تتطابق مع خلفية الـ nav */
+[data-theme="light"] .bottom-nav .indicator-circle::before {
+    box-shadow: 2px -10px 0 0 #ffffff !important;
+}
+
+[data-theme="light"] .bottom-nav .indicator-circle::after {
+    box-shadow: -2px -10px 0 0 #ffffff !important;
+}
+
+/* badge ديال الشات */
+[data-theme="light"] .badge {
+    border-color: #ffffff !important;
+}
+
+/* ============================================================
+   LIGHT MODE — USER CARDS FINAL (clean, elegant borders)
+   ============================================================ */
+
+/* Base card */
+[data-theme="light"] .user-card {
+    background: #ffffff !important;
+    border: 1.5px solid rgba(0, 0, 0, 0.55) !important;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        0 4px 14px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    color: #111827 !important;
+}
+
+/* Female card — border وردي واضح + shadow خفيف */
+[data-theme="light"] .user-card.female {
+    background: linear-gradient(145deg, #fff5f9, #ffffff) !important;
+    border: 1.5px solid rgba(219, 39, 119, 0.75) !important;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.45),
+        0 1px 3px rgba(219, 39, 119, 0.1),
+        0 4px 16px rgba(219, 39, 119, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+/* Male card — border أزرق واضح + shadow خفيف */
+[data-theme="light"] .user-card.male {
+    background: linear-gradient(145deg, #f5f8ff, #ffffff) !important;
+    border: 1.5px solid rgba(37, 99, 235, 0.7) !important;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.45),
+        0 1px 3px rgba(37, 99, 235, 0.1),
+        0 4px 16px rgba(37, 99, 235, 0.11),
+        inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+/* VIP card — ذهبي */
+[data-theme="light"] .user-card.vip-member-card {
+    background: linear-gradient(145deg, #fffbeb, #ffffff) !important;
+    border: 1.5px solid rgba(245, 158, 11, 0.4) !important;
+    box-shadow:
+        0 1px 3px rgba(245, 158, 11, 0.1),
+        0 4px 16px rgba(245, 158, 11, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+/* Hover */
+[data-theme="light"] .user-card:hover {
+    border-color: rgba(0, 0, 0, 0.7) !important;
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.12),
+        0 8px 24px rgba(0, 0, 0, 0.12) !important;
+    transform: translateY(-2px);
+}
+
+[data-theme="light"] .user-card.female:hover {
+    border-color: rgba(219, 39, 119, 0.85) !important;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.5),
+        0 4px 20px rgba(219, 39, 119, 0.15) !important;
+}
+
+[data-theme="light"] .user-card.male:hover {
+    border-color: rgba(37, 99, 235, 0.8) !important;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.5),
+        0 4px 20px rgba(37, 99, 235, 0.14) !important;
+}
+
+/* Text داخل الكرت */
+[data-theme="light"] .name-row h3 {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .bio-text,
+[data-theme="light"] .bio-preview {
+    color: #6b7280 !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.09) !important;
+    border-radius: 20px !important;
+    padding: 3px 10px !important;
+}
+
+[data-theme="light"] .time-ago {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .online-status,
+[data-theme="light"] .online-dot {
+    border-color: #ffffff !important;
+}
+
+/* ============================================================
+   LIGHT MODE — ACTION BUTTONS (chat/heart/star/close) FIX
+   ============================================================ */
+
+/* ============================================================
+   LIGHT MODE — ACTION BUTTONS: couleur selon le genre du card
+   ============================================================ */
+
+[data-theme="light"] .action-btn {
+    filter: none !important;
+}
+
+[data-theme="light"] .action-btn i {
+    filter: none !important;
+    color: inherit !important;
+}
+
+/* === CARTE MALE — tous les boutons en BLEU === */
+[data-theme="light"] .user-card.male .action-btn {
+    background: #dbeafe !important;
+    border: 1.5px solid rgba(26, 117, 255, 0.6) !important;
+    color: #1d4ed8 !important;
+    box-shadow: 0 1px 3px rgba(26, 117, 255, 0.15) !important;
+}
+
+[data-theme="light"] .user-card.male .action-btn i {
+    color: #1d4ed8 !important;
+}
+
+[data-theme="light"] .user-card.male .action-btn:hover {
+    background: #bfdbfe !important;
+    border-color: rgba(26, 117, 255, 0.9) !important;
+}
+
+/* === CARTE FEMALE — tous les boutons en ROSE === */
+[data-theme="light"] .user-card.female .action-btn {
+    background: #fce7f3 !important;
+    border: 1.5px solid rgba(255, 51, 153, 0.6) !important;
+    color: #be185d !important;
+    box-shadow: 0 1px 3px rgba(255, 51, 153, 0.15) !important;
+}
+
+[data-theme="light"] .user-card.female .action-btn i {
+    color: #be185d !important;
+}
+
+[data-theme="light"] .user-card.female .action-btn:hover {
+    background: #fbcfe8 !important;
+    border-color: rgba(255, 51, 153, 0.9) !important;
+}
+
+/* États actifs (liked / favorited) — restent colorés */
+[data-theme="light"] .action-btn.heart.liked {
+    background: #ef4444 !important;
+    border-color: rgba(0, 0, 0, 0.4) !important;
+    color: #fff !important;
+}
+
+[data-theme="light"] .action-btn.heart.liked i {
+    color: #fff !important;
+}
+
+[data-theme="light"] .action-btn.star.favorited {
+    background: #eab308 !important;
+    border-color: rgba(0, 0, 0, 0.4) !important;
+    color: #fff !important;
+}
+
+[data-theme="light"] .action-btn.star.favorited i {
+    color: #fff !important;
+}
+
+/* Séparateur */
+[data-theme="light"] .card-actions-grid {
+    border-left-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .user-card.male .card-actions-grid {
+    border-left-color: rgba(26, 117, 255, 0.25) !important;
+}
+
+[data-theme="light"] .user-card.female .card-actions-grid {
+    border-left-color: rgba(255, 51, 153, 0.25) !important;
+}
+
+/* ============================================================
+   LIGHT MODE — USER DETAIL MODAL (openUserModal)
+   يغلب على الألوان hardcoded داخل script.js
+   ============================================================ */
+
+/* الخلفية الرئيسية للكارت */
+[data-theme="light"] .user-modal-card {
+    background: #ffffff !important;
+    color: #111827 !important;
+    box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* طبقة التدرج السفلية (اسم المستخدم) — من أبيض لشفاف */
+[data-theme="light"] .user-modal-card>div:first-child>div:last-child {
+    background: linear-gradient(to top, #ffffff, transparent) !important;
+}
+
+/* صندوق التفاصيل (Genre / Âge / etc.) */
+[data-theme="light"] .modal-detail-box {
+    background: #f3f4f6 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: #111827 !important;
+}
+
+[data-theme="light"] .detail-label-modal {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .detail-value-modal {
+    color: #111827 !important;
+    font-weight: 700 !important;
+}
+
+/* صندوق الـ Bio */
+[data-theme="light"] .modal-bio-box {
+    background: #f9fafb !important;
+    border: 1px solid rgba(0, 0, 0, 0.09) !important;
+    color: #374151 !important;
+}
+
+[data-theme="light"] .modal-bio-box h4 {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .modal-bio-box p {
+    color: #4b5563 !important;
+}
+
+/* الأزرار السفلية — Bloquer / Signaler */
+[data-theme="light"] .btn-modal-action {
+    background: #f3f4f6 !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color: #374151 !important;
+}
+
+[data-theme="light"] .btn-modal-action.danger {
+    background: #fef2f2 !important;
+    border-color: rgba(239, 68, 68, 0.25) !important;
+    color: #dc2626 !important;
+}
+
+/* دائرة الأفاتار في الـ modal */
+[data-theme="light"] .user-modal-card [style*="background:#1c1c1e"] {
+    background: #f3f4f6 !important;
+}
+
+/* ============================================================
+   LIGHT MODE — ADVANCED FILTER MODAL (#adv-filter-modal)
+   يغلب على الألوان hardcoded داخل script.js
+   ============================================================ */
+
+[data-theme="light"] #adv-filter-modal .hm-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: #111827 !important;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* التبويبات */
+[data-theme="light"] #adv-filter-modal .hm-tabs {
+    border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+    background: #f9fafb !important;
+}
+
+[data-theme="light"] #adv-filter-modal .hm-tab {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] #adv-filter-modal .hm-tab.active {
+    color: #1d4ed8 !important;
+    background: none !important;
+}
+
+/* Pills الجنس */
+[data-theme="light"] #adv-filter-modal .hm-pill {
+    background: #f3f4f6 !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #374151 !important;
+}
+
+[data-theme="light"] #adv-filter-modal .hm-pill.active {
+    background: #111827 !important;
+    color: #ffffff !important;
+    border-color: #111827 !important;
+}
+
+/* Label */
+[data-theme="light"] #adv-filter-modal .hm-label {
+    color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Select المسافة */
+[data-theme="light"] #adv-filter-modal .hm-select {
+    background: #f3f4f6 !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #111827 !important;
+}
+
+[data-theme="light"] #adv-filter-modal .hm-select option {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+/* بطاقة VIP */
+[data-theme="light"] #adv-filter-modal .hm-vip {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(255, 248, 220, 0.9)) !important;
+    border-color: rgba(251, 191, 36, 0.4) !important;
+}
+
+/* Toggle */
+[data-theme="light"] #adv-filter-modal .hm-toggle-track {
+    background: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* زر Annuler */
+[data-theme="light"] #adv-filter-modal .hm-btn-cancel {
+    background: #f3f4f6 !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #374151 !important;
+}
+
+[data-theme="light"] #adv-filter-modal .hm-btn-cancel:hover {
+    background: #e5e7eb !important;
+}
+
+/* ============================================================
+   SIMPLE TOAST — إشعار سريع خفيف (للأكشن في الـ dropdown)
+   ============================================================ */
+.simple-toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(30, 35, 50, 0.95);
+    color: #f1f5f9;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font-primary);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.simple-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+[data-theme="light"] .simple-toast {
+    background: rgba(255, 255, 255, 0.97);
+    color: #111827;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================
+   LIGHT MODE — CHAT ITEMS iOS-style separator
+   ============================================================ */
+[data-theme="light"] .chat-item::after {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+/* text colors in light mode */
+[data-theme="light"] .chat-item-name {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .chat-item-lastmsg {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .chat-item-time {
+    color: #9ca3af !important;
+}
+
+/* ============================================================
+   LIGHT MODE — CHAT WINDOW full fix
+   ============================================================ */
+[data-theme="light"] .chat-window {
+    background: #f0f2f5 !important;
+}
+
+[data-theme="light"] .chat-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .chat-user-name {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .chat-user-status {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .chat-back-btn,
+[data-theme="light"] .chat-header-btn {
+    color: #374151 !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .chat-back-btn:hover,
+[data-theme="light"] .chat-header-btn:hover {
+    background: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* منطقة الإدخال */
+[data-theme="light"] .chat-input-area {
+    background: #ffffff !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] #chat-input {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] #chat-input::placeholder {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .chat-emoji-btn,
+[data-theme="light"] .chat-attach-btn,
+[data-theme="light"] .chat-mic-btn {
+    color: #6b7280 !important;
+}
+
+/* فقاعات الرسائل في light mode */
+[data-theme="light"] .msg-bubble.received {
+    background: #ffffff !important;
+    color: #111827 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .msg-bubble.sent {
+    background: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .msg-time {
+    color: rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="light"] .msg-bubble.sent .msg-time {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+/* فاصل التاريخ */
+[data-theme="light"] .chat-date-divider span {
+    background: #e5e7eb !important;
+    color: #6b7280 !important;
+}
+
+/* attachment menu */
+[data-theme="light"] .attachment-bottom-sheet {
+    background: #ffffff !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CHATS LIST — NEW DESIGN (matching screenshot)
+   ══════════════════════════════════════════════════════════════ */
+
+/* --- chats-list container reset --- */
+.chats-list {
+    padding: 0;
+    margin: 0;
+}
+
+/* --- Section Header --- */
+.chats-section-header {
+    padding: 22px 18px 10px 18px;
+    text-align: left;
+}
+
+.chats-section-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.chats-section-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-white);
+    margin: 0;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+}
+
+.chats-section-count {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* --- List Card Container --- */
+.chats-list-card {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 18px;
+    margin: 0 6px 20px 6px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* --- Chat Item Override for new design --- */
+.chats-list-card .chat-item {
+    direction: ltr !important;
+    padding: 16px 14px 13px 0 !important;
+    gap: 12px !important;
+    background: transparent !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.chats-list-card .chat-item::after {
+    left: 70px !important;
+    right: 0 !important;
+    background: rgba(255, 255, 255, 0.07) !important;
+}
+
+.chats-list-card .chat-item:last-child::after {
+    display: none !important;
+}
+
+.chats-list-card .chat-item:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.chats-list-card .chat-item:active {
+    background: rgba(255, 255, 255, 0.07) !important;
+}
+
+/* --- Top colored border indicator (horizontal) --- */
+.chat-item-left-border {
+    width: 100%;
+    height: 3px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    flex-shrink: 0;
+}
+
+/* First item — match card's top border-radius */
+.chats-list-card .chat-item:first-child .chat-item-left-border {
+    border-radius: 17px 17px 0 0;
+}
+
+/* Male border — blue */
+.chat-item-left-border.male {
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.45);
+}
+
+/* Female border — magenta-purple matching avatar */
+.chat-item-left-border.female {
+    background: linear-gradient(90deg, #db2777, #c026d3);
+    box-shadow: 0 2px 10px rgba(192, 38, 211, 0.5);
+}
+
+/* --- Avatar Wrapper (inside card) --- */
+.chats-list-card .chat-item-avatar-wrapper {
+    margin-left: 14px;
+}
+
+/* --- Details block --- */
+.chats-list-card .chat-item-details {
+    text-align: left !important;
+    flex: 1;
+    min-width: 0;
+    gap: 3px !important;
+}
+
+/* --- Name + time row --- */
+.chats-list-card .chat-item-name-row {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    direction: ltr !important;
+    gap: 8px;
+}
+
+.chat-item-time-right {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.chat-item-online-text {
+    color: #22c55e;
+    font-weight: 700;
+    font-size: 11.5px;
+}
+
+/* --- Badge row (sent / received / time) --- */
+.chats-list-card .chat-item-badge-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 5px !important;
+    margin-top: 3px !important;
+    flex-wrap: nowrap;
+}
+
+/* --- Stat badges --- */
+.chat-stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    line-height: 1.6;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+
+.chat-stat-badge i {
+    font-size: 9px;
+}
+
+/* Gender + age badge — male = blue */
+.chat-stat-badge.chat-stat-gender.male {
+    background: #3b82f6;
+    color: #ffffff;
+    border: none;
+    padding: 3px 8px;
+}
+
+/* Gender + age badge — female = solid pink */
+.chat-stat-badge.chat-stat-gender.female {
+    background: #ec4899;
+    color: #ffffff;
+    border: none;
+    padding: 3px 8px;
+}
+
+/* Time badge — grey */
+.chat-stat-badge.chat-stat-time {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Distance (km) badge — default/male (teal) */
+.chat-stat-badge.chat-stat-km {
+    background: rgba(20, 184, 166, 0.14);
+    color: #2dd4bf;
+    border: 1px solid rgba(20, 184, 166, 0.25);
+}
+
+/* Distance (km) badge — female (pink background, pink text, blue icon) */
+.chat-stat-badge.chat-stat-km.female {
+    background: rgba(236, 72, 153, 0.12); /* light pink */
+    color: #ec4899; /* pink text */
+    border: 1px solid rgba(236, 72, 153, 0.2);
+}
+
+.chat-stat-badge.chat-stat-km.female i {
+    color: #3b82f6; /* blue icon */
+}
+
+.chat-stat-badge.chat-stat-km i {
+    font-size: 8px;
+}
+
+
+/* --- Last message --- */
+.chats-list-card .chat-item-lastmsg {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 4px !important;
+}
+
+/* --- Right chevron area --- */
+.chat-item-chevron {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    flex-shrink: 0;
+    padding-right: 4px;
+}
+
+.chat-item-arrow {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.2);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.chats-list-card .chat-item:hover .chat-item-arrow {
+    color: rgba(255, 255, 255, 0.45);
+    transform: translateX(2px);
+}
+
+/* --- Unread badge inside chevron --- */
+.chat-item-chevron .chat-item-unread-badge {
+    background: #ef4444;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+}
+
+/* --- Unread item highlight --- */
+.chats-list-card .chat-item.chat-item-unread {
+    background: rgba(239, 68, 68, 0.06) !important;
+}
+
+
+
+/* ── Light theme overrides ── */
+[data-theme="light"] .chats-section-title {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .chats-section-count {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .chats-list-card {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item:hover {
+    background: rgba(0, 0, 0, 0.02) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item::after {
+    background: rgba(0, 0, 0, 0.07) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item-name {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item-lastmsg {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .chat-item-time-right {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .chat-stat-badge.chat-stat-time {
+    background: rgba(0, 0, 0, 0.06) !important;
+    color: #6b7280 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .chat-item-arrow {
+    color: rgba(0, 0, 0, 0.18) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item:hover .chat-item-arrow {
+    color: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item.chat-item-unread {
+    background: rgba(239, 68, 68, 0.04) !important;
+}
+
+
+
+/* Light theme overrides for gender badges removed so they stay solid */
+
+/* Light theme — km badge */
+[data-theme="light"] .chat-stat-badge.chat-stat-km {
+    background: rgba(20, 184, 166, 0.1) !important;
+    border-color: rgba(20, 184, 166, 0.2) !important;
+}
+
+[data-theme="light"] .chat-stat-badge.chat-stat-km.female {
+    background: rgba(236, 72, 153, 0.1) !important;
+    border-color: rgba(236, 72, 153, 0.2) !important;
 }

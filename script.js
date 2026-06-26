@@ -218,11 +218,6 @@ async function handleRouting(user) {
 
 
     if (isProfilePage) {
-        const emailEl = document.getElementById('profile-email');
-        if (emailEl) {
-            emailEl.textContent = user.email || '';
-        }
-
         try {
             const { data: profilesList, error } = await sb
                 .from('profiles')
@@ -481,9 +476,9 @@ function initAppTabs() {
             }
         }
 
-        // إظهار/إخفاء الشريط العلوي (يظهر في قسم الاستكشاف وقسم المحادثات وجهات الاتصال)
+        // إظهار/إخفاء الشريط العلوي (يظهر في قسم الاستكشاف وقسم المحادثات وجهات الاتصال والبروفايل)
         if (appHeader) {
-            const showHeader = viewId === 'trouver' || viewId === 'chats' || viewId === 'contacts';
+            const showHeader = viewId === 'trouver' || viewId === 'chats' || viewId === 'contacts' || viewId === 'profil';
             appHeader.style.display = showHeader ? 'flex' : 'none';
 
             const headerTitle = document.getElementById('header-title');
@@ -494,6 +489,7 @@ function initAppTabs() {
                 } else {
                     headerTitle.style.display = '';
                     if (viewId === 'chats') {
+                        headerTitle.style.width = '';
                         const isLight = document.documentElement.getAttribute('data-theme') === 'light';
                         const titleColor = isLight ? '#111827' : '#ffffff';
                         headerTitle.innerHTML = `
@@ -503,7 +499,36 @@ function initAppTabs() {
                             </div>
                         `;
                     } else if (viewId === 'contacts') {
+                        headerTitle.style.width = '';
                         headerTitle.textContent = 'Contacts';
+                    } else if (viewId === 'profil') {
+                        headerTitle.style.width = '100%';
+                        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                        const titleColor = isLight ? '#111827' : '#ffffff';
+                        const _hmId = currentUserProfile ? generateHayMoiId(currentUser?.id || '') : '--------';
+                        const _hmLvl = currentUserProfile ? calculateUserLevel(currentUserProfile.visits_count || 0, currentUserProfile.friends_count || 0) : 1;
+                        headerTitle.innerHTML = `
+                            <div style="display: flex; align-items: center; width: 100%; position: relative;">
+                                <!-- ID + Level à gauche, simple sans fond -->
+                                <div id="hm-header-id-badge" title="Copier l'ID" style="display:flex; flex-direction:column; gap:2px; cursor:pointer; padding:4px 2px; flex-shrink:0;">
+                                    <span style="display:flex; align-items:center; gap:5px; font-size:12px; font-weight:700; letter-spacing:0.02em; line-height:1.3; color: var(--text-white);">
+                                        <span style="color:var(--text-muted); font-weight:600;">ID</span>
+                                        <span style="color:var(--text-muted); font-size:13px;">:</span>
+                                        <span id="hm-header-id-val" style="font-variant-numeric:tabular-nums; letter-spacing:1px; color:var(--text-white);">${_hmId}</span>
+                                    </span>
+                                    <span style="display:flex; align-items:center; gap:5px; font-size:12px; font-weight:700; letter-spacing:0.02em; line-height:1.3; color:var(--text-white);">
+                                        <span style="color:var(--text-muted); font-weight:600;">NV</span>
+                                        <span style="color:var(--text-muted); font-size:13px;">:</span>
+                                        <span style="color:var(--text-white);">${_hmLvl}</span>
+                                    </span>
+                                </div>
+                                <!-- Titre centré -->
+                                <div class="chats-section-title-block" style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2px; position:absolute; left:50%; transform:translateX(-50%);">
+                                    <h2 class="chats-section-title" translate="no" style="color: ${titleColor}; font-size: 26px; font-weight: 800; margin: 0; line-height: 1.1;">Hay Moi</h2>
+                                    <span class="chats-section-count" translate="no" style="font-size: 13px; font-weight: 600; color: var(--text-muted); opacity: 0.8;">My Profile</span>
+                                </div>
+                            </div>
+                        `;
                     }
                 }
             }
@@ -517,6 +542,7 @@ function initAppTabs() {
             const tabSearch = document.getElementById('tab-search');
             const tabGroups = document.getElementById('tab-groups');
             const tabVip = document.getElementById('tab-vip');
+            const headerSettingsBtn = document.getElementById('header-settings-btn');
 
             if (viewId === 'trouver') {
                 if (headerAvatar) headerAvatar.style.display = '';
@@ -524,12 +550,34 @@ function initAppTabs() {
                 if (tabSearch) tabSearch.style.display = '';
                 if (tabGroups) tabGroups.style.display = '';
                 if (tabVip) tabVip.style.display = '';
-            } else if (viewId === 'chats' || viewId === 'contacts') {
+                if (headerSettingsBtn) headerSettingsBtn.style.display = 'none';
+            } else if (viewId === 'chats' || viewId === 'contacts' || viewId === 'profil') {
                 if (headerAvatar) headerAvatar.style.display = 'none'; // إخفاء الأفاتار بالكامل ليتنحى العنوان لليسار
                 if (notifBell) notifBell.style.display = 'none'; // إخفاء الجرس
-                if (tabSearch) tabSearch.style.display = ''; // إبقاء البحث
+                if (tabSearch) tabSearch.style.display = viewId === 'profil' ? 'none' : ''; // إبقاء البحث ما عدا في البروفايل
                 if (tabGroups) tabGroups.style.display = 'none'; // إخفاء القلب
                 if (tabVip) tabVip.style.display = 'none'; // إخفاء الجوهرة
+                if (headerSettingsBtn) headerSettingsBtn.style.display = viewId === 'profil' ? 'block' : 'none';
+                
+                // Click to copy ID from header badge
+                if (viewId === 'profil') {
+                    setTimeout(() => {
+                        const hdrIdBadge = document.getElementById('hm-header-id-badge');
+                        if (hdrIdBadge && !hdrIdBadge._hasClickHandler) {
+                            hdrIdBadge._hasClickHandler = true;
+                            hdrIdBadge.addEventListener('click', () => {
+                                const idVal = document.getElementById('hm-header-id-val');
+                                if (idVal) {
+                                    navigator.clipboard.writeText(idVal.textContent).catch(() => {});
+                                    const orig = idVal.style.color;
+                                    idVal.style.color = '#4ade80';
+                                    showToast('ID copié ✅');
+                                    setTimeout(() => { idVal.style.color = orig; }, 1800);
+                                }
+                            });
+                        }
+                    }, 100);
+                }
             }
         }
 
@@ -695,6 +743,33 @@ async function loadOwnProfile(user) {
 
         if (profile) {
             currentUserProfile = profile; // حفظ الملف الشخصي الحالي للمستخدم بما فيه الإحداثيات
+            
+            // حساب عدد الأصدقاء (عدد الأشخاص الذين تواصلنا معهم)
+            let friendsCount = profile.friends_count || 0;
+            try {
+                const { data: userMessages } = await sb
+                    .from('messages')
+                    .select('sender_id, receiver_id')
+                    .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`);
+                
+                if (userMessages) {
+                    const uniquePartners = new Set();
+                    userMessages.forEach(msg => {
+                        if (msg.sender_id !== user.id) uniquePartners.add(msg.sender_id);
+                        if (msg.receiver_id !== user.id) uniquePartners.add(msg.receiver_id);
+                    });
+                    friendsCount = uniquePartners.size;
+                    
+                    // تحديث في الداتابيز لتخزينها
+                    if (friendsCount !== profile.friends_count) {
+                        await sb.from('profiles').update({ friends_count: friendsCount }).eq('user_id', user.id);
+                        profile.friends_count = friendsCount;
+                    }
+                }
+            } catch (err) {
+                console.error("Error calculating friends count:", err);
+            }
+
             const age = calculateAge(profile.dob);
             const genderText = profile.gender === 'male' ? 'Homme' : profile.gender === 'female' ? 'Femme' : '-';
             const genderIcon = profile.gender === 'male' ? 'fa-mars' : 'fa-venus';
@@ -719,7 +794,7 @@ async function loadOwnProfile(user) {
             let ownExtraSection = '';
             if (profile.height || profile.residence || profile.profession || profile.company || profile.income || profile.body_type || profile.ethnicity || profile.hair_color) {
                 ownExtraSection = `
-                    <div class="profil-bio-section" style="margin-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 15px; text-align: left; width: 100%;">
+                    <div class="profil-bio-section" style="margin-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; text-align: left; width: 100%;">
                         <h4 style="margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Informations supplémentaires</h4>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13.5px; color: var(--text-muted);">
                             ${profile.height ? `<div><strong style="color:var(--text-white);">Taille :</strong> ${escapeHtml(profile.height)}</div>` : ''}
@@ -735,24 +810,100 @@ async function loadOwnProfile(user) {
                 `;
             }
 
+            // قسم حسابات التواصل الاجتماعي مع إمكانية التعديل
+            const provider = user.app_metadata?.provider;
+            
+            // بناء عناصر الحسابات (فقط Instagram و TikTok)
+            let socialItems = `
+                <div class="social-account-item" id="social-instagram-item">
+                    <div class="social-account-icon" style="background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);"><i class="fab fa-instagram"></i></div>
+                    <div class="social-account-info">
+                        <span class="social-account-platform">Instagram</span>
+                        <span class="social-account-name" id="social-instagram-name">${profile.instagram ? '@' + escapeHtml(profile.instagram) : '<em style="opacity:0.5;">Non ajouté</em>'}</span>
+                    </div>
+                    ${profile.instagram ? `<a href="https://instagram.com/${escapeHtml(profile.instagram)}" target="_blank" class="social-account-link-btn" title="Visiter"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                    <button class="social-account-edit-btn" data-platform="instagram" data-current="${profile.instagram || ''}" title="Modifier"><i class="fas fa-pen"></i></button>
+                </div>
+                <div class="social-account-item" id="social-tiktok-item">
+                    <div class="social-account-icon" style="background: #000; border: 1px solid rgba(255,255,255,0.15);"><i class="fab fa-tiktok"></i></div>
+                    <div class="social-account-info">
+                        <span class="social-account-platform">TikTok</span>
+                        <span class="social-account-name" id="social-tiktok-name">${profile.tiktok ? '@' + escapeHtml(profile.tiktok) : '<em style="opacity:0.5;">Non ajouté</em>'}</span>
+                    </div>
+                    ${profile.tiktok ? `<a href="https://tiktok.com/@${escapeHtml(profile.tiktok)}" target="_blank" class="social-account-link-btn" title="Visiter"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                    <button class="social-account-edit-btn" data-platform="tiktok" data-current="${profile.tiktok || ''}" title="Modifier"><i class="fas fa-pen"></i></button>
+                </div>`;
+
+            const socialLinksSection = `
+                <div class="social-accounts-section" style="margin-top: 10px; width: 100%; text-align: left;">
+                    <h4 style="margin-bottom: 8px; font-size: 12px; color: var(--color-primary); display: flex; align-items: center; gap: 6px; font-weight: 700;">
+                        <i class="fas fa-share-alt"></i> Mes comptes sociaux
+                    </h4>
+                    <div class="social-accounts-list" style="display: flex; flex-direction: column; gap: 8px;">
+                        ${socialItems}
+                    </div>
+                </div>
+            `;
+
             const avatarDisplay = profile.avatar_url
-                ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="" loading="lazy">`
+                ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="" loading="lazy" id="own-avatar-img">`
                 : initial;
 
-            container.innerHTML = `
-                <div class="profil-card">
-                    <div class="profil-avatar-ring">
-                        <div class="profil-avatar-letter" style="border-color: ${genderColor};">${avatarDisplay}</div>
-                        <button class="profil-avatar-change-btn" id="change-avatar-btn" title="Changer la photo">
-                            <i class="fas fa-camera"></i>
-                        </button>
-                        <input type="file" id="avatar-file-input" accept="image/*" style="display:none;">
+            // بناء معرض الصور أو الخلفية البديلة لبروفايل المستخدم الحالي
+            const galleryList = (profile.gallery && Array.isArray(profile.gallery)) ? profile.gallery.filter(Boolean) : [];
+            let bannerHtml = '';
+            if (galleryList.length > 0) {
+                let slides = '';
+                let dots = '';
+                galleryList.forEach((url, i) => {
+                    slides += `
+                        <div class="carousel-slide">
+                            <img src="${sanitizeUrl(url)}" style="width:100%; height:100%; object-fit:cover; filter: brightness(0.75);" class="gallery-img-clickable" data-gallery-index="${i}" loading="lazy">
+                        </div>
+                    `;
+                    dots += `<div class="carousel-dot ${i === 0 ? 'active' : ''}"></div>`;
+                });
+                bannerHtml = `
+                    <div class="gallery-carousel" id="own-gallery-carousel">
+                        <div class="carousel-track">
+                            ${slides}
+                        </div>
+                        <div class="carousel-indicators">
+                            ${dots}
+                        </div>
                     </div>
-                    <h2 class="profil-name">
-                        ${profile.full_name || 'Utilisateur HayMoi'}
-                        ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 14px; margin-left: 6px;" title="Membre VIP"></i>' : ''}
+                `;
+            } else {
+                bannerHtml = profile.avatar_url 
+                    ? `<img src="${sanitizeUrl(profile.avatar_url)}" class="blurred-bg-fallback clickable-fallback-bg" loading="lazy">`
+                    : '';
+            }
+
+            container.innerHTML = `
+                <div class="profil-card" style="position: relative; overflow: hidden; padding-top: 0;">
+                    <!-- خلفية البروفايل (معرض الصور أو أفاتار مشوش) -->
+                    <div class="profile-header-banner" style="width: calc(100% + 20px); margin-left: -10px; margin-right: -10px; height: 250px; position: relative; overflow: hidden; z-index: 1; border-radius: 20px 20px 0 0; background: ${profile.gender === 'female' ? 'linear-gradient(135deg, #f97316, #ec4899)' : 'linear-gradient(135deg, #0ea5e9, #6366f1)'}; margin-bottom: 10px;">
+                        ${bannerHtml}
+                        
+                        <!-- دائرة الصورة المركزية للمستخدم الحالي (ممركزة في وسط البانر) -->
+                        <div class="profil-avatar-ring" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 5; margin: 0;">
+                            <div class="profil-avatar-letter" style="border-color: ${genderColor}; background: #1c1c1e; width: 110px; height: 110px; box-shadow: 0 0 20px rgba(0,0,0,0.6);">${avatarDisplay}</div>
+                            <button class="profil-avatar-change-btn" id="change-avatar-btn" title="Changer la photo" style="z-index: 6;">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <input type="file" id="avatar-file-input" accept="image/*" style="display:none;">
+                        </div>
+                    </div>
+                    <h2 class="profil-name" style="text-align: center; margin-bottom: 8px; width: 100%; display: block;">
+                        <span style="position: relative; display: inline-block; padding-right: 28px;">
+                            <span id="profil-display-name">${escapeHtml(profile.full_name || 'Utilisateur HayMoi')}</span>
+                            ${profile.is_verified ? ' <i class="fas fa-check-circle" style="color: #3b82f6; font-size: 16px; vertical-align: middle; margin-left: 4px;" title="Vérifié"></i>' : ''}
+                            ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 14px; vertical-align: middle; margin-left: 4px;" title="Membre VIP"></i>' : ''}
+                            <button id="edit-name-btn" class="profil-edit-name-btn" title="Modifier le nom" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); margin: 0; padding: 4px; line-height: 1;">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </span>
                     </h2>
-                    <p class="profil-email">${user.email || ''}</p>
                     <div class="profil-stats">
                         <div class="stat-item">
                             <i class="fas ${genderIcon}" style="color: ${genderColor};"></i>
@@ -764,13 +915,53 @@ async function loadOwnProfile(user) {
                             <span>${age} ans</span>
                         </div>
                     </div>
-                    <div class="profil-bio-section">
-                        <h4><i class="fas fa-comment-dots"></i> À propos de moi</h4>
-                        <p>${profile.bio || 'Aucune biographie pour le moment.'}</p>
+                    
+                    <!-- شريط إحصائيات التفاعل -->
+                    <div class="profile-stats-bar">
+                        <div class="profile-stat-col friends">
+                            <span class="stat-num">${friendsCount}</span>
+                            <span class="stat-label"><i class="fas fa-user-group"></i> Amis</span>
+                        </div>
+                        <div class="profile-stat-divider"></div>
+                        <div class="profile-stat-col visits">
+                            <span class="stat-num">${profile.visits_count || 0}</span>
+                            <span class="stat-label"><i class="fas fa-eye"></i> Visites</span>
+                        </div>
+                        <div class="profile-stat-divider"></div>
+                        <div class="profile-stat-col likes">
+                            <span class="stat-num">${profile.likes_count || 0}</span>
+                            <span class="stat-label"><i class="fas fa-heart"></i> Likes</span>
+                        </div>
                     </div>
+                    
+                    ${socialLinksSection}
                     ${ownExtraSection}
-                    <button id="edit-profile-btn" class="btn profil-edit-btn"><i class="fas fa-edit"></i> Modifier le profil</button>
-                    <button id="open-settings-btn" class="btn profil-settings-btn"><i class="fas fa-sliders"></i> Paramètres</button>
+                    
+                    <!-- Bio Section with Hashtags -->
+                    <div class="profil-bio-card hm-bio-card" style="margin-top: 10px; width: 100%; box-sizing: border-box;">
+                        <div class="hm-bio-header">
+                            <span class="hm-bio-title"><i class="fas fa-comment-dots"></i> À propos de moi</span>
+                            <button class="hm-bio-edit-btn" id="bio-edit-hashtag-btn" title="Modifier les hashtags">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </div>
+                        <div class="hm-bio-body" id="hm-bio-body">
+                            ${profile.bio
+                                ? `<p class="hm-bio-text" id="profil-bio-text">${escapeHtml(profile.bio)}</p>`
+                                : `<p class="hm-bio-empty" id="profil-bio-text">Ajoutez une biographie ou des hashtags pour vous décrire ✨</p>`
+                            }
+                            <div class="hm-hashtags-row" id="hm-hashtags-row">
+                                ${(profile.hashtags && profile.hashtags.length > 0)
+                                    ? profile.hashtags.map(h => `<span class="hm-hashtag-chip">${escapeHtml(h)}</span>`).join('')
+                                    : ''
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profil-actions-wrapper">
+                        <button id="edit-profile-btn" class="btn profil-edit-btn" style="margin-bottom: 0;"><i class="fas fa-edit"></i> Modifier le profil</button>
+                    </div>
 
                     <!-- Settings Bottom Sheet -->
                     <div id="settings-sheet-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:3000;"></div>
@@ -778,6 +969,22 @@ async function loadOwnProfile(user) {
                         <!-- Handle bar -->
                         <div class="settings-sheet-handle"></div>
                         <h3 class="settings-sheet-title">Paramètres</h3>
+
+                        <!-- Connected Provider -->
+                        ${provider ? `
+                        <div class="settings-row" style="pointer-events:none;">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <div class="settings-icon-box" style="background:${provider === 'google' ? 'linear-gradient(135deg, #4285F4, #34A853)' : '#1877F2'};">
+                                    <i class="fab fa-${provider === 'google' ? 'google' : 'facebook-f'}" style="font-size:16px;color:#fff;"></i>
+                                </div>
+                                <div>
+                                    <div class="settings-row-label">Connecté via ${provider === 'google' ? 'Google' : 'Facebook'}</div>
+                                    <div class="settings-row-sublabel">${user.email || ''}</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-check-circle" style="color:${provider === 'google' ? '#34A853' : '#1877F2'};font-size:18px;flex-shrink:0;"></i>
+                        </div>
+                        ` : ''}
 
                         <!-- Theme Toggle -->
                         <div class="settings-row">
@@ -815,6 +1022,50 @@ async function loadOwnProfile(user) {
                 </div>
             `;
 
+            // تهيئة الكاروسيل لمعرض صور المستخدم الحالي
+            const ownCarouselEl = document.getElementById('own-gallery-carousel');
+            if (ownCarouselEl) {
+                initProfileCarousel(ownCarouselEl);
+            }
+
+            // إعداد معرض الصور المعروض في الـ Lightbox للمستخدم الحالي
+            const ownLightboxPhotos = [];
+            if (profile.avatar_url) ownLightboxPhotos.push(profile.avatar_url);
+            galleryList.forEach(url => ownLightboxPhotos.push(url));
+
+            // عند الضغط على الأفاتار الدائري
+            const ownAvatarImg = document.getElementById('own-avatar-img');
+            if (ownAvatarImg && ownLightboxPhotos.length > 0) {
+                ownAvatarImg.style.cursor = 'pointer';
+                ownAvatarImg.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openLightbox(ownLightboxPhotos, 0);
+                });
+            }
+
+            // عند الضغط على صور المعرض في الخلفية
+            if (ownCarouselEl && ownLightboxPhotos.length > 0) {
+                const clickableGalleryImgs = ownCarouselEl.querySelectorAll('.gallery-img-clickable');
+                clickableGalleryImgs.forEach(img => {
+                    img.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const gIdx = parseInt(img.getAttribute('data-gallery-index'), 10);
+                        const startIndex = profile.avatar_url ? gIdx + 1 : gIdx;
+                        openLightbox(ownLightboxPhotos, startIndex);
+                    });
+                });
+            }
+
+            // عند الضغط على الخلفية البديلة المشوشة
+            const ownFallbackBg = container.querySelector('.clickable-fallback-bg');
+            if (ownFallbackBg && ownLightboxPhotos.length > 0) {
+                ownFallbackBg.style.cursor = 'pointer';
+                ownFallbackBg.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openLightbox(ownLightboxPhotos, 0);
+                });
+            }
+
             // ربط زر تعديل البروفايل
             const editBtn = document.getElementById('edit-profile-btn');
             if (editBtn) {
@@ -822,6 +1073,162 @@ async function loadOwnProfile(user) {
                     window.location.href = 'profile-setup.html';
                 });
             }
+
+            // ربط زر تعديل الاسم المباشر
+            const editNameBtn = document.getElementById('edit-name-btn');
+            if (editNameBtn) {
+                editNameBtn.addEventListener('click', async () => {
+                    const currentName = profile.full_name || '';
+                    const newName = prompt("Entrez votre nouveau nom :", currentName);
+                    if (newName !== null) {
+                        const trimmedName = newName.trim();
+                        if (trimmedName === '') {
+                            alert("Le nom ne peut pas être vide.");
+                            return;
+                        }
+                        if (trimmedName.length > 18) {
+                            alert("Le nom ne peut pas dépasser 18 caractères.");
+                            return;
+                        }
+                        
+                        try {
+                            editNameBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                            editNameBtn.disabled = true;
+
+                            const { error } = await sb
+                                .from('profiles')
+                                .update({ full_name: trimmedName })
+                                .eq('user_id', user.id);
+
+                            if (error) throw error;
+
+                            profile.full_name = trimmedName;
+                            if (currentUserProfile) {
+                                currentUserProfile.full_name = trimmedName;
+                            }
+                            
+                            const displayNameEl = document.getElementById('profil-display-name');
+                            if (displayNameEl) {
+                                displayNameEl.textContent = trimmedName;
+                            }
+                            
+                            // تحديث الاسم في الهيدر أيضًا
+                            const headerAvatar = document.getElementById('header-user-avatar');
+                            if (headerAvatar && !profile.avatar_url) {
+                                const initial = trimmedName.charAt(0).toUpperCase();
+                                headerAvatar.textContent = initial;
+                            }
+
+                            alert("Nom modifié avec succès !");
+                        } catch (err) {
+                            console.error("Erreur lors de la modification du nom:", err);
+                            alert("Une erreur est survenue lors de la modification du nom.");
+                        } finally {
+                            editNameBtn.innerHTML = '<i class="fas fa-pen"></i>';
+                            editNameBtn.disabled = false;
+                        }
+                    }
+                });
+            }
+            // === ID Badge Copy ===
+            const hmIdBadge = document.getElementById('hm-id-badge');
+            if (hmIdBadge) {
+                hmIdBadge.addEventListener('click', () => {
+                    const idVal = document.getElementById('hm-id-value');
+                    const idText = idVal ? idVal.textContent : '';
+                    if (idText) {
+                        navigator.clipboard.writeText(idText).then(() => {
+                            showToast('🔑 ID copié : ' + idText);
+                            hmIdBadge.classList.add('copied');
+                            setTimeout(() => hmIdBadge.classList.remove('copied'), 1500);
+                        }).catch(() => showToast('ID : ' + idText));
+                    }
+                });
+            }
+
+            // === Hashtag Bio Edit Button ===
+            const bioEditHashtagBtn = document.getElementById('bio-edit-hashtag-btn');
+            if (bioEditHashtagBtn) {
+                bioEditHashtagBtn.addEventListener('click', () => {
+                    openHashtagEditor(profile, user);
+                });
+            }
+
+            // === Settings Bottom Sheet ===
+
+            // ربط أزرار تعديل حسابات التواصل الاجتماعي
+            document.querySelectorAll('.social-account-edit-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const platform = btn.dataset.platform;
+                    const currentVal = btn.dataset.current || '';
+                    const platformLabel = platform === 'instagram' ? 'Instagram' : 'TikTok';
+                    const placeholder = platform === 'instagram' ? 'ex: hamza_123' : 'ex: hamza.tiktok';
+                    
+                    const newVal = prompt(`أدخل اسم حسابك على ${platformLabel} (بدون @):\n\nاتركه فارغاً لحذفه.`, currentVal);
+                    
+                    if (newVal === null) return; // المستخدم ألغى
+                    
+                    const trimmed = newVal.trim().replace(/^@/, ''); // إزالة @ إذا أضافها
+                    
+                    try {
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                        btn.disabled = true;
+                        
+                        const updateData = {};
+                        updateData[platform] = trimmed || null;
+                        
+                        const { error } = await sb
+                            .from('profiles')
+                            .update(updateData)
+                            .eq('user_id', user.id);
+                        
+                        if (error) throw error;
+                        
+                        // تحديث البيانات المحلية
+                        profile[platform] = trimmed || null;
+                        if (currentUserProfile) currentUserProfile[platform] = trimmed || null;
+                        
+                        // تحديث الواجهة
+                        const nameEl = document.getElementById(`social-${platform}-name`);
+                        if (nameEl) {
+                            nameEl.innerHTML = trimmed ? '@' + escapeHtml(trimmed) : '<em style="opacity:0.5;">Non ajouté</em>';
+                        }
+                        
+                        // تحديث الرابط الخارجي
+                        btn.dataset.current = trimmed;
+                        
+                        // إعادة بناء عنصر الحساب لتحديث رابط الزيارة
+                        const itemEl = document.getElementById(`social-${platform}-item`);
+                        if (itemEl) {
+                            const existingLinkBtn = itemEl.querySelector('.social-account-link-btn');
+                            if (trimmed && !existingLinkBtn) {
+                                const linkBtn = document.createElement('a');
+                                linkBtn.className = 'social-account-link-btn';
+                                linkBtn.href = platform === 'instagram' 
+                                    ? `https://instagram.com/${trimmed}` 
+                                    : `https://tiktok.com/@${trimmed}`;
+                                linkBtn.target = '_blank';
+                                linkBtn.title = 'Visiter';
+                                linkBtn.innerHTML = '<i class="fas fa-external-link-alt"></i>';
+                                itemEl.insertBefore(linkBtn, btn);
+                            } else if (!trimmed && existingLinkBtn) {
+                                existingLinkBtn.remove();
+                            } else if (trimmed && existingLinkBtn) {
+                                existingLinkBtn.href = platform === 'instagram' 
+                                    ? `https://instagram.com/${trimmed}` 
+                                    : `https://tiktok.com/@${trimmed}`;
+                            }
+                        }
+                        
+                    } catch (err) {
+                        console.error(`Erreur modification ${platform}:`, err);
+                        alert(`خطأ في تعديل حساب ${platformLabel}`);
+                    } finally {
+                        btn.innerHTML = '<i class="fas fa-pen"></i>';
+                        btn.disabled = false;
+                    }
+                });
+            });
 
             // === Settings Bottom Sheet ===
             const openSettingsBtn = document.getElementById('open-settings-btn');
@@ -837,18 +1244,28 @@ async function loadOwnProfile(user) {
 
             function openSettingsSheet() {
                 if (!settingsSheet || !settingsOverlay) return;
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'none';
                 settingsOverlay.style.display = 'block';
                 settingsSheet.style.bottom = '0';
             }
             function closeSettingsSheet() {
                 if (!settingsSheet || !settingsOverlay) return;
                 settingsSheet.style.bottom = '-400px';
-                setTimeout(() => { settingsOverlay.style.display = 'none'; }, 350);
+                setTimeout(() => {
+                    settingsOverlay.style.display = 'none';
+                    const bottomNav = document.querySelector('.bottom-nav');
+                    if (bottomNav) bottomNav.style.display = '';
+                }, 350);
             }
 
             if (openSettingsBtn) openSettingsBtn.addEventListener('click', openSettingsSheet);
             if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', closeSettingsSheet);
             if (settingsOverlay) settingsOverlay.addEventListener('click', closeSettingsSheet);
+
+            // ربط كليك زر الإعدادات الجديد في الهيدر لفتح قائمة الإعدادات
+            const headerSettingsBtn = document.getElementById('header-settings-btn');
+            if (headerSettingsBtn) headerSettingsBtn.addEventListener('click', openSettingsSheet);
 
             // === Dark / Light Mode Toggle ===
             function applyTheme(isDark) {
@@ -1200,7 +1617,7 @@ function renderFilteredList(profiles, listContainer) {
 
     // فلترة التوثيق
     if (requireVerifiedFilter) {
-        filtered = filtered.filter(p => p.is_vip);
+        filtered = filtered.filter(p => p.is_verified || p.is_vip);
     }
 
     if (query) {
@@ -1290,15 +1707,22 @@ function createUserCard(profile, index) {
                 </div>
             </div>
             <div class="info-section">
-                <div class="name-row">
+                <div class="name-row" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                     <h3>${escapeHtml(profile.full_name || 'Utilisateur')}</h3>
+                    ${profile.is_verified ? '<i class="fas fa-check-circle" style="color: #3b82f6; font-size: 13px;" title="Vérifié"></i>' : ''}
                     <span class="age-tag">${age !== '-' ? age : '?'} <i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i></span>
                     ${profile.is_vip ? '<i class="fas fa-gem card-vip-icon" title="VIP" style="color:#fbbf24;font-size:13px;"></i>' : ''}
                 </div>
                 <p class="bio-text">${escapeHtml(bio)}</p>
-                <div class="status-row">
-                    ${distBadgeHTML}
-                    <span class="time-ago ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
+                <div class="status-row" style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        ${distBadgeHTML}
+                        <span class="time-ago ${isOnline ? 'online' : ''}" data-created-at="${profile.created_at}" data-last-seen="${lastSeenTime}">${statusText}</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        ${profile.instagram ? `<a href="https://instagram.com/${escapeHtml(profile.instagram)}" target="_blank" class="social-badge instagram" title="Instagram" style="background:#e1306c; width:16px; height:16px; font-size:9px; color:white; display:inline-flex; align-items:center; justify-content:center; border-radius:50%;"><i class="fab fa-instagram"></i></a>` : ''}
+                        ${profile.tiktok ? `<a href="https://tiktok.com/@${escapeHtml(profile.tiktok)}" target="_blank" class="social-badge tiktok" title="TikTok" style="background:#000000; border: 1px solid rgba(255,255,255,0.2); width:16px; height:16px; font-size:9px; color:white; display:inline-flex; align-items:center; justify-content:center; border-radius:50%;"><i class="fab fa-tiktok"></i></a>` : ''}
+                    </div>
                 </div>
             </div>
         </div>
@@ -1323,6 +1747,14 @@ function createUserCard(profile, index) {
                 icon.classList.add('fas');
                 likeBtn.classList.add('liked');
 
+                // زيادة اللايك في قاعدة البيانات
+                if (currentUser) {
+                    sb.rpc('increment_profile_like', { target_id: profile.user_id })
+                        .then(({ error }) => {
+                            if (error) console.error("Error incrementing profile like:", error);
+                        });
+                }
+
                 // إنشاء قلب طائر متحرك
                 const rect = likeBtn.getBoundingClientRect();
                 const flyingHeart = document.createElement('i');
@@ -1342,6 +1774,14 @@ function createUserCard(profile, index) {
                 icon.classList.remove('fas');
                 icon.classList.add('far');
                 likeBtn.classList.remove('liked');
+
+                // تقليل اللايك في قاعدة البيانات
+                if (currentUser) {
+                    sb.rpc('decrement_profile_like', { target_id: profile.user_id })
+                        .then(({ error }) => {
+                            if (error) console.error("Error decrementing profile like:", error);
+                        });
+                }
             }
         });
     }
@@ -1389,6 +1829,14 @@ function openUserModal(profile) {
     // إزالة أي نافذة سابقة
     const oldModal = document.getElementById('user-detail-modal');
     if (oldModal) oldModal.remove();
+
+    // زيادة عدد الزيارات بأمان في الخلفية (فقط إذا كان العضو ليس المستخدم الحالي)
+    if (currentUser && profile.user_id !== currentUser.id) {
+        sb.rpc('increment_profile_visit', { target_id: profile.user_id })
+            .then(({ error }) => {
+                if (error) console.error("Error incrementing profile visit:", error);
+            });
+    }
 
     const age = calculateAge(profile.dob);
     const genderClass = profile.gender === 'female' ? 'female' : 'male';
@@ -1476,6 +1924,36 @@ function openUserModal(profile) {
         `;
     }
 
+    // بناء معرض الصور أو الخلفية البديلة لبروفايل العضو
+    const modalGalleryList = (profile.gallery && Array.isArray(profile.gallery)) ? profile.gallery.filter(Boolean) : [];
+    let modalBannerHtml = '';
+    if (modalGalleryList.length > 0) {
+        let slides = '';
+        let dots = '';
+        modalGalleryList.forEach((url, i) => {
+            slides += `
+                <div class="carousel-slide">
+                    <img src="${sanitizeUrl(url)}" style="width:100%; height:100%; object-fit:cover; filter: brightness(0.75);" class="gallery-img-clickable" data-gallery-index="${i}" loading="lazy">
+                </div>
+            `;
+            dots += `<div class="carousel-dot ${i === 0 ? 'active' : ''}"></div>`;
+        });
+        modalBannerHtml = `
+            <div class="gallery-carousel" id="modal-gallery-carousel">
+                <div class="carousel-track">
+                    ${slides}
+                </div>
+                <div class="carousel-indicators">
+                    ${dots}
+                </div>
+            </div>
+        `;
+    } else {
+        modalBannerHtml = profile.avatar_url 
+            ? `<img src="${sanitizeUrl(profile.avatar_url)}" class="blurred-bg-fallback clickable-fallback-bg" loading="lazy">`
+            : '';
+    }
+
     const modal = document.createElement('div');
     modal.id = 'user-detail-modal';
     modal.className = 'modal-overlay';
@@ -1490,12 +1968,12 @@ function openUserModal(profile) {
 
             <!-- الصورة الكبيرة -->
             <div style="width:100%; height:380px; position:relative; background: ${profile.gender === 'female' ? 'linear-gradient(135deg, #f97316, #ec4899)' : 'linear-gradient(135deg, #0ea5e9, #6366f1)'}; border-radius:24px 24px 0 0; overflow:hidden;">
-                <!-- خلفية ضبابية إذا كانت هناك صورة -->
-                ${profile.avatar_url ? `<img src="${sanitizeUrl(profile.avatar_url)}" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; filter:blur(20px) brightness(0.5); z-index:0;" loading="lazy">` : ''}
+                <!-- معرض الصور أو الخلفية -->
+                ${modalBannerHtml}
                 
                 <!-- دائرة الصورة المركزية مثل القصص (Stories) -->
-                <div style="position:absolute; top:45%; left:50%; transform:translate(-50%, -50%); z-index:1; width:140px; height:140px; border-radius:50%; border:4px solid ${profile.gender === 'female' ? '#ff3399' : '#1a75ff'}; box-shadow:0 0 25px rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; background:#1c1c1e; overflow:hidden;">
-                    ${profile.avatar_url ? `<img src="${sanitizeUrl(profile.avatar_url)}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">` : `<span style="font-size:60px; color:white; font-weight:bold;">${initial}</span>`}
+                <div style="position:absolute; top:45%; left:50%; transform:translate(-50%, -50%); z-index:5; width:140px; height:140px; border-radius:50%; border:4px solid ${profile.gender === 'female' ? '#ff3399' : '#1a75ff'}; box-shadow:0 0 25px rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; background:#1c1c1e; overflow:hidden;">
+                    ${profile.avatar_url ? `<img src="${sanitizeUrl(profile.avatar_url)}" id="modal-avatar-img" style="width:100%; height:100%; object-fit:cover; cursor:pointer;" loading="lazy">` : `<span style="font-size:60px; color:white; font-weight:bold;">${initial}</span>`}
                 </div>
 
                 <!-- طبقة التدرج السفلى لاسم المستخدم -->
@@ -1504,6 +1982,7 @@ function openUserModal(profile) {
                         <h2 style="margin:0; font-size:26px; font-weight:800; color:white; line-height:1.2;">
                             ${escapeHtml(profile.full_name || 'Utilisateur')}
                         </h2>
+                        ${profile.is_verified ? '<i class="fas fa-check-circle" style="color: #3b82f6; font-size: 20px;" title="Vérifié"></i>' : ''}
                         <span style="font-size:22px; font-weight:400; color:#e4e4e7; margin-left:6px;">${age !== '-' ? age : ''}</span>
                         ${profile.is_vip ? '<i class="fas fa-gem" style="color: #fbbf24; font-size: 18px;" title="Membre VIP"></i>' : ''}
                     </div>
@@ -1512,14 +1991,34 @@ function openUserModal(profile) {
                             <i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i> ${genderText}
                         </span>
                         ${distanceText ? `<span style="color:#a1a1aa; font-size:13px; display:flex; align-items:center; gap:4px;"><i class="fas fa-location-dot" style="color:var(--color-primary);"></i>${distanceText}</span>` : ''}
+                        ${profile.instagram ? `<a href="https://instagram.com/${escapeHtml(profile.instagram)}" target="_blank" class="social-badge instagram" title="Instagram" style="background:#e1306c; width:18px; height:18px; font-size:10px; color:white; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; margin-left:4px;"><i class="fab fa-instagram"></i></a>` : ''}
+                        ${profile.tiktok ? `<a href="https://tiktok.com/@${escapeHtml(profile.tiktok)}" target="_blank" class="social-badge tiktok" title="TikTok" style="background:#000000; border: 1px solid rgba(255,255,255,0.2); width:18px; height:18px; font-size:10px; color:white; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; margin-left:4px;"><i class="fab fa-tiktok"></i></a>` : ''}
                     </div>
                 </div>
             </div>
 
             <!-- التفاصيل السفلية -->
             <div style="padding:20px;">
-            <div class="modal-details-grid">
-                <div class="modal-detail-box">
+                <!-- شريط إحصائيات التفاعل -->
+                <div class="profile-stats-bar" style="margin-top: 0; margin-bottom: 20px;">
+                    <div class="profile-stat-col friends">
+                        <span class="stat-num" id="modal-stat-friends">${profile.friends_count || 0}</span>
+                        <span class="stat-label"><i class="fas fa-user-group"></i> Amis</span>
+                    </div>
+                    <div class="profile-stat-divider"></div>
+                    <div class="profile-stat-col visits">
+                        <span class="stat-num" id="modal-stat-visits">${(profile.visits_count || 0) + 1}</span>
+                        <span class="stat-label"><i class="fas fa-eye"></i> Visites</span>
+                    </div>
+                    <div class="profile-stat-divider"></div>
+                    <div class="profile-stat-col likes">
+                        <span class="stat-num" id="modal-stat-likes">${profile.likes_count || 0}</span>
+                        <span class="stat-label"><i class="fas fa-heart"></i> Likes</span>
+                    </div>
+                </div>
+
+                <div class="modal-details-grid">
+                    <div class="modal-detail-box">
                     <span class="detail-label-modal">Genre</span>
                     <span class="detail-value-modal">${genderText}</span>
                 </div>
@@ -1550,6 +2049,49 @@ function openUserModal(profile) {
     `;
 
     document.body.appendChild(modal);
+
+    // تهيئة الكاروسيل لمعرض صور العضو
+    const modalCarouselEl = document.getElementById('modal-gallery-carousel');
+    if (modalCarouselEl) {
+        initProfileCarousel(modalCarouselEl);
+    }
+
+    // إعداد معرض الصور المعروض في الـ Lightbox للعضو
+    const modalLightboxPhotos = [];
+    if (profile.avatar_url) modalLightboxPhotos.push(profile.avatar_url);
+    modalGalleryList.forEach(url => modalLightboxPhotos.push(url));
+
+    // عند الضغط على الأفاتار الدائري
+    const modalAvatarImg = document.getElementById('modal-avatar-img');
+    if (modalAvatarImg && modalLightboxPhotos.length > 0) {
+        modalAvatarImg.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openLightbox(modalLightboxPhotos, 0);
+        });
+    }
+
+    // عند الضغط على صور المعرض في الخلفية
+    if (modalCarouselEl && modalLightboxPhotos.length > 0) {
+        const clickableGalleryImgs = modalCarouselEl.querySelectorAll('.gallery-img-clickable');
+        clickableGalleryImgs.forEach(img => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const gIdx = parseInt(img.getAttribute('data-gallery-index'), 10);
+                const startIndex = profile.avatar_url ? gIdx + 1 : gIdx;
+                openLightbox(modalLightboxPhotos, startIndex);
+            });
+        });
+    }
+
+    // عند الضغط على الخلفية البديلة المشوشة
+    const modalFallbackBg = modal.querySelector('.clickable-fallback-bg');
+    if (modalFallbackBg && modalLightboxPhotos.length > 0) {
+        modalFallbackBg.style.cursor = 'pointer';
+        modalFallbackBg.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openLightbox(modalLightboxPhotos, 0);
+        });
+    }
 
     // إغلاق بالنقر على الخلفية أو زر الإغلاق
     document.getElementById('close-user-modal').addEventListener('click', () => modal.remove());
@@ -3243,6 +3785,189 @@ function showToast(msg) {
 }
 
 // ═══════════════════════════════════════════════════
+// === معرض الصور والكاروسيل (Profile Carousel & Lightbox) ===
+// ═══════════════════════════════════════════════════
+
+function initProfileCarousel(containerEl) {
+    if (!containerEl) return;
+    const track = containerEl.querySelector('.carousel-track');
+    const dots = containerEl.querySelectorAll('.carousel-dot');
+    const slides = containerEl.querySelectorAll('.carousel-slide');
+    if (!track || slides.length <= 1) return;
+
+    let currentIndex = 0;
+    let startX = 0;
+    let isDragging = false;
+    let autoPlayInterval = null;
+
+    function updateCarousel() {
+        const width = containerEl.offsetWidth || 400;
+        track.style.transform = `translateX(-${currentIndex * width}px)`;
+        dots.forEach((dot, idx) => {
+            dot.classList.toggle('active', idx === currentIndex);
+        });
+    }
+
+    function startAutoPlay() {
+        stopAutoPlay();
+        autoPlayInterval = setInterval(() => {
+            if (currentIndex < slides.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            updateCarousel();
+        }, 4500);
+    }
+
+    function stopAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+        }
+    }
+
+    // Touch events
+    containerEl.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        track.style.transition = 'none';
+        stopAutoPlay();
+    }, { passive: true });
+
+    containerEl.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const currentX = e.touches[0].clientX;
+        const diff = currentX - startX;
+        const width = containerEl.offsetWidth || 400;
+        const translate = -currentIndex * width + diff;
+        track.style.transform = `translateX(${translate}px)`;
+    }, { passive: true });
+
+    containerEl.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        track.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        
+        const endX = e.changedTouches[0].clientX;
+        const diff = endX - startX;
+        const threshold = (containerEl.offsetWidth || 400) * 0.15;
+
+        if (diff < -threshold && currentIndex < slides.length - 1) {
+            currentIndex++;
+        } else if (diff > threshold && currentIndex > 0) {
+            currentIndex--;
+        }
+        updateCarousel();
+        startAutoPlay();
+    });
+
+    startAutoPlay();
+    
+    const resizeObserver = new ResizeObserver(() => {
+        updateCarousel();
+    });
+    resizeObserver.observe(containerEl);
+
+    containerEl._carouselCleanup = () => {
+        stopAutoPlay();
+        resizeObserver.disconnect();
+    };
+}
+
+function openLightbox(imagesList, startIndex = 0) {
+    const oldLightbox = document.getElementById('lightbox-viewer');
+    if (oldLightbox) oldLightbox.remove();
+
+    const lightbox = document.createElement('div');
+    lightbox.id = 'lightbox-viewer';
+    lightbox.className = 'lightbox-overlay';
+
+    let currentIndex = startIndex;
+
+    lightbox.innerHTML = `
+        <button class="lightbox-close" title="Fermer">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="${sanitizeUrl(imagesList[currentIndex])}">
+            
+            ${imagesList.length > 1 ? `
+                <button class="lightbox-nav prev" title="Précédent">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="lightbox-nav next" title="Suivant">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="lightbox-counter">
+                    ${currentIndex + 1} / ${imagesList.length}
+                </div>
+            ` : ''}
+        </div>
+    `;
+
+    document.body.appendChild(lightbox);
+
+    const imgEl = lightbox.querySelector('#lightbox-img');
+    const counterEl = lightbox.querySelector('.lightbox-counter');
+
+    function updateImage() {
+        imgEl.style.opacity = '0';
+        imgEl.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            imgEl.src = sanitizeUrl(imagesList[currentIndex]);
+            imgEl.style.opacity = '1';
+            imgEl.style.transform = 'scale(1)';
+            if (counterEl) counterEl.textContent = `${currentIndex + 1} / ${imagesList.length}`;
+        }, 150);
+    }
+
+    lightbox.querySelector('.lightbox-close').addEventListener('click', () => lightbox.remove());
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox || e.target.classList.contains('lightbox-content')) {
+            lightbox.remove();
+        }
+    });
+
+    if (imagesList.length > 1) {
+        const prevBtn = lightbox.querySelector('.lightbox-nav.prev');
+        const nextBtn = lightbox.querySelector('.lightbox-nav.next');
+        if (prevBtn) {
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentIndex = (currentIndex - 1 + imagesList.length) % imagesList.length;
+                updateImage();
+            });
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentIndex = (currentIndex + 1) % imagesList.length;
+                updateImage();
+            });
+        }
+
+        let startX = 0;
+        lightbox.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        }, { passive: true });
+
+        lightbox.addEventListener('touchend', (e) => {
+            const endX = e.changedTouches[0].clientX;
+            const diff = endX - startX;
+            if (diff > 60) {
+                currentIndex = (currentIndex - 1 + imagesList.length) % imagesList.length;
+                updateImage();
+            } else if (diff < -60) {
+                currentIndex = (currentIndex + 1) % imagesList.length;
+                updateImage();
+            }
+        });
+    }
+}
+
+// ═══════════════════════════════════════════════════
 // === نظام الصور والأفاتار (Avatar System) ===
 // ═══════════════════════════════════════════════════
 
@@ -3409,6 +4134,413 @@ async function downgradeFromVIP() {
             alert('Échec de l\'annulation VIP : ' + err.message);
         }
     }
+}
+
+// ═══════════════════════════════════════════════════
+// === نظام ID و Level (HayMoi ID & Level System) ===
+// ═══════════════════════════════════════════════════
+
+function generateHayMoiId(userId) {
+    // نولد ID رقمي 8 خانات من UUID الخاص بالمستخدم (ثابت دائماً)
+    let hash = 0;
+    const str = userId.replace(/-/g, '');
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    const positiveHash = Math.abs(hash);
+    // نضمن أنه 8 أرقام بالضبط
+    const id8 = String(positiveHash % 90000000 + 10000000);
+    return id8;
+}
+
+function calculateUserLevel(visitsCount, friendsCount) {
+    const score = (visitsCount || 0) + (friendsCount || 0) * 3;
+    if (score === 0)  return 1;
+    if (score < 5)   return 2;
+    if (score < 15)  return 3;
+    if (score < 30)  return 4;
+    if (score < 60)  return 5;
+    if (score < 100) return 6;
+    if (score < 150) return 7;
+    if (score < 220) return 8;
+    if (score < 300) return 9;
+    return 10;
+}
+
+function getLevelProgress(visitsCount, friendsCount) {
+    const score = (visitsCount || 0) + (friendsCount || 0) * 3;
+    const thresholds = [0, 5, 15, 30, 60, 100, 150, 220, 300, 999];
+    const level = calculateUserLevel(visitsCount, friendsCount);
+    if (level >= 10) return 100;
+    const low  = thresholds[level - 1];
+    const high = thresholds[level];
+    const progress = Math.round(((score - low) / (high - low)) * 100);
+    return Math.min(Math.max(progress, 4), 100);
+}
+
+function getLevelIcon(visitsCount, friendsCount) {
+    const level = calculateUserLevel(visitsCount, friendsCount);
+    const icons = ['🌱','🌿','⭐','🌟','💫','🔥','💎','👑','🏆','🚀'];
+    return icons[level - 1] || '🌱';
+}
+
+// ═══════════════════════════════════════════════════
+// === نظام تعديل الهاشتاكات والبيو (Hashtag Editor) ===
+// ═══════════════════════════════════════════════════
+
+const HM_HASHTAG_CATEGORIES = [
+    {
+        label: '☕ Lifestyle',
+        tags: ['#Café', '#Thé', '#Sorties', '#Musique', '#Cinéma', '#Lecture', '#Voyage', '#Sport', '#Gaming', '#Art', '#Cuisine', '#Mode']
+    },
+    {
+        label: '💬 Statut social',
+        tags: ['#Libre', '#Je suis libre pour chats', '#Célibataire', '#Discret', '#Sérieux', '#Amitié', '#Rencontre', '#Flirt']
+    },
+    {
+        label: '🌟 Personnalité',
+        tags: ['#Sympa', '#Drôle', '#Sérieux', '#Romantique', '#Aventurier', '#Ambitieux', '#Créatif', '#Positif']
+    },
+    {
+        label: '🎯 Recherche',
+        tags: ['#Amis', '#Discussion', '#Bonne humeur', '#Partage', '#Confidences', '#Rencontres']
+    }
+];
+
+function openHashtagEditor(profile, user) {
+    const existing = document.getElementById('hm-hashtag-editor-modal');
+    if (existing) existing.remove();
+
+    const currentHashtags = (profile.hashtags && Array.isArray(profile.hashtags)) ? [...profile.hashtags] : [];
+    const currentBio = profile.bio || '';
+
+    const modal = document.createElement('div');
+    modal.id = 'hm-hashtag-editor-modal';
+
+    let selectedTags = [...currentHashtags];
+    const MAX_TAGS = 5;
+
+    const buildCategoryHtml = () => HM_HASHTAG_CATEGORIES.map((cat, ci) => `
+        <div class="hm-ht-cat">
+            <div class="hm-ht-cat-label">${cat.label}</div>
+            <div class="hm-ht-pills-row">
+                ${cat.tags.map(tag => {
+                    const isActive = selectedTags.includes(tag);
+                    return `<button class="hm-ht-pill ${isActive ? 'active' : ''}" data-tag="${tag.replace(/"/g, '&quot;')}">${tag}</button>`;
+                }).join('')}
+            </div>
+        </div>
+    `).join('');
+
+    modal.innerHTML = `
+    <style>
+        #hm-hashtag-editor-modal {
+            position: fixed; inset: 0; z-index: 4000;
+            background: rgba(0,0,0,0.75);
+            display: flex; align-items: flex-end; justify-content: center;
+            animation: hmFadeIn 0.2s ease;
+        }
+        @keyframes hmFadeIn { from { opacity:0; } to { opacity:1; } }
+        @keyframes hmSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        #hm-hashtag-editor-modal .hm-ht-sheet {
+            width: 100%; max-width: 480px;
+            background: #13161f;
+            border-radius: 28px 28px 0 0;
+            padding: 0 0 32px;
+            max-height: 92vh;
+            overflow-y: auto;
+            animation: hmSlideUp 0.35s cubic-bezier(0.34, 1.26, 0.64, 1);
+        }
+        #hm-hashtag-editor-modal .hm-ht-handle {
+            width: 40px; height: 4px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+            margin: 14px auto 0;
+        }
+        #hm-hashtag-editor-modal .hm-ht-top {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 20px 10px;
+        }
+        #hm-hashtag-editor-modal .hm-ht-top-title {
+            font-size: 18px; font-weight: 800; color: #fff;
+        }
+        #hm-hashtag-editor-modal .hm-ht-close {
+            background: rgba(255,255,255,0.08); border: none;
+            color: rgba(255,255,255,0.6); width: 32px; height: 32px;
+            border-radius: 50%; cursor: pointer; font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        /* bio textarea */
+        #hm-hashtag-editor-modal .hm-ht-bio-wrap {
+            padding: 0 20px 16px;
+        }
+        #hm-hashtag-editor-modal .hm-ht-bio-label {
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .08em; color: rgba(255,255,255,0.38);
+            margin-bottom: 8px; display: block;
+        }
+        #hm-hashtag-editor-modal .hm-ht-bio-input {
+            width: 100%; padding: 12px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1.5px solid rgba(255,255,255,0.1);
+            border-radius: 16px; color: #fff;
+            font-size: 14px; font-family: inherit;
+            resize: none; outline: none;
+            transition: border-color .2s;
+            box-sizing: border-box;
+        }
+        #hm-hashtag-editor-modal .hm-ht-bio-input:focus {
+            border-color: #3b82f6;
+        }
+        /* counter */
+        #hm-hashtag-editor-modal .hm-ht-counter {
+            font-size: 12px; color: rgba(255,255,255,0.35);
+            text-align: right; margin-top: 4px;
+        }
+        #hm-hashtag-editor-modal .hm-ht-counter.warn { color: #f59e0b; }
+        /* selected preview */
+        #hm-hashtag-editor-modal .hm-ht-selected-preview {
+            margin: 0 20px 16px;
+            min-height: 42px;
+            background: rgba(59,130,246,0.07);
+            border: 1.5px dashed rgba(59,130,246,0.25);
+            border-radius: 16px;
+            padding: 10px 14px;
+            display: flex; flex-wrap: wrap; gap: 7px; align-items: center;
+        }
+        #hm-hashtag-editor-modal .hm-ht-sel-empty {
+            font-size: 12px; color: rgba(255,255,255,0.3);
+        }
+        #hm-hashtag-editor-modal .hm-ht-sel-chip {
+            background: rgba(59,130,246,0.2);
+            border: 1px solid rgba(59,130,246,0.45);
+            color: #93c5fd;
+            font-size: 12px; font-weight: 700;
+            padding: 4px 10px; border-radius: 20px;
+            display: flex; align-items: center; gap: 5px;
+            animation: hmPopIn .2s cubic-bezier(0.34,1.26,0.64,1);
+        }
+        @keyframes hmPopIn { from {transform:scale(0.7); opacity:0;} to {transform:scale(1); opacity:1;} }
+        #hm-hashtag-editor-modal .hm-ht-sel-chip .rm { cursor:pointer; opacity:.7; }
+        #hm-hashtag-editor-modal .hm-ht-sel-chip .rm:hover { opacity:1; }
+        /* categories */
+        #hm-hashtag-editor-modal .hm-ht-cats {
+            padding: 0 20px;
+        }
+        #hm-hashtag-editor-modal .hm-ht-cat {
+            margin-bottom: 18px;
+        }
+        #hm-hashtag-editor-modal .hm-ht-cat-label {
+            font-size: 12px; font-weight: 700;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase; letter-spacing: .07em;
+            margin-bottom: 10px;
+        }
+        #hm-hashtag-editor-modal .hm-ht-pills-row {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+        #hm-hashtag-editor-modal .hm-ht-pill {
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.75);
+            padding: 7px 14px; border-radius: 20px;
+            font-size: 13px; font-weight: 600;
+            cursor: pointer; font-family: inherit;
+            transition: all .2s;
+        }
+        #hm-hashtag-editor-modal .hm-ht-pill.active {
+            background: rgba(59,130,246,0.18);
+            border-color: #3b82f6;
+            color: #93c5fd;
+        }
+        #hm-hashtag-editor-modal .hm-ht-pill.maxed:not(.active) {
+            opacity: 0.35; cursor: not-allowed;
+        }
+        /* footer */
+        #hm-hashtag-editor-modal .hm-ht-footer {
+            display: flex; gap: 10px;
+            padding: 20px 20px 0;
+        }
+        #hm-hashtag-editor-modal .hm-ht-btn-cancel {
+            flex: 1; background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.09);
+            color: rgba(255,255,255,0.55);
+            padding: 14px; border-radius: 22px;
+            font-weight: 700; font-size: 15px;
+            cursor: pointer; font-family: inherit;
+        }
+        #hm-hashtag-editor-modal .hm-ht-btn-save {
+            flex: 1.5; background: linear-gradient(135deg, #3b82f6, #6366f1);
+            border: none; color: #fff;
+            padding: 14px; border-radius: 22px;
+            font-weight: 800; font-size: 15px;
+            cursor: pointer; font-family: inherit;
+            box-shadow: 0 6px 20px rgba(59,130,246,0.3);
+            transition: opacity .2s;
+        }
+        #hm-hashtag-editor-modal .hm-ht-btn-save:active { opacity:.8; }
+    </style>
+
+    <div class="hm-ht-sheet">
+        <div class="hm-ht-handle"></div>
+        <div class="hm-ht-top">
+            <span class="hm-ht-top-title">✏️ Modifier la bio</span>
+            <button class="hm-ht-close" id="hm-ht-close-btn"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Bio textarea -->
+        <div class="hm-ht-bio-wrap">
+            <span class="hm-ht-bio-label">Bio (texte libre)</span>
+            <textarea class="hm-ht-bio-input" id="hm-ht-bio-textarea" rows="3" maxlength="160" placeholder="Décris-toi en quelques mots...">${escapeHtml(currentBio)}</textarea>
+            <div class="hm-ht-counter" id="hm-ht-bio-counter">${currentBio.length}/160</div>
+        </div>
+
+        <!-- Selected tags preview -->
+        <div class="hm-ht-selected-preview" id="hm-ht-sel-preview">
+            ${selectedTags.length === 0
+                ? `<span class="hm-ht-sel-empty">Aucun hashtag sélectionné (max ${MAX_TAGS})</span>`
+                : selectedTags.map(t => `<span class="hm-ht-sel-chip">${escapeHtml(t)} <span class="rm" data-remove="${t.replace(/"/g,'&quot;')}">✕</span></span>`).join('')
+            }
+        </div>
+
+        <!-- Categories -->
+        <div class="hm-ht-cats" id="hm-ht-cats-container">
+            ${buildCategoryHtml()}
+        </div>
+
+        <!-- Footer -->
+        <div class="hm-ht-footer">
+            <button class="hm-ht-btn-cancel" id="hm-ht-cancel-btn">Annuler</button>
+            <button class="hm-ht-btn-save" id="hm-ht-save-btn"><i class="fas fa-check" style="margin-right:6px;"></i>Enregistrer</button>
+        </div>
+    </div>
+    `;
+
+    document.body.appendChild(modal);
+    const _htBottomNav = document.querySelector('.bottom-nav');
+    if (_htBottomNav) _htBottomNav.style.display = 'none';
+
+    function _htClose() {
+        modal.remove();
+        if (_htBottomNav) _htBottomNav.style.display = '';
+    }
+
+    // helpers
+    function renderPreview() {
+        const preview = modal.querySelector('#hm-ht-sel-preview');
+        if (selectedTags.length === 0) {
+            preview.innerHTML = `<span class="hm-ht-sel-empty">Aucun hashtag sélectionné (max ${MAX_TAGS})</span>`;
+        } else {
+            preview.innerHTML = selectedTags.map(t =>
+                `<span class="hm-ht-sel-chip">${escapeHtml(t)} <span class="rm" data-remove="${t.replace(/"/g,'&quot;')}">✕</span></span>`
+            ).join('');
+            // remove click
+            preview.querySelectorAll('.rm').forEach(rmEl => {
+                rmEl.addEventListener('click', () => {
+                    selectedTags = selectedTags.filter(s => s !== rmEl.dataset.remove);
+                    renderPreview();
+                    renderPills();
+                });
+            });
+        }
+    }
+
+    function renderPills() {
+        const isMax = selectedTags.length >= MAX_TAGS;
+        modal.querySelectorAll('.hm-ht-pill').forEach(pill => {
+            const tag = pill.dataset.tag;
+            const active = selectedTags.includes(tag);
+            pill.classList.toggle('active', active);
+            pill.classList.toggle('maxed', isMax && !active);
+        });
+    }
+
+    // pill clicks
+    modal.querySelector('#hm-ht-cats-container').addEventListener('click', e => {
+        const pill = e.target.closest('.hm-ht-pill');
+        if (!pill) return;
+        const tag = pill.dataset.tag;
+        if (selectedTags.includes(tag)) {
+            selectedTags = selectedTags.filter(s => s !== tag);
+        } else {
+            if (selectedTags.length >= MAX_TAGS) return;
+            selectedTags.push(tag);
+        }
+        renderPreview();
+        renderPills();
+    });
+
+    // bio counter
+    const bioTextarea = modal.querySelector('#hm-ht-bio-textarea');
+    const bioCounter = modal.querySelector('#hm-ht-bio-counter');
+    bioTextarea.addEventListener('input', () => {
+        const len = bioTextarea.value.length;
+        bioCounter.textContent = `${len}/160`;
+        bioCounter.classList.toggle('warn', len > 130);
+    });
+
+    // close
+    modal.querySelector('#hm-ht-close-btn').addEventListener('click', () => _htClose());
+    modal.querySelector('#hm-ht-cancel-btn').addEventListener('click', () => _htClose());
+    modal.addEventListener('click', e => { if (e.target === modal) _htClose(); });
+
+    // save
+    modal.querySelector('#hm-ht-save-btn').addEventListener('click', async () => {
+        const saveBtn = modal.querySelector('#hm-ht-save-btn');
+        const newBio = bioTextarea.value.trim();
+
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        saveBtn.disabled = true;
+
+        try {
+            const { error } = await sb.from('profiles')
+                .update({ bio: newBio || null, hashtags: selectedTags })
+                .eq('user_id', user.id);
+
+            if (error) throw error;
+
+            // update local state
+            profile.bio = newBio;
+            profile.hashtags = selectedTags;
+            if (currentUserProfile) {
+                currentUserProfile.bio = newBio;
+                currentUserProfile.hashtags = selectedTags;
+            }
+
+            // update DOM directly without full reload
+            const bioTextEl = document.getElementById('profil-bio-text');
+            if (bioTextEl) {
+                if (newBio) {
+                    bioTextEl.className = 'hm-bio-text';
+                    bioTextEl.textContent = newBio;
+                } else {
+                    bioTextEl.className = 'hm-bio-empty';
+                    bioTextEl.textContent = 'Ajoutez une biographie ou des hashtags pour vous décrire ✨';
+                }
+            }
+
+            const hashtagsRow = document.getElementById('hm-hashtags-row');
+            if (hashtagsRow) {
+                if (selectedTags.length > 0) {
+                    hashtagsRow.innerHTML = selectedTags.map(h =>
+                        `<span class="hm-hashtag-chip">${escapeHtml(h)}</span>`
+                    ).join('');
+                } else {
+                    hashtagsRow.innerHTML = '';
+                }
+            }
+
+            _htClose();
+            showToast('✅ Bio et hashtags mis à jour !');
+        } catch (err) {
+            console.error('Erreur hashtags:', err);
+            alert('Erreur lors de la sauvegarde : ' + err.message);
+            saveBtn.innerHTML = '<i class="fas fa-check" style="margin-right:6px;"></i>Enregistrer';
+            saveBtn.disabled = false;
+        }
+    });
 }
 
 // تحديث آخر ظهور عند إخفاء الصفحة أو مغادرتها

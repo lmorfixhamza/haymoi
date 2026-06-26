@@ -20,7 +20,7 @@
         <form id="profile-form">
             <div class="input-group">
                 <label for="fullName">Nom (ou pseudo) :</label>
-                <input type="text" id="fullName" placeholder="Ex: Ahmed" required>
+                <input type="text" id="fullName" placeholder="Ex: Ahmed" maxlength="18" required>
             </div>
 
             <div class="input-group">
@@ -40,6 +40,35 @@
             <div class="input-group">
                 <label for="bio">À propos de moi (Bio) :</label>
                 <textarea id="bio" rows="3" placeholder="Écrivez quelque chose pour attirer l'attention..."></textarea>
+            </div>
+
+            <div class="input-group" style="margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 20px;">
+                <label style="font-weight: 700; color: var(--color-primary);"><i class="fas fa-images" style="margin-right: 6px;"></i> Photos du profil (Galerie - Max 3)</label>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; margin-top: 4px;">Ajoutez jusqu'à 3 photos supplémentaires pour votre carrousel de profil.</p>
+                
+                <div class="gallery-upload-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                    <div class="gallery-upload-box" style="position: relative; aspect-ratio: 1; border: 2px dashed rgba(255,255,255,0.12); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; background: rgba(255,255,255,0.02); transition: all 0.2s;">
+                        <input type="file" id="gallery-input-1" accept="image/*" style="position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2;">
+                        <div class="upload-preview" id="gallery-preview-1" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: absolute; inset: 0; z-index: 1;">
+                            <i class="fas fa-plus" style="font-size: 20px; color: var(--text-muted);"></i>
+                            <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Photo 1</span>
+                        </div>
+                    </div>
+                    <div class="gallery-upload-box" style="position: relative; aspect-ratio: 1; border: 2px dashed rgba(255,255,255,0.12); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; background: rgba(255,255,255,0.02); transition: all 0.2s;">
+                        <input type="file" id="gallery-input-2" accept="image/*" style="position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2;">
+                        <div class="upload-preview" id="gallery-preview-2" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: absolute; inset: 0; z-index: 1;">
+                            <i class="fas fa-plus" style="font-size: 20px; color: var(--text-muted);"></i>
+                            <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Photo 2</span>
+                        </div>
+                    </div>
+                    <div class="gallery-upload-box" style="position: relative; aspect-ratio: 1; border: 2px dashed rgba(255,255,255,0.12); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; background: rgba(255,255,255,0.02); transition: all 0.2s;">
+                        <input type="file" id="gallery-input-3" accept="image/*" style="position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2;">
+                        <div class="upload-preview" id="gallery-preview-3" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: absolute; inset: 0; z-index: 1;">
+                            <i class="fas fa-plus" style="font-size: 20px; color: var(--text-muted);"></i>
+                            <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Photo 3</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <details class="extra-details" style="margin: 20px 0; border: 1px solid rgba(255, 255, 255, 0.08); padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.02);">
@@ -100,6 +129,20 @@
                     <div class="input-group">
                         <label for="hair_color">Couleur des cheveux :</label>
                         <input type="text" id="hair_color" placeholder="Ex: Noir, châtain...">
+                    </div>
+
+                    <div class="input-group" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px; margin-top: 15px;">
+                        <label style="font-weight: 700; color: var(--color-primary);"><i class="fas fa-share-nodes" style="margin-right: 6px;"></i> Réseaux Sociaux</label>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="instagram"><i class="fab fa-instagram" style="margin-right: 6px;"></i> Instagram (Nom d'utilisateur) :</label>
+                        <input type="text" id="instagram" placeholder="Ex: hamza_username">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="tiktok"><i class="fab fa-tiktok" style="margin-right: 6px;"></i> TikTok (Nom d'utilisateur) :</label>
+                        <input type="text" id="tiktok" placeholder="Ex: hamza_tiktok">
                     </div>
                 </div>
             </details>

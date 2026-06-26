@@ -1,11 +1,97 @@
 // ملف setup.js
 document.addEventListener('DOMContentLoaded', async () => {
     const form = document.getElementById('profile-form');
+    let galleryUrls = ['', '', ''];
 
     // 1. جلب المستخدم الحالي وجلب بياناته السابقة إن وجدت لتسهيل التعديل
     const { data: { user } } = await sb.auth.getUser();
     
     if (user) {
+        // دالة مساعدة لتحديث معاينة معرض الصور
+        function updateGalleryPreview(index, url) {
+            const previewDiv = document.getElementById(`gallery-preview-${index}`);
+            const inputEl = document.getElementById(`gallery-input-${index}`);
+            if (!previewDiv || !inputEl) return;
+
+            if (url) {
+                previewDiv.innerHTML = `
+                    <img src="${url}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <button type="button" class="delete-gallery-img" style="position: absolute; top: 6px; right: 6px; background: rgba(220, 38, 38, 0.85); border: none; color: white; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; z-index: 10;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                inputEl.style.display = 'none';
+
+                // مستمع حدث الحذف
+                previewDiv.querySelector('.delete-gallery-img').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    galleryUrls[index - 1] = '';
+                    updateGalleryPreview(index, '');
+                });
+            } else {
+                previewDiv.innerHTML = `
+                    <i class="fas fa-plus" style="font-size: 20px; color: var(--text-muted);"></i>
+                    <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Photo ${index}</span>
+                `;
+                inputEl.style.display = 'block';
+                inputEl.value = '';
+            }
+        }
+
+        // إعداد مستمعي الأحداث لمدخلات معرض الصور
+        [1, 2, 3].forEach(index => {
+            const inputEl = document.getElementById(`gallery-input-${index}`);
+            if (inputEl) {
+                inputEl.addEventListener('change', async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const previewDiv = document.getElementById(`gallery-preview-${index}`);
+                    if (!previewDiv) return;
+
+                    // عرض مؤشر التحميل
+                    previewDiv.innerHTML = `
+                        <i class="fas fa-spinner fa-spin" style="font-size: 20px; color: var(--color-primary);"></i>
+                        <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Chargement...</span>
+                    `;
+                    inputEl.style.pointerEvents = 'none';
+
+                    try {
+                        // ضغط الصورة (الحد الأقصى للعرض 800 بكسل، الجودة 0.75)
+                        const compressed = await compressImage(file, 800, 0.75);
+
+                        const fileName = `gallery_${user.id}_${index}_${Date.now()}.jpg`;
+                        const filePath = `gallery/${fileName}`;
+
+                        const { data: uploadData, error: uploadError } = await sb.storage
+                            .from('chat-media')
+                            .upload(filePath, compressed, {
+                                contentType: 'image/jpeg',
+                                upsert: false
+                            });
+
+                        if (uploadError) throw uploadError;
+
+                        const { data: urlData } = sb.storage
+                            .from('chat-media')
+                            .getPublicUrl(filePath);
+
+                        const publicUrl = urlData.publicUrl;
+                        galleryUrls[index - 1] = publicUrl;
+                        updateGalleryPreview(index, publicUrl);
+
+                    } catch (err) {
+                        console.error("Error uploading gallery image:", err);
+                        alert("Erreur lors du chargement de l'image : " + err.message);
+                        updateGalleryPreview(index, '');
+                    } finally {
+                        inputEl.style.pointerEvents = 'auto';
+                    }
+                });
+            }
+        });
+
         try {
             const { data: profilesList, error } = await sb
                 .from('profiles')
@@ -34,6 +120,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (document.getElementById('body_type')) document.getElementById('body_type').value = profile.body_type || '';
                 if (document.getElementById('ethnicity')) document.getElementById('ethnicity').value = profile.ethnicity || '';
                 if (document.getElementById('hair_color')) document.getElementById('hair_color').value = profile.hair_color || '';
+                if (document.getElementById('instagram')) document.getElementById('instagram').value = profile.instagram || '';
+                if (document.getElementById('tiktok')) document.getElementById('tiktok').value = profile.tiktok || '';
+
+                // تحميل الصور الموجودة في المعرض
+                if (profile.gallery && Array.isArray(profile.gallery)) {
+                    profile.gallery.forEach((url, i) => {
+                        if (i < 3 && url) {
+                            galleryUrls[i] = url;
+                            updateGalleryPreview(i + 1, url);
+                        }
+                    });
+                }
 
                 // إضافة زر إلغاء الرجوع إذا كان البروفايل موجوداً بالفعل لمنع إجبار المستخدم على ملئه مجدداً
                 if (form) {
@@ -52,67 +150,82 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         } catch (err) {
-            console.error("Erreur lors de la récupération des anciennes données du profil :", err);
+            console.error("Erreur lorsِ de la récupération des anciennes données du profil :", err);
             alert("Erreur lors de la récupération des données de votre profil. Veuillez réessayer.");
         }
     }
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault(); // منع الصفحة من إعادة التحميل
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // منع الصفحة من إعادة التحميل
 
-        if (!user) {
-            alert("Veuillez d'abord vous connecter !");
-            return;
-        }
-
-        // 2. تجميع البيانات من الفورم
-        const profileData = {
-            user_id: user.id, // هذا ضروري للـ RLS
-            full_name: document.getElementById('fullName').value, // تطابق ID في HTML
-            gender: document.getElementById('gender').value,
-            dob: document.getElementById('dob').value,
-            bio: document.getElementById('bio').value,
-            height: document.getElementById('height')?.value || null,
-            residence: document.getElementById('residence')?.value || null,
-            income: document.getElementById('income')?.value || null,
-            profession: document.getElementById('profession')?.value || null,
-            company: document.getElementById('company')?.value || null,
-            body_type: document.getElementById('body_type')?.value || null,
-            ethnicity: document.getElementById('ethnicity')?.value || null,
-            hair_color: document.getElementById('hair_color')?.value || null
-        };
-
-        // 3. إرسال البيانات لجدول profiles (باستخدام الاستعلام والتحديث أو الإدخال لتجنب التكرار وتفادي قيود RLS/Primary Key)
-        try {
-            const { data: existingProfiles, error: fetchErr } = await sb
-                .from('profiles')
-                .select('user_id')
-                .eq('user_id', user.id);
-            
-            if (fetchErr) throw fetchErr;
-
-            let saveResult;
-            if (existingProfiles && existingProfiles.length > 0) {
-                // تحديث جميع السجلات التي لديها نفس user_id لتفادي التكرار مستقبلاً
-                saveResult = await sb
-                    .from('profiles')
-                    .update(profileData)
-                    .eq('user_id', user.id);
-            } else {
-                // إدخال سجل جديد لأول مرة
-                saveResult = await sb
-                    .from('profiles')
-                    .insert([profileData]);
+            if (!user) {
+                alert("Veuillez d'abord vous connecter !");
+                return;
             }
 
-            if (saveResult.error) throw saveResult.error;
+            // 2. تجميع البيانات من الفورم
+            const profileData = {
+                user_id: user.id, // هذا ضروري للـ RLS
+                full_name: document.getElementById('fullName').value,
+                gender: document.getElementById('gender').value,
+                dob: document.getElementById('dob').value,
+                bio: document.getElementById('bio').value,
+                height: document.getElementById('height')?.value || null,
+                residence: document.getElementById('residence')?.value || null,
+                income: document.getElementById('income')?.value || null,
+                profession: document.getElementById('profession')?.value || null,
+                company: document.getElementById('company')?.value || null,
+                body_type: document.getElementById('body_type')?.value || null,
+                ethnicity: document.getElementById('ethnicity')?.value || null,
+                hair_color: document.getElementById('hair_color')?.value || null
+            };
 
-            alert("Vos données ont été enregistrées avec succès !");
-            window.location.href = 'app.html'; // حول المستخدم للصفحة الرئيسية
+            // إضافة الحقول الاختيارية (الأعمدة موجودة في الداتابيز)
+            profileData.instagram = document.getElementById('instagram')?.value || null;
+            profileData.tiktok = document.getElementById('tiktok')?.value || null;
+            const filteredGallery = galleryUrls.filter(url => url !== '');
+            if (filteredGallery.length > 0) profileData.gallery = filteredGallery;
 
-        } catch (err) {
-            console.error("Erreur lors de l'enregistrement :", err);
-            alert("Une erreur est survenue lors de l'enregistrement de vos données. Veuillez réessayer.");
-        }
-    });
+            // 3. إرسال البيانات لجدول profiles
+            try {
+                const { data: existingProfiles, error: fetchErr } = await sb
+                    .from('profiles')
+                    .select('user_id')
+                    .eq('user_id', user.id);
+                
+                if (fetchErr) {
+                    console.error("❌ Fetch error:", JSON.stringify(fetchErr));
+                    throw fetchErr;
+                }
+
+                let saveResult;
+                if (existingProfiles && existingProfiles.length > 0) {
+                    // تحديث
+                    saveResult = await sb
+                        .from('profiles')
+                        .update(profileData)
+                        .eq('user_id', user.id);
+                } else {
+                    // إدخال جديد
+                    saveResult = await sb
+                        .from('profiles')
+                        .insert([profileData]);
+                }
+
+                if (saveResult.error) {
+                    console.error("❌ Save error details:", JSON.stringify(saveResult.error));
+                    alert("خطأ في الحفظ: " + saveResult.error.message + "\nCode: " + (saveResult.error.code || 'N/A') + "\nDetails: " + (saveResult.error.details || 'N/A'));
+                    return;
+                }
+
+                alert("Vos données ont été enregistrées avec succès !");
+                window.location.href = 'app.html';
+
+            } catch (err) {
+                console.error("❌ Exception:", err);
+                alert("خطأ: " + (err.message || JSON.stringify(err)));
+            }
+        });
+    }
 });

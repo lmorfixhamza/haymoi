@@ -4279,26 +4279,23 @@ body {
 
 [data-theme="light"] body,
 [data-theme="light"] .app-body {
-    background-color: #e8eaef;
-    background-image: var(--watermark-bg);
-    background-size: var(--watermark-size);
+    background-color: #ffffff !important;
+    background-image: none !important;
     color: #111;
 }
 
 [data-theme="light"] .video-overlay {
-    background-color: #e8eaef;
-    background-image: var(--watermark-bg);
-    background-size: var(--watermark-size);
+    background-color: #ffffff !important;
+    background-image: none !important;
 }
 
 [data-theme="light"] .app-container {
-    background-color: #e8eaef;
-    background-image: var(--watermark-bg);
-    background-size: var(--watermark-size);
+    background-color: #ffffff !important;
+    background-image: none !important;
     --text-white: #111827;
     --text-muted: #6b7280;
-    --bg-glass: #e8eaf0;
-    --bg-glass-hover: #dde0ea;
+    --bg-glass: #ffffff;
+    --bg-glass-hover: #f3f4f6;
     --border-glass: rgba(0, 0, 0, 0.08);
     color: #111827;
 }
@@ -4527,10 +4524,12 @@ body {
 }
 
 /* --- أزرار البروفايل (Edit / Paramètres) --- */
-[data-theme="light"] #edit-profile-btn {
-    background: rgba(0, 0, 0, 0.05) !important;
-    color: #000000 !important;
-    border: 1px solid #000000 !important;
+[data-theme="light"] #edit-profile-btn,
+[data-theme="light"] .prf-edit-btn {
+    background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(0, 102, 255, 0.35) !important;
 }
 
 [data-theme="light"] #open-settings-btn {
@@ -4540,8 +4539,10 @@ body {
 }
 
 [data-theme="light"] #edit-profile-btn:hover,
+[data-theme="light"] .prf-edit-btn:hover,
 [data-theme="light"] #open-settings-btn:hover {
-    background: rgba(0, 0, 0, 0.09) !important;
+    background: linear-gradient(135deg, #0057e0 0%, #0044bb 100%) !important;
+    box-shadow: 0 6px 20px rgba(0, 102, 255, 0.45) !important;
 }
 
 /* --- Settings Bottom Sheet --- */
@@ -6567,4 +6568,1596 @@ body {
 [data-theme="light"] .hm-id-copy-icon {
     color: #94a3b8;
 }
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* === PROFILE REDESIGN — Mockup Clean Style ===                  */
+/* ═══════════════════════════════════════════════════════════════ */
+
+/* Overall container override */
+.profil-card-new-clean {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent;
+    padding: 0 10px 10px 10px;
+    min-height: calc(100vh - 161px);
+    min-height: calc(100dvh - 161px);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Profile Banner card shape with rounded bottom corners */
+.profile-banner {
+    position: relative;
+    width: calc(100% + 20px);
+    margin-left: -10px;
+    margin-right: -10px;
+    min-height: 230px;
+    padding: 25px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0a1f3d 0%, #150c2e 100%);
+    border-radius: 0 0 35px 35px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.profile-banner.female-banner {
+    background: linear-gradient(135deg, #2e0820 0%, #150c2e 100%);
+}
+
+.profile-banner::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    top: -50px;
+    left: -50px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.profile-banner::after {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    bottom: -30px;
+    right: -30px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.profile-banner .gallery-carousel {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: 0 0 35px 35px;
+    overflow: hidden;
+}
+
+.profile-banner .gallery-carousel .carousel-slide img {
+    filter: brightness(0.75) saturate(1.1);
+}
+
+.profile-banner .blurred-bg-fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(20px) brightness(0.7) saturate(1.2);
+    z-index: 1;
+    border-radius: 0 0 35px 35px;
+}
+
+/* Profile Picture Wrapper */
+.profile-picture-wrapper {
+    position: relative;
+    z-index: 5;
+}
+
+.profile-picture-inner {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 3px solid #0066ff;
+    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a2e;
+    color: #ffffff;
+    font-size: 44px;
+    font-weight: 800;
+    overflow: hidden;
+}
+
+.profile-banner.female-banner .profile-picture-inner {
+    border-color: #ec4899;
+    box-shadow: 0 8px 25px rgba(236, 72, 153, 0.2);
+}
+
+.profile-picture-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.camera-icon {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 36px;
+    height: 36px;
+    background: #0066ff;
+    border: 3px solid #111726;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(0, 102, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 6;
+}
+
+.camera-icon:hover {
+    background: #0052cc;
+    transform: scale(1.08);
+}
+
+.profile-banner.female-banner .camera-icon {
+    background: #ec4899;
+}
+
+.profile-banner.female-banner .camera-icon:hover {
+    background: #db2777;
+}
+
+/* User Info Section */
+.profil-card-new-clean .user-info {
+    display: block !important;
+    flex: none !important;
+    padding: 12px 20px 0 !important;
+    text-align: center !important;
+    width: 100% !important;
+}
+
+.user-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.edit-icon {
+    color: #0066ff;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.2s;
+    opacity: 0.8;
+}
+
+.edit-icon:hover {
+    color: #0052cc;
+}
+
+.user-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,0.06);
+    padding: 8px 14px;
+    border-radius: 24px;
+    width: fit-content;
+    margin: 0 auto 2px;
+    font-size: 14px;
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.user-details i {
+    color: #0066ff;
+    font-size: 16px;
+}
+
+.divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255,255,255,0.15);
+}
+
+/* Stats Section */
+.stats-section {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 6px 10px;
+    border-radius: 16px;
+    margin: 10px 0 10px !important;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    position: relative;
+}
+
+.stat-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 10%;
+    height: 80%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.stat-icon {
+    font-size: 26px !important;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2px !important;
+}
+
+.stat-icon.friends i {
+    color: #0066ff !important;
+    filter: drop-shadow(0 4px 6px rgba(0, 102, 255, 0.25));
+}
+.stat-icon.visits i {
+    color: #00d4aa !important;
+    filter: drop-shadow(0 4px 6px rgba(0, 212, 170, 0.25));
+}
+.stat-icon.likes i {
+    color: #ff4757 !important;
+    filter: drop-shadow(0 4px 6px rgba(255, 71, 87, 0.25));
+}
+
+.stat-number {
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    line-height: 1.2 !important;
+}
+
+.stat-label {
+    font-size: 9px !important;
+    color: #888888 !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    margin-top: 4px !important;
+    margin-bottom: 2px !important;
+}
+
+/* Social Accounts Section title */
+.section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0066ff;
+    margin: 10px 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    text-align: left;
+}
+
+/* Override social cards for clean style */
+.profil-card-new-clean .social-account-item {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.profil-card-new-clean .social-account-item:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-2px);
+}
+
+.profil-card-new-clean .social-account-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.profil-card-new-clean .social-account-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    background: #000000;
+    color: #ffffff;
+}
+
+.profil-card-new-clean #social-instagram-item .social-account-icon {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.profil-card-new-clean #social-tiktok-item .social-account-icon {
+    background: #000000;
+}
+
+.profil-card-new-clean .social-account-platform {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff !important;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.profil-card-new-clean .social-account-name {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5) !important;
+    margin: 0;
+}
+
+.profil-card-new-clean .social-account-edit-btn,
+.profil-card-new-clean .social-account-link-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    color: #0066ff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.profil-card-new-clean .social-account-edit-btn:hover,
+.profil-card-new-clean .social-account-link-btn:hover {
+    background: rgba(255,255,255,0.15) !important;
+    border-color: #0066ff !important;
+}
+
+/* About Me Section */
+.about-section {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    width: 100%;
+}
+
+.about-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.tag {
+    padding: 10px 18px;
+    border-radius: 24px;
+    font-size: 13.5px;
+    font-weight: 500;
+    border: 1.5px solid;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tag.tag-1 {
+    color: #0066ff !important;
+    border-color: #0066ff !important;
+    background: rgba(0, 102, 255, 0.05) !important;
+}
+
+.tag.tag-1:hover {
+    background: rgba(0, 102, 255, 0.1) !important;
+}
+
+.tag.tag-2 {
+    color: #7c3aed !important;
+    border-color: #7c3aed !important;
+    background: rgba(124, 58, 237, 0.05) !important;
+}
+
+.tag.tag-2:hover {
+    background: rgba(124, 58, 237, 0.1) !important;
+}
+
+.tag.tag-3 {
+    color: #ec4899 !important;
+    border-color: #ec4899 !important;
+    background: rgba(236, 72, 153, 0.05) !important;
+}
+
+.tag.tag-3:hover {
+    background: rgba(236, 72, 153, 0.1) !important;
+}
+
+/* Edit Profile Button */
+.edit-profile-btn {
+    background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 10px 20px;
+    border-radius: 24px !important;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 10px 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+}
+
+.edit-profile-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 102, 255, 0.4);
+}
+
+.edit-profile-btn:active {
+    transform: translateY(0);
+}
+
+/* Bottom Nav active circle with wings indicator styling */
+.bottom-nav .nav-item.active .icon i {
+    background: #0066ff;
+    color: #ffffff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+}
+
+.bottom-nav .nav-item.active {
+    position: relative;
+}
+
+.bottom-nav .nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 54px;
+    height: 54px;
+    background: radial-gradient(circle, rgba(0, 102, 255, 0.4) 0%, transparent 70%);
+    opacity: 0.8;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* === LIGHT MODE overrides for clean profile ===                 */
+/* ═══════════════════════════════════════════════════════════════ */
+
+[data-theme="light"] .profil-card-new-clean {
+    background: #ffffff;
+}
+
+[data-theme="light"] .profile-banner {
+    background: linear-gradient(135deg, #e0f2ff 0%, #f0e5ff 100%);
+}
+
+[data-theme="light"] .profile-banner.female-banner {
+    background: linear-gradient(135deg, #fce7f3 0%, #f0e5ff 100%);
+}
+
+[data-theme="light"] .profile-picture-inner {
+    border-color: #0066ff;
+    background: #ffffff;
+    color: #333333;
+}
+
+[data-theme="light"] .camera-icon {
+    border-color: #ffffff;
+}
+
+[data-theme="light"] .profile-banner.female-banner .profile-picture-inner {
+    border-color: #ec4899;
+}
+
+[data-theme="light"] .user-name {
+    color: #000000;
+}
+
+[data-theme="light"] .user-details {
+    background: #f8f9fa;
+    color: #333333;
+    border: none;
+}
+
+[data-theme="light"] .divider {
+    background: #dddddd;
+}
+
+[data-theme="light"] .stat-item:not(:last-child)::after {
+    background: #dddddd;
+}
+
+[data-theme="light"] .stats-section {
+    background: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .stat-number {
+    color: #000000;
+}
+
+[data-theme="light"] .stat-label {
+    color: #666666;
+}
+
+[data-theme="light"] .profil-card-new-clean .social-account-item {
+    background: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .profil-card-new-clean .social-account-platform {
+    color: #000000 !important;
+}
+
+[data-theme="light"] .profil-card-new-clean .social-account-edit-btn,
+[data-theme="light"] .profil-card-new-clean .social-account-link-btn {
+    background: #ffffff !important;
+    border-color: #dddddd !important;
+}
+
+[data-theme="light"] .profil-card-new-clean .social-account-name {
+    color: #999999 !important;
+}
+
+
+[data-theme="light"] .about-section {
+    background: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .about-text {
+    color: #999999;
+}
+
+[data-theme="light"] .section-title {
+    color: #0066ff;
+}
+
+[data-theme="light"] .user-details i {
+    color: #0066ff;
+}
+
+/* Override social accounts section inside clean profile to hide duplicate title and fix spacing */
+.profil-card-new-clean .social-accounts-section h4 {
+    display: none !important;
+}
+
+.profil-card-new-clean .social-accounts-section {
+    border-top: none !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    width: 100%;
+}
+
+.profil-card-new-clean .social-accounts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px !important;
+    width: 100%;
+}
+/* ================================================================
+   PRF - Profile Section Clean Design (matches screenshot exactly)
+   ================================================================ */
+
+/* Section title - "My social accounts" / "About me" */
+.prf-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0066ff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0 4px;
+    width: 100%;
+}
+
+.prf-section-title i {
+    font-size: 15px;
+}
+
+/* Social cards list container - 2 columns grid */
+.prf-social-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0;
+    margin-bottom: 4px;
+    width: 100%;
+}
+
+/* Each social card row */
+.prf-social-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    border-radius: 14px;
+    padding: 16px 12px;
+    gap: 8px;
+    transition: background 0.2s;
+    border: none;
+}
+
+.prf-social-card:hover {
+    background: #f0f1f3;
+}
+
+/* Left side: icon + text */
+.prf-social-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Platform icon square */
+.prf-social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.prf-icon-instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.prf-icon-tiktok {
+    background: #000000;
+}
+
+.prf-icon-whatsapp {
+    background: #25d366;
+}
+
+.prf-icon-facebook {
+    background: #1877f2;
+}
+
+/* Platform name + username */
+.prf-social-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.prf-platform-name {
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+    color: #111827;
+    letter-spacing: 0.03em;
+}
+
+.prf-platform-user {
+    font-size: 12px !important;
+    color: #4b5563;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Right side: action buttons */
+.prf-social-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Round icon button (link + edit) */
+.prf-btn-round {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #555;
+    font-size: 10px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.prf-btn-round:hover {
+    background: #f0f0f0;
+    border-color: #0066ff;
+    color: #0066ff;
+}
+
+/* About Me box */
+.prf-about-box {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin: 0 0 8px;
+    width: 100%;
+}
+
+.prf-about-text {
+    font-size: 14px;
+    color: #999;
+    line-height: 1.6;
+    flex: 1;
+}
+
+/* Edit Profile button */
+.prf-edit-btn {
+    margin: 12px 0 6px !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 22px !important;
+    padding: 11px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 16px rgba(0,102,255,0.3) !important;
+    transition: all 0.3s !important;
+}
+
+.prf-edit-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(0,102,255,0.4) !important;
+}
+
+/* Logout Profile button under Edit Profile */
+.prf-logout-btn {
+    margin: 0 0 28px !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 22px !important;
+    padding: 11px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 16px rgba(239,68,68,0.3) !important;
+    transition: all 0.3s !important;
+}
+
+.prf-logout-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4) !important;
+}
+
+/* ── Dark Mode overrides ── */
+.profil-card-new-clean .prf-social-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+}
+
+.profil-card-new-clean .prf-social-card:hover {
+    background: rgba(255,255,255,0.09);
+}
+
+.profil-card-new-clean .prf-platform-name {
+    color: #ffffff;
+}
+
+.profil-card-new-clean .prf-platform-user {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.profil-card-new-clean .prf-btn-round {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.12);
+    color: #0066ff;
+}
+
+.profil-card-new-clean .prf-btn-round:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: #0066ff;
+}
+
+.profil-card-new-clean .prf-about-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+}
+
+.profil-card-new-clean .prf-about-text {
+    color: rgba(255,255,255,0.45);
+}
+
+.profil-card-new-clean .prf-section-title {
+    color: #0066ff;
+}
+
+/* ── Light Mode overrides (when data-theme=light) ── */
+[data-theme="light"] .prf-social-card {
+    background: #f8f9fa;
+    border: none;
+}
+
+[data-theme="light"] .prf-social-card:hover {
+    background: #f0f1f3;
+}
+
+[data-theme="light"] .prf-platform-name {
+    color: #000;
+}
+
+[data-theme="light"] .prf-platform-user {
+    color: #999;
+}
+
+[data-theme="light"] .prf-btn-round {
+    background: #fff;
+    border-color: #e0e0e0;
+    color: #555;
+}
+
+[data-theme="light"] .prf-btn-round:hover {
+    background: #f0f0f0;
+    border-color: #0066ff;
+    color: #0066ff;
+}
+
+[data-theme="light"] .prf-about-box {
+    background: #f8f9fa;
+    border: none;
+}
+
+[data-theme="light"] .prf-about-text {
+    color: #999;
+}
+
+/* ================================================================
+   COMPREHENSIVE LIGHT MODE OVERRIDES - High specificity
+   ================================================================ */
+
+/* profil-card background */
+[data-theme="light"] .profil-card-new-clean {
+    background: #ffffff;
+}
+
+/* Banner gradient */
+[data-theme="light"] .profile-banner {
+    background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 50%, #fce7f3 100%);
+}
+[data-theme="light"] .profile-banner.female-banner {
+    background: linear-gradient(135deg, #fce7f3 0%, #ede9fe 100%);
+}
+
+/* Avatar border */
+[data-theme="light"] .profile-picture-inner {
+    border-color: #0066ff;
+    background: #ffffff;
+    color: #333333;
+}
+[data-theme="light"] .profile-banner.female-banner .profile-picture-inner {
+    border-color: #ec4899;
+}
+
+/* Name */
+[data-theme="light"] .user-name {
+    color: #111827;
+}
+
+/* Details pill */
+[data-theme="light"] .user-details {
+    background: #f8f9fa;
+    border: none;
+    color: #333333;
+}
+[data-theme="light"] .divider {
+    background: #dddddd;
+}
+
+/* Stats */
+[data-theme="light"] .stats-section {
+    background: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+[data-theme="light"] .stat-number {
+    color: #0f172a !important;
+}
+[data-theme="light"] .stat-label {
+    color: #94a3b8 !important;
+}
+[data-theme="light"] .stat-item:not(:last-child)::after {
+    background: rgba(0, 102, 255, 0.12) !important;
+}
+
+/* Social cards - HIGH specificity to beat dark overrides */
+[data-theme="light"] .profil-card-new-clean .prf-social-card {
+    background: #f8f9fa !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+[data-theme="light"] .profil-card-new-clean .prf-social-card:hover {
+    background: #f0f1f3 !important;
+}
+[data-theme="light"] .profil-card-new-clean .prf-platform-name {
+    color: #111827 !important;
+}
+[data-theme="light"] .profil-card-new-clean .prf-platform-user {
+    color: #4b5563 !important;
+}
+[data-theme="light"] .profil-card-new-clean .prf-btn-round {
+    background: #ffffff !important;
+    border-color: #e0e0e0 !important;
+    color: #555555 !important;
+}
+[data-theme="light"] .profil-card-new-clean .prf-btn-round:hover {
+    background: #f0f0f0 !important;
+    border-color: #0066ff !important;
+    color: #0066ff !important;
+}
+
+/* About box */
+[data-theme="light"] .profil-card-new-clean .prf-about-box {
+    background: #f8f9fa !important;
+    border: none !important;
+}
+[data-theme="light"] .profil-card-new-clean .prf-about-text {
+    color: #999999 !important;
+}
+
+/* Section title */
+[data-theme="light"] .profil-card-new-clean .prf-section-title {
+    color: #0066ff !important;
+}
+
+/* Fix user-name truncation */
+.profil-card-new-clean .user-name {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    word-break: break-word !important;
+}
+
+/* Circular style for all action buttons (Edit, Link, Bio, Name) */
+.profil-card-new-clean .prf-btn-round,
+[data-theme="light"] .profil-card-new-clean .prf-btn-round {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+}
+
+/* Hover state for circular buttons */
+.profil-card-new-clean .prf-btn-round:hover,
+[data-theme="light"] .profil-card-new-clean .prf-btn-round:hover {
+    background: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* Edit and Link buttons get a solid BLACK border on their circle, and white background, in all themes! */
+.profil-card-new-clean .social-account-edit-btn,
+.profil-card-new-clean .social-account-link-btn,
+.profil-card-new-clean #edit-name-btn,
+[data-theme="light"] .profil-card-new-clean .social-account-edit-btn,
+[data-theme="light"] .profil-card-new-clean .social-account-link-btn,
+[data-theme="light"] .profil-card-new-clean #edit-name-btn,
+[data-theme="dark"] .profil-card-new-clean .social-account-edit-btn,
+[data-theme="dark"] .profil-card-new-clean .social-account-link-btn,
+[data-theme="dark"] .profil-card-new-clean #edit-name-btn {
+    background: #ffffff !important;
+    border: 1.5px solid #000000 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Hover state for black border edit and link buttons */
+.profil-card-new-clean .social-account-edit-btn:hover,
+.profil-card-new-clean .social-account-link-btn:hover,
+.profil-card-new-clean #edit-name-btn:hover,
+[data-theme="light"] .profil-card-new-clean .social-account-edit-btn:hover,
+[data-theme="light"] .profil-card-new-clean .social-account-link-btn:hover,
+[data-theme="light"] .profil-card-new-clean #edit-name-btn:hover,
+[data-theme="dark"] .profil-card-new-clean .social-account-edit-btn:hover,
+[data-theme="dark"] .profil-card-new-clean .social-account-link-btn:hover,
+[data-theme="dark"] .profil-card-new-clean #edit-name-btn:hover {
+    background: #f3f4f6 !important;
+    border-color: #000000 !important;
+}
+
+/* Specific edit pen colors based on platform and layout */
+.profil-card-new-clean .social-account-edit-btn i,
+.profil-card-new-clean #edit-name-btn i {
+    font-size: 15px !important;
+}
+
+/* Instagram: Pink pen */
+.profil-card-new-clean .social-account-edit-btn[data-platform="instagram"] i {
+    color: #e1306c !important;
+}
+/* WhatsApp: Green pen */
+.profil-card-new-clean .social-account-edit-btn[data-platform="whatsapp"] i {
+    color: #25d366 !important;
+}
+/* TikTok: Black pen */
+.profil-card-new-clean .social-account-edit-btn[data-platform="tiktok"] i {
+    color: #000000 !important;
+}
+/* Facebook: Blue pen */
+.profil-card-new-clean .social-account-edit-btn[data-platform="facebook"] i {
+    color: #1877f2 !important;
+}
+/* Name Edit: Blue pen */
+.profil-card-new-clean #edit-name-btn i {
+    color: #0066ff !important;
+}
+
+/* Link/Visiter button inside circles (Dark slate/black color!) */
+.profil-card-new-clean .social-account-link-btn i,
+.profil-card-new-clean .social-account-link-btn.disabled i {
+    color: #111827 !important;
+    opacity: 1 !important;
+    font-size: 14px !important;
+}
+.profil-card-new-clean .social-account-link-btn:hover i {
+    color: #0066ff !important;
+}
+
+/* Light Theme overrides for Logout button */
+[data-theme="light"] .prf-logout-btn {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35) !important;
+}
+
+[data-theme="light"] .prf-logout-btn:hover {
+    background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45) !important;
+}
+
+/* Bio edit pen button styling - enlarged and prominent (34px circle, black border, blue pen) */
+.profil-card-new-clean #bio-edit-hashtag-btn,
+[data-theme="light"] .profil-card-new-clean #bio-edit-hashtag-btn,
+[data-theme="dark"] .profil-card-new-clean #bio-edit-hashtag-btn {
+    width: 34px !important;
+    height: 34px !important;
+    background: #ffffff !important;
+    border: 1.5px solid #000000 !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.2s !important;
+}
+
+.profil-card-new-clean #bio-edit-hashtag-btn i {
+    color: #0066ff !important;
+    font-size: 14px !important;
+}
+
+.profil-card-new-clean #bio-edit-hashtag-btn:hover,
+[data-theme="light"] .profil-card-new-clean #bio-edit-hashtag-btn:hover,
+[data-theme="dark"] .profil-card-new-clean #bio-edit-hashtag-btn:hover {
+    background: #f3f4f6 !important;
+    border-color: #000000 !important;
+}
+
+.profil-card-new-clean #bio-edit-hashtag-btn:hover i {
+    color: #0052cc !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESTORED CHATS VIEW DESIGN — NOTES, TABS, SEARCH, BACKGROUNDS
+   ══════════════════════════════════════════════════════════════ */
+
+/* --- 1. Pastel Glowing Background (Light Mode Override) --- */
+[data-theme="light"] body,
+[data-theme="light"] .app-body {
+    background: linear-gradient(135deg, #ffeef6 0%, #edf1fd 40%, #e1e7ff 70%, #d8e4ff 100%) !important;
+    background-attachment: fixed !important;
+    color: #111827 !important;
+}
+
+[data-theme="light"] .video-overlay {
+    background: transparent !important;
+}
+
+[data-theme="light"] .app-container {
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.45) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.45) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04), inset 0 0 100px rgba(255, 255, 255, 0.1) !important;
+    --text-white: #111827;
+    --text-muted: #6b7280;
+    --bg-glass: rgba(255, 255, 255, 0.5);
+    --bg-glass-hover: rgba(255, 255, 255, 0.7);
+    --border-glass: rgba(255, 255, 255, 0.4);
+    color: #111827 !important;
+}
+
+[data-theme="light"] .app-header {
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+
+[data-theme="light"] .bottom-nav {
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+
+/* --- 2. Instagram Notes Section --- */
+.chats-notes-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 16px;
+    margin: 12px 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+[data-theme="light"] .chats-notes-section {
+    background: rgba(255, 255, 255, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.03) !important;
+}
+
+.chats-notes-label {
+    display: none;
+}
+
+.chats-notes-slider {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px 4px 4px 4px;
+    scrollbar-width: none;
+}
+
+.chats-notes-slider::-webkit-scrollbar {
+    display: none;
+}
+
+.note-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    width: 70px;
+}
+
+.note-bubble-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.note-bubble {
+    background: #1f2937;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 18px;
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    margin-bottom: 8px;
+    position: relative;
+    max-width: 80px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="light"] .note-bubble {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.note-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: #1f2937 transparent;
+    display: block;
+    width: 0;
+}
+
+[data-theme="light"] .note-bubble::after {
+    border-color: #ffffff transparent !important;
+}
+
+.note-avatar {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+    position: relative;
+    border: 2.5px solid #111827;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    background: #1f2937;
+}
+
+[data-theme="light"] .note-avatar {
+    border-color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+    background: #e2e8f0 !important;
+}
+
+.note-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.note-avatar.female {
+    background: linear-gradient(135deg, #fbcfe8, #f472b6);
+    color: #db2777;
+}
+
+.note-avatar.male {
+    background: linear-gradient(135deg, #dbeafe, #60a5fa);
+    color: #2563eb;
+}
+
+.note-avatar.has-story {
+    border-color: #ff3366 !important;
+}
+
+.note-add-plus {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    background: #ff3366;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: bold;
+    border: 2px solid #111827;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .note-add-plus {
+    border-color: #ffffff !important;
+}
+
+.note-online-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    background: #22c55e;
+    border-radius: 50%;
+    border: 2px solid #111827;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .note-online-dot {
+    border-color: #ffffff !important;
+}
+
+.note-name {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+[data-theme="light"] .note-name {
+    color: #374151 !important;
+}
+
+/* --- 3. Capsule Tabs switcher --- */
+.chats-tabs-container {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    padding: 4px;
+    margin: 8px 16px;
+    gap: 4px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .chats-tabs-container {
+    background: rgba(255, 255, 255, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02) !important;
+}
+
+.chats-tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 26px;
+    color: #9ca3af;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    outline: none;
+}
+
+[data-theme="light"] .chats-tab-btn {
+    color: #4b5563 !important;
+}
+
+.chats-tab-btn i {
+    font-size: 14px;
+}
+
+.chats-tab-btn.active {
+    background: linear-gradient(135deg, #ec4899 0%, #3b82f6 100%);
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+}
+
+.chats-tab-badge {
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 1.5px solid #111827;
+    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);
+    position: absolute;
+    top: -5px;
+    right: 5px;
+}
+
+[data-theme="light"] .chats-tab-badge {
+    border-color: #ffffff !important;
+}
+
+/* --- 4. Inline Search Bar --- */
+.chats-inline-search {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 25px;
+    padding: 8px 16px;
+    margin: 8px 16px 16px 16px;
+    gap: 10px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+[data-theme="light"] .chats-inline-search {
+    background: rgba(255, 255, 255, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02) !important;
+}
+
+.chats-inline-search i.fa-search {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+[data-theme="light"] .chats-inline-search i.fa-search {
+    color: #6b7280 !important;
+}
+
+.chats-inline-search input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+[data-theme="light"] .chats-inline-search input {
+    color: #111827 !important;
+}
+
+.chats-inline-search input::placeholder {
+    color: #6b7280;
+}
+
+[data-theme="light"] .chats-inline-search input::placeholder {
+    color: #9ca3af !important;
+}
+
+.chats-inline-search i.fa-sliders-h {
+    color: #9ca3af;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+[data-theme="light"] .chats-inline-search i.fa-sliders-h {
+    color: #4b5563 !important;
+}
+
+.chats-inline-search i.fa-sliders-h:hover {
+    color: #ffffff;
+}
+
+[data-theme="light"] .chats-inline-search i.fa-sliders-h:hover {
+    color: #111827 !important;
+}
+
+/* --- 5. Glassmorphism Chat List Card & Items --- */
+[data-theme="light"] .chats-list-card .chat-item {
+    background: rgba(255, 255, 255, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02) !important;
+    transition: all 0.25s ease !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item:hover {
+    background: rgba(255, 255, 255, 0.7) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Colored outline borders on cards based on gender */
+.chats-list-card .chat-item.female {
+    border: 1.5px solid rgba(236, 72, 153, 0.18) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item.female {
+    border: 1.5px solid rgba(236, 72, 153, 0.3) !important;
+    background: rgba(255, 243, 249, 0.45) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item.female:hover {
+    background: rgba(255, 243, 249, 0.7) !important;
+}
+
+.chats-list-card .chat-item.male {
+    border: 1.5px solid rgba(59, 130, 246, 0.18) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item.male {
+    border: 1.5px solid rgba(59, 130, 246, 0.3) !important;
+    background: rgba(240, 247, 255, 0.45) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item.male:hover {
+    background: rgba(240, 247, 255, 0.7) !important;
+}
+
+.chats-list-card .chat-item.group {
+    border: 1.5px solid rgba(139, 92, 246, 0.18) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item.group {
+    border: 1.5px solid rgba(139, 92, 246, 0.3) !important;
+    background: rgba(245, 243, 255, 0.45) !important;
+}
+
+[data-theme="light"] .chats-list-card .chat-item.group:hover {
+    background: rgba(245, 243, 255, 0.7) !important;
+}
+
+
+
 

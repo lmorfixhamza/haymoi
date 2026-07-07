@@ -7,11 +7,19 @@
     <title>HayMoi | Explorez votre entourage</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap"></noscript>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-    <link rel="stylesheet" href="style.css?v=3.5">
+    <link rel="preload"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap"
+        as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap">
+    </noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
+    <link rel="stylesheet" href="style.css?v=3.6">
 </head>
 
 <body class="app-body">
@@ -65,8 +73,17 @@
             <span class="header-title" id="header-title" translate="no" style="display: none;">Trouver</span>
 
             <!-- زر الإعدادات في أعلى اليمين عند عرض البروفايل -->
-            <button id="header-settings-btn" style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-white); font-size: 22px; cursor: pointer; padding: 8px; z-index: 100;" title="Paramètres">
+            <button id="header-settings-btn"
+                style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-white); font-size: 22px; cursor: pointer; padding: 8px; z-index: 100;"
+                title="Paramètres">
                 <i class="fas fa-cog"></i>
+            </button>
+
+            <!-- زر الإنشاء في أعلى اليمين عند عرض المحادثات -->
+            <button id="header-compose-btn"
+                style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: linear-gradient(135deg, #ff3366, #db2777); border: none; color: #ffffff; border-radius: 12px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; z-index: 100; box-shadow: 0 4px 10px rgba(255, 51, 102, 0.3);"
+                title="Nouvelle discussion">
+                <i class="fas fa-edit"></i>
             </button>
 
             <!-- أزرار التنقل في الأعلى -->
@@ -84,6 +101,14 @@
                     <div class="loading-spinner">
                         <i class="fas fa-spinner fa-spin"></i> Recherche de personnes proches...
                     </div>
+                </div>
+            </section>
+
+            <!-- قسم Pour toi (منشورات عامة) -->
+            <section id="view-pourtoi" class="app-view">
+                <div class="pourtoi-feed" id="pourtoi-feed-container"
+                    style="padding: 16px 12px 80px 12px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; max-height: calc(100vh - 140px);">
+                    <!-- Dynamic mockup posts will be loaded here -->
                 </div>
             </section>
 
@@ -262,7 +287,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=3.0"></script>
+    <script src="script.js?v=3.1"></script>
 </body>
 
 </html>

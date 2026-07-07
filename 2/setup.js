@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 1. جلب المستخدم الحالي وجلب بياناته السابقة إن وجدت لتسهيل التعديل
     const { data: { user } } = await sb.auth.getUser();
-
+    
     if (user) {
         // دالة مساعدة لتحديث معاينة معرض الصور
         function updateGalleryPreview(index, url) {

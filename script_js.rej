@@ -1,0 +1,2103 @@
+diff a/script.js b/script.js	(rejected hunks)
+@@ -72,6 +72,13 @@ async function loadAppData(user) {
+         debugLog("loadAppData: Error loading favorites: " + e.message, true);
+     }
+ 
++    try {
++        debugLog("loadAppData: Loading chat requests...");
++        await loadChatRequests();
++    } catch (e) {
++        debugLog("loadAppData: Error loading chat requests: " + e.message, true);
++    }
++
+     try {
+         debugLog("loadAppData: Loading discovery users...");
+         await loadDiscoveryUsers(user);
+@@ -119,6 +126,116 @@ let latestDiscoveryProfiles = []; // Ï¬Ï«Ï▓┘è┘å ÏóÏ«Ï▒ ┘éÏºÏª┘àÏ® Ï¿Ï▒┘ê┘üÏº┘è┘ä
+ let discoveryLastFetchTime = 0; // ┘ê┘éÏ¬ ÏóÏ«Ï▒ Ï¼┘äÏ¿ ┘ä┘äÏ¿┘èÏº┘åÏºÏ¬ - ┘ä┘äÏ¬Ï¡┘â┘à ┘ü┘è Ïº┘ä┘âÏºÏ┤
+ const DISCOVERY_CACHE_MS = 60000; // ┘âÏºÏ┤ ┘ä┘àÏ»Ï® Ï»┘é┘è┘éÏ® ┘êÏºÏ¡Ï»Ï® ┘äÏ¬Ï¼┘åÏ¿ Ïº┘äÏÀ┘äÏ¿ÏºÏ¬ Ïº┘ä┘àÏ¬┘âÏ▒Ï▒Ï®
+ 
++// === Simulated Group Chats (Local Session & Persistence) ===
++window._simulatedGroups = [];
++try {
++    const savedGroups = localStorage.getItem('haymoi_simulated_groups');
++    if (savedGroups) window._simulatedGroups = JSON.parse(savedGroups);
++} catch (e) {
++    console.error("Error loading simulated groups:", e);
++}
++
++window._groupMessages = {};
++try {
++    const savedGroupMsgs = localStorage.getItem('haymoi_group_messages');
++    if (savedGroupMsgs) window._groupMessages = JSON.parse(savedGroupMsgs);
++} catch (e) {
++    console.error("Error loading group messages:", e);
++}
++
++// === Simulated Mock Bots (Local Session & Persistence) ===
++window._botMessages = {};
++try {
++    const savedBotMsgs = localStorage.getItem('haymoi_bot_messages');
++    if (savedBotMsgs) window._botMessages = JSON.parse(savedBotMsgs);
++} catch (e) {
++    console.error("Error loading bot messages:", e);
++}
++
++const MOCK_BOTS = [
++    {
++        user_id: 'bot_farida_female',
++        full_name: 'Farida Alami',
++        gender: 'female',
++        dob: '2003-05-15',
++        bio: 'Passionn├®e de photo, voyages et caf├® ÔÿòÔ£¿ LetÔÇÖs chat!',
++        avatar_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
++        latitude: 33.5731,
++        longitude: -7.5898,
++        is_vip: true,
++        is_verified: true,
++        is_online: true,
++        created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
++        instagram: 'farida_alami',
++        tiktok: 'farida_alami',
++        whatsapp: '+212600000001',
++        facebook: 'farida.alami'
++    },
++    {
++        user_id: 'bot_youssef_male',
++        full_name: 'Youssef Bennani',
++        gender: 'male',
++        dob: '2000-08-20',
++        bio: 'D├®veloppeur web ­ƒÆ╗ grand sportif ­ƒÅâÔÇìÔÖé´©Å Toujours positif !',
++        avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
++        latitude: 33.5750,
++        longitude: -7.5920,
++        is_vip: false,
++        is_verified: true,
++        is_online: true,
++        created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
++        instagram: 'youssef_bennani',
++        whatsapp: '+212600000002'
++    },
++    {
++        user_id: 'bot_amina_female',
++        full_name: 'Amina El Fassi',
++        gender: 'female',
++        dob: '2005-02-10',
++        bio: 'Artiste peintre ­ƒÄ¿ fan de musique classique et de lecture ­ƒôû',
++        avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
++        latitude: 33.5710,
++        longitude: -7.5850,
++        is_vip: true,
++        is_verified: false,
++        is_online: false,
++        created_at: new Date(Date.now() - 3600000 * 12).toISOString(),
++        instagram: 'amina_art',
++        tiktok: 'amina_art'
++    },
++    {
++        user_id: 'bot_mehdi_male',
++        full_name: 'Mehdi Naciri',
++        gender: 'male',
++        dob: '1998-11-05',
++        bio: 'Gamer ­ƒÄ« et cr├®ateur de contenu. Viens discuter ! Ô£î´©Å',
++        avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
++        latitude: 33.5780,
++        longitude: -7.6010,
++        is_vip: false,
++        is_verified: true,
++        is_online: false,
++        created_at: new Date(Date.now() - 3600000 * 24).toISOString(),
++        instagram: 'mehdi_naciri',
++        tiktok: 'mehdi_gaming'
++    },
++    {
++        user_id: 'bot_salma_female',
++        full_name: 'Salma Tazi',
++        gender: 'female',
++        dob: '2001-03-30',
++        bio: 'Pharmacienne ­ƒÆè voyageuse du monde Ô£ê´©Å Amoureuse des chats ­ƒÉ▒',
++        avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
++        latitude: 33.5680,
++        longitude: -7.5800,
++        is_vip: false,
++        is_verified: true,
++        is_online: true,
++        created_at: new Date(Date.now() - 3600000 * 48).toISOString(),
++        instagram: 'salma_tazi'
++    }
++];
++
+ // Ï¡Ï│ÏºÏ¿ Ïº┘ä┘àÏ│Ïº┘üÏ® Ï¿┘è┘å ┘å┘éÏÀÏ¬┘è┘å Ï¼Ï║Ï▒Ïº┘ü┘èÏ¬┘è┘å Ï¿Ïº┘ä┘â┘è┘ä┘ê┘àÏ¬Ï▒
+ function calculateDistance(lat1, lon1, lat2, lon2) {
+     const l1 = parseFloat(lat1);
+@@ -464,6 +581,26 @@ function initAppTabs() {
+ 
+     // Ï»Ïº┘äÏ® Ï¬Ï¿Ï»┘è┘ä Ïº┘äÏú┘éÏ│Ïº┘à
+     window.switchAppView = function (viewId) {
++        // ÏÑÏ░Ïº ┘âÏº┘å Ï¬Ï¿┘ê┘èÏ¿ VIPÏî ┘å┘é┘ê┘à ┘ü┘éÏÀ Ï¿Ïº┘äÏ¬ÏúÏ½┘èÏ▒ Ïº┘äÏ¿ÏÁÏ▒┘è ┘ä┘ä┘àÏñÏ┤Ï▒ ┘êÏº┘äÏ▓Ï▒
++        if (viewId === 'vip') {
++            const targetBtn = document.getElementById('btn-nav-vip');
++            if (targetBtn) {
++                navBtns.forEach(b => b.classList.remove('active'));
++                targetBtn.classList.add('active');
++
++                const bottomNav = document.querySelector('.bottom-nav');
++                if (bottomNav) {
++                    const navBtnsArray = Array.from(document.querySelectorAll('.bottom-nav .nav-item'));
++                    const activeIndex = navBtnsArray.indexOf(targetBtn);
++                    if (activeIndex !== -1) {
++                        bottomNav.style.setProperty('--active-idx', activeIndex);
++                        bottomNav.style.setProperty('--active-color', '#fbbf24');
++                    }
++                }
++            }
++            return;
++        }
++
+         // ÏÑÏ«┘üÏºÏí ┘â┘ä Ïº┘äÏú┘éÏ│Ïº┘à
+         views.forEach(v => v.classList.remove('active'));
+         navBtns.forEach(b => b.classList.remove('active'));
+@@ -557,41 +695,46 @@ function initAppTabs() {
+             const tabGroups = document.getElementById('tab-groups');
+             const tabVip = document.getElementById('tab-vip');
+             const headerSettingsBtn = document.getElementById('header-settings-btn');
++            const headerComposeBtn = document.getElementById('header-compose-btn');
+ 
+             if (viewId === 'trouver') {
+-                if (headerAvatar) headerAvatar.style.display = '';
++                if (headerAvatar) headerAvatar.style.display = 'flex';
+                 if (notifBell) notifBell.style.display = '';
+                 if (tabSearch) tabSearch.style.display = '';
+                 if (tabGroups) tabGroups.style.display = '';
+                 if (tabVip) tabVip.style.display = '';
+                 if (headerSettingsBtn) headerSettingsBtn.style.display = 'none';
+-            } else if (viewId === 'chats' || viewId === 'contacts' || viewId === 'profil') {
+-                if (headerAvatar) headerAvatar.style.display = 'none'; // ÏÑÏ«┘üÏºÏí Ïº┘äÏú┘üÏºÏ¬ÏºÏ▒ Ï¿Ïº┘ä┘âÏº┘à┘ä ┘ä┘èÏ¬┘åÏ¡┘ë Ïº┘äÏ╣┘å┘êÏº┘å ┘ä┘ä┘èÏ│ÏºÏ▒
+-                if (notifBell) notifBell.style.display = 'none'; // ÏÑÏ«┘üÏºÏí Ïº┘äÏ¼Ï▒Ï│
+-                if (tabSearch) tabSearch.style.display = viewId === 'profil' ? 'none' : ''; // ÏÑÏ¿┘éÏºÏí Ïº┘äÏ¿Ï¡Ï½ ┘àÏº Ï╣Ï»Ïº ┘ü┘è Ïº┘äÏ¿Ï▒┘ê┘üÏº┘è┘ä
+-                if (tabGroups) tabGroups.style.display = 'none'; // ÏÑÏ«┘üÏºÏí Ïº┘ä┘é┘äÏ¿
+-                if (tabVip) tabVip.style.display = 'none'; // ÏÑÏ«┘üÏºÏí Ïº┘äÏ¼┘ê┘çÏ▒Ï®
+-                if (headerSettingsBtn) headerSettingsBtn.style.display = viewId === 'profil' ? 'block' : 'none';
+-                
++                if (headerComposeBtn) headerComposeBtn.style.display = 'none';
++            } else if (viewId === 'chats' || viewId === 'contacts') {
++                if (headerAvatar) headerAvatar.style.display = 'none'; // hide top avatar to align title left
++                if (notifBell) notifBell.style.display = 'none';
++                if (tabSearch) tabSearch.style.display = '';
++                if (tabGroups) tabGroups.style.display = 'none';
++                if (tabVip) tabVip.style.display = 'none';
++                if (headerSettingsBtn) headerSettingsBtn.style.display = 'none';
++                if (headerComposeBtn) headerComposeBtn.style.display = viewId === 'chats' ? 'block' : 'none';
++            } else if (viewId === 'profil') {
++                if (headerAvatar) headerAvatar.style.display = 'none';
++                if (headerSettingsBtn) headerSettingsBtn.style.display = 'block';
++                if (headerComposeBtn) headerComposeBtn.style.display = 'none';
++
+                 // Click to copy ID from header badge
+-                if (viewId === 'profil') {
+-                    setTimeout(() => {
+-                        const hdrIdBadge = document.getElementById('hm-header-id-badge');
+-                        if (hdrIdBadge && !hdrIdBadge._hasClickHandler) {
+-                            hdrIdBadge._hasClickHandler = true;
+-                            hdrIdBadge.addEventListener('click', () => {
+-                                const idVal = document.getElementById('hm-header-id-val');
+-                                if (idVal) {
+-                                    navigator.clipboard.writeText(idVal.textContent).catch(() => {});
+-                                    const orig = idVal.style.color;
+-                                    idVal.style.color = '#4ade80';
+-                                    showToast('ID copi├® Ô£à');
+-                                    setTimeout(() => { idVal.style.color = orig; }, 1800);
+-                                }
+-                            });
+-                        }
+-                    }, 100);
+-                }
++                setTimeout(() => {
++                    const hdrIdBadge = document.getElementById('hm-header-id-badge');
++                    if (hdrIdBadge && !hdrIdBadge._hasClickHandler) {
++                        hdrIdBadge._hasClickHandler = true;
++                        hdrIdBadge.addEventListener('click', () => {
++                            const idVal = document.getElementById('hm-header-id-val');
++                            if (idVal) {
++                                navigator.clipboard.writeText(idVal.textContent).catch(() => { });
++                                const orig = idVal.style.color;
++                                idVal.style.color = '#4ade80';
++                                showToast('ID copi├® Ô£à');
++                                setTimeout(() => { idVal.style.color = orig; }, 1800);
++                            }
++                        });
++                    }
++                }, 100);
+             }
+         }
+ 
+@@ -762,29 +905,37 @@ async function loadOwnProfile(user) {
+ 
+         if (profile) {
+             currentUserProfile = profile; // Ï¡┘üÏ© Ïº┘ä┘à┘ä┘ü Ïº┘äÏ┤Ï«ÏÁ┘è Ïº┘äÏ¡Ïº┘ä┘è ┘ä┘ä┘àÏ│Ï¬Ï«Ï»┘à Ï¿┘àÏº ┘ü┘è┘ç Ïº┘äÏÑÏ¡Ï»ÏºÏ½┘èÏºÏ¬
+-            
++
+             // Ï¡Ï│ÏºÏ¿ Ï╣Ï»Ï» Ïº┘äÏúÏÁÏ»┘éÏºÏí (Ï╣Ï»Ï» Ïº┘äÏúÏ┤Ï«ÏºÏÁ Ïº┘äÏ░┘è┘å Ï¬┘êÏºÏÁ┘ä┘åÏº ┘àÏ╣┘ç┘à)
+             let friendsCount = profile.friends_count || 0;
+             try {
+-                const { data: userMessages } = await sb
+-                    .from('messages')
+-                    .select('sender_id, receiver_id')
+-                    .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`);
+-                
+-                if (userMessages) {
+-                    const uniquePartners = new Set();
+-                    userMessages.forEach(msg => {
+-                        if (msg.sender_id !== user.id) uniquePartners.add(msg.sender_id);
+-                        if (msg.receiver_id !== user.id) uniquePartners.add(msg.receiver_id);
+-                    });
+-                    friendsCount = uniquePartners.size;
+-                    
+-                    // Ï¬Ï¡Ï»┘èÏ½ ┘ü┘è Ïº┘äÏ»ÏºÏ¬ÏºÏ¿┘èÏ▓ ┘äÏ¬Ï«Ï▓┘è┘å┘çÏº
+-                    if (friendsCount !== profile.friends_count) {
+-                        await sb.from('profiles').update({ friends_count: friendsCount }).eq('user_id', user.id);
+-                        profile.friends_count = friendsCount;
++                // Ïº┘ä┘àÏ¡Ïº┘ê┘äÏ® Ïº┘äÏú┘ê┘ä┘ë: ÏºÏ│Ï¬Ï╣┘àÏº┘ä Database Function (RPC) ┘ä┘äÏúÏ»ÏºÏí Ïº┘äÏ╣Ïº┘ä┘è ┘êÏ¬┘üÏºÏ»┘è Ï¬Ï¡┘à┘è┘ä Ïó┘äÏº┘ü Ïº┘äÏ▒Ï│ÏºÏª┘ä
++                const { data: rpcCount, error: rpcError } = await sb.rpc('get_unique_friends_count', { user_id_param: user.id });
++
++                if (!rpcError && rpcCount !== null) {
++                    friendsCount = rpcCount;
++                } else {
++                    // Ïº┘ä┘àÏ¡Ïº┘ê┘äÏ® Ïº┘äÏ½Ïº┘å┘èÏ® (Fallback): ÏÑÏ░Ïº ┘ä┘à Ï¬┘â┘å Ïº┘äÏ»Ïº┘äÏ® ┘à┘ç┘èÏúÏ® ┘ü┘è Supabase Ï¿Ï╣Ï»
++                    const { data: userMessages } = await sb
++                        .from('messages')
++                        .select('sender_id, receiver_id')
++                        .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`);
++
++                    if (userMessages) {
++                        const uniquePartners = new Set();
++                        userMessages.forEach(msg => {
++                            if (msg.sender_id !== user.id) uniquePartners.add(msg.sender_id);
++                            if (msg.receiver_id !== user.id) uniquePartners.add(msg.receiver_id);
++                        });
++                        friendsCount = uniquePartners.size;
+                     }
+                 }
++
++                // Ï¬Ï¡Ï»┘èÏ½ ┘ü┘è Ïº┘äÏ»ÏºÏ¬ÏºÏ¿┘èÏ▓ ┘äÏ¬Ï«Ï▓┘è┘å┘çÏº
++                if (friendsCount !== profile.friends_count) {
++                    await sb.from('profiles').update({ friends_count: friendsCount }).eq('user_id', user.id);
++                    profile.friends_count = friendsCount;
++                }
+             } catch (err) {
+                 console.error("Error calculating friends count:", err);
+             }
+@@ -949,12 +1100,15 @@ async function loadOwnProfile(user) {
+                                 <i class="fas fa-pen"></i>
+                             </button>
+                         </div>
+-                        <div class="user-details">
+-                            <i class="fas ${genderIcon}" style="color:${genderColor};"></i>
+-                            <span>${genderText}</span>
+-                            <div class="divider"></div>
+-                            <i class="fas fa-calendar" style="color:#0066ff;"></i>
+-                            <span>${age} ans</span>
++                        <div class="user-details-container" style="display:flex; justify-content:center; align-items:center; gap:8px; margin: 0 auto 2px; width:fit-content;">
++                            <div class="user-detail-pill">
++                                <i class="fas ${genderIcon}" style="color:${genderColor};"></i>
++                                <span>${genderText}</span>
++                            </div>
++                            <div class="user-detail-pill">
++                                <i class="fas fa-calendar" style="color:#0066ff;"></i>
++                                <span>${age} ans</span>
++                            </div>
+                         </div>
+                     </div>
+ 
+@@ -984,14 +1138,14 @@ async function loadOwnProfile(user) {
+                     </div>
+ 
+                     <!-- Social Accounts Section -->
+-                    <div class="prf-section-title">
++                    <div class="prf-section-title prf-section-title-center">
+                         <i class="fas fa-link"></i>
+                         My social accounts
+                     </div>
+                     ${socialLinksSection}
+ 
+                     <!-- About Me Section -->
+-                    <div class="prf-section-title">
++                    <div class="prf-section-title prf-section-title-center">
+                         <i class="fas fa-comment"></i>
+                         About me
+                     </div>
+@@ -1000,9 +1154,9 @@ async function loadOwnProfile(user) {
+                         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                             <div class="prf-about-text" id="profil-bio-text">
+                                 ${profile.bio
+-                                    ? escapeHtml(profile.bio)
+-                                    : `Add a bio or hashtags to describe <span style="color:#ffa500;">Ô£¿</span> yourself`
+-                                }
++                    ? escapeHtml(profile.bio)
++                    : `Add a bio or hashtags to describe <span style="color:#ffa500;">Ô£¿</span> yourself`
++                }
+                             </div>
+                             <button class="prf-btn-round" id="bio-edit-hashtag-btn" title="Modifier" style="flex-shrink:0;">
+                                 <i class="fas fa-pen"></i>
+@@ -1010,9 +1164,9 @@ async function loadOwnProfile(user) {
+                         </div>
+                         <div class="tags-container" id="hm-hashtags-row">
+                             ${(profile.hashtags && profile.hashtags.length > 0)
+-                                ? profile.hashtags.map((h, i) => `<span class="tag tag-${(i % 3) + 1}">${escapeHtml(h)}</span>`).join('')
+-                                : ''
+-                            }
++                    ? profile.hashtags.map((h, i) => `<span class="tag tag-${(i % 3) + 1}">${escapeHtml(h)}</span>`).join('')
++                    : ''
++                }
+                         </div>
+                     </div>
+ 
+@@ -1144,7 +1298,7 @@ async function loadOwnProfile(user) {
+                             alert("Le nom ne peut pas d├®passer 18 caract├¿res.");
+                             return;
+                         }
+-                        
++
+                         try {
+                             editNameBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                             editNameBtn.disabled = true;
+@@ -1160,12 +1314,12 @@ async function loadOwnProfile(user) {
+                             if (currentUserProfile) {
+                                 currentUserProfile.full_name = trimmedName;
+                             }
+-                            
++
+                             const displayNameEl = document.getElementById('profil-display-name');
+                             if (displayNameEl) {
+                                 displayNameEl.textContent = trimmedName;
+                             }
+-                            
++
+                             // Ï¬Ï¡Ï»┘èÏ½ Ïº┘äÏºÏ│┘à ┘ü┘è Ïº┘ä┘ç┘èÏ»Ï▒ Ïú┘èÏÂ┘ïÏº
+                             const headerAvatar = document.getElementById('header-user-avatar');
+                             if (headerAvatar && !profile.avatar_url) {
+@@ -1215,7 +1369,7 @@ async function loadOwnProfile(user) {
+                 btn.addEventListener('click', async () => {
+                     const platform = btn.dataset.platform;
+                     const currentVal = btn.dataset.current || '';
+-                    
++
+                     let platformLabel = '';
+                     let placeholder = '';
+                     if (platform === 'instagram') {
+@@ -1231,63 +1385,63 @@ async function loadOwnProfile(user) {
+                         platformLabel = 'Facebook';
+                         placeholder = 'ex: hamza.facebook';
+                     }
+-                    
++
+                     let promptMsg = `ÏúÏ»Ï«┘ä ÏºÏ│┘à Ï¡Ï│ÏºÏ¿┘â Ï╣┘ä┘ë ${platformLabel} (${placeholder}):\n\nÏºÏ¬Ï▒┘â┘ç ┘üÏºÏ▒Ï║Ïº┘ï ┘äÏ¡Ï░┘ü┘ç.`;
+                     if (platform === 'whatsapp') {
+                         promptMsg = `ÏúÏ»Ï«┘ä Ï▒┘é┘à Ïº┘ä┘êÏºÏ¬Ï│ÏºÏ¿ Ïº┘äÏ«ÏºÏÁ Ï¿┘â ┘àÏ╣ Ï▒┘àÏ▓ Ïº┘äÏ»┘ê┘äÏ® (${placeholder}):\n\nÏºÏ¬Ï▒┘â┘ç ┘üÏºÏ▒Ï║Ïº┘ï ┘äÏ¡Ï░┘ü┘ç.`;
+                     }
+-                    
++
+                     const newVal = prompt(promptMsg, currentVal);
+                     if (newVal === null) return; // Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à Ïú┘äÏ║┘ë
+-                    
++
+                     let trimmed = newVal.trim();
+                     if (platform === 'instagram' || platform === 'tiktok') {
+                         trimmed = trimmed.replace(/^@/, ''); // ÏÑÏ▓Ïº┘äÏ® @ ÏÑÏ░Ïº ÏúÏÂÏº┘ü┘çÏº
+                     } else if (platform === 'whatsapp') {
+                         trimmed = trimmed.replace(/[+\s-]/g, ''); // ÏÑÏ▓Ïº┘äÏ® Ïº┘äÏ▒┘à┘êÏ▓ ┘êÏº┘ä┘àÏ│Ïº┘üÏºÏ¬
+                     }
+-                    
++
+                     try {
+                         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                         btn.disabled = true;
+-                        
++
+                         const updateData = {};
+                         updateData[platform] = trimmed || null;
+-                        
++
+                         const { error } = await sb
+                             .from('profiles')
+                             .update(updateData)
+                             .eq('user_id', user.id);
+-                        
++
+                         if (error) throw error;
+-                        
++
+                         // Ï¬Ï¡Ï»┘èÏ½ Ïº┘äÏ¿┘èÏº┘åÏºÏ¬ Ïº┘ä┘àÏ¡┘ä┘èÏ®
+                         profile[platform] = trimmed || null;
+                         if (currentUserProfile) currentUserProfile[platform] = trimmed || null;
+-                        
++
+                         // Ï¬Ï¡Ï»┘èÏ½ Ïº┘ä┘êÏºÏ¼┘çÏ®
+                         const nameEl = document.getElementById(`social-${platform}-name`);
+                         if (nameEl) {
+-                            nameEl.innerHTML = trimmed 
+-                                ? (platform === 'instagram' || platform === 'tiktok' ? '@' + escapeHtml(trimmed) : escapeHtml(trimmed)) 
++                            nameEl.innerHTML = trimmed
++                                ? (platform === 'instagram' || platform === 'tiktok' ? '@' + escapeHtml(trimmed) : escapeHtml(trimmed))
+                                 : '<em style="opacity:0.5;">Non ajout├®</em>';
+                         }
+-                        
++
+                         // Ï¬Ï¡Ï»┘èÏ½ Ïº┘äÏ▒ÏºÏ¿ÏÀ Ïº┘äÏ«ÏºÏ▒Ï¼┘è
+                         btn.dataset.current = trimmed;
+-                        
++
+                         const itemEl = document.getElementById(`social-${platform}-item`);
+                         if (itemEl) {
+                             const existingLinkBtn = itemEl.querySelector('.social-account-link-btn');
+                             if (existingLinkBtn) {
+                                 if (trimmed) {
+-                                    existingLinkBtn.href = platform === 'instagram' 
+-                                        ? `https://instagram.com/${trimmed}` 
++                                    existingLinkBtn.href = platform === 'instagram'
++                                        ? `https://instagram.com/${trimmed}`
+                                         : platform === 'tiktok'
+-                                        ? `https://tiktok.com/@${trimmed}`
+-                                        : platform === 'whatsapp'
+-                                        ? `https://wa.me/${trimmed}`
+-                                        : `https://facebook.com/${trimmed}`;
++                                            ? `https://tiktok.com/@${trimmed}`
++                                            : platform === 'whatsapp'
++                                                ? `https://wa.me/${trimmed}`
++                                                : `https://facebook.com/${trimmed}`;
+                                     existingLinkBtn.style.opacity = '1';
+                                     existingLinkBtn.style.pointerEvents = 'auto';
+                                 } else {
+@@ -1297,7 +1451,7 @@ async function loadOwnProfile(user) {
+                                 }
+                             }
+                         }
+-                        
++
+                     } catch (err) {
+                         console.error(`Erreur modification ${platform}:`, err);
+                         alert(`Ï«ÏÀÏú ┘ü┘è Ï¬Ï╣Ï»┘è┘ä Ï¡Ï│ÏºÏ¿ ${platformLabel}`);
+@@ -1545,7 +1713,7 @@ async function loadDiscoveryUsers(currentUser) {
+         // Ï¬ÏÁ┘ü┘èÏ® Ïº┘äÏ¬┘âÏ▒ÏºÏ▒ÏºÏ¬ (ÏÑÏ¿┘éÏºÏí Ïº┘äÏ¿Ï▒┘ê┘üÏº┘è┘ä Ïº┘äÏú┘ê┘ä Ïº┘ä┘üÏ▒┘èÏ» ┘ä┘â┘ä ┘àÏ│Ï¬Ï«Ï»┘à)
+         const uniqueProfiles = [];
+         const seenUserIds = new Set();
+-        profiles.forEach(p => {
++        allProfiles.forEach(p => {
+             if (p.last_seen) {
+                 lastSeenTimeMap.set(p.user_id, p.last_seen);
+             }
+@@ -2158,6 +2326,12 @@ function openUserModal(profile) {
+                 <h4><i class="fas fa-comment-dots" style="margin-right: 6px;"></i> ├Ç propos de moi</h4>
+                 <p>${escapeHtml(profile.bio || "Cet utilisateur n'a pas encore r├®dig├® de biographie.")}</p>
+             </div>
++            ${profile.user_id !== currentUser?.id ? `
++            <button class="btn-follow-user" id="btn-modal-follow">
++                <i class="${window._favoritesCache && window._favoritesCache.has(profile.user_id) ? 'fas fa-star' : 'far fa-star'}" style="color: ${window._favoritesCache && window._favoritesCache.has(profile.user_id) ? '#fbbf24' : 'inherit'}"></i>
++                <span>${window._favoritesCache && window._favoritesCache.has(profile.user_id) ? 'Suivi' : 'Suivre'}</span>
++            </button>
++            ` : ''}
+             <button class="btn-chat-start" id="btn-start-chat">
+                 <i class="fas fa-paper-plane"></i>
+                 D├®marrer un chat
+@@ -2225,8 +2399,74 @@ function openUserModal(profile) {
+         if (e.target === modal) modal.remove();
+     });
+ 
++    // Ï▓Ï▒ Ïº┘ä┘àÏ¬ÏºÏ¿Ï╣Ï®
++    const followBtn = document.getElementById('btn-modal-follow');
++    if (followBtn) {
++        followBtn.addEventListener('click', async () => {
++            if (!currentUser) return;
++            const icon = followBtn.querySelector('i');
++            const label = followBtn.querySelector('span');
++            const isCurrentlyFollowing = icon.classList.contains('fas');
++
++            // Ï¬Ï¡Ï»┘èÏ½ Ïº┘ä┘êÏºÏ¼┘çÏ® ┘ü┘êÏ▒Ïº┘ï
++            if (!isCurrentlyFollowing) {
++                icon.className = 'fas fa-star';
++                icon.style.color = '#fbbf24';
++                label.textContent = 'Suivi';
++                if (!window._favoritesCache) window._favoritesCache = new Set();
++                window._favoritesCache.add(profile.user_id);
++                showToast('Ajout├® aux favoris Ô¡É');
++            } else {
++                icon.className = 'far fa-star';
++                icon.style.color = 'inherit';
++                label.textContent = 'Suivre';
++                if (window._favoritesCache) window._favoritesCache.delete(profile.user_id);
++                showToast('Retir├® des favoris');
++            }
++
++            // Ï¬Ï¡Ï»┘èÏ½ ┘éÏºÏ╣Ï»Ï® Ïº┘äÏ¿┘èÏº┘åÏºÏ¬
++            try {
++                if (profile.user_id && !profile.user_id.startsWith('bot_')) {
++                    if (!isCurrentlyFollowing) {
++                        await sb.from('favorites').upsert([{
++                            user_id: currentUser.id,
++                            favorite_user_id: profile.user_id
++                        }], { onConflict: 'user_id,favorite_user_id' });
++                    } else {
++                        await sb.from('favorites')
++                            .delete()
++                            .eq('user_id', currentUser.id)
++                            .eq('favorite_user_id', profile.user_id);
++                    }
++                }
++            } catch (err) {
++                console.error('Erreur follow DB:', err);
++                // Ïº┘äÏ¬Ï▒ÏºÏ¼Ï╣ Ï╣┘å Ïº┘äÏ¬Ï║┘è┘èÏ▒ ÏÑÏ░Ïº ┘üÏ┤┘ä Ïº┘äÏ¡┘üÏ©
++                if (profile.user_id && !profile.user_id.startsWith('bot_')) {
++                    if (!isCurrentlyFollowing) {
++                        icon.className = 'far fa-star';
++                        icon.style.color = 'inherit';
++                        label.textContent = 'Suivre';
++                        if (window._favoritesCache) window._favoritesCache.delete(profile.user_id);
++                    } else {
++                        icon.className = 'fas fa-star';
++                        icon.style.color = '#fbbf24';
++                        label.textContent = 'Suivi';
++                        if (!window._favoritesCache) window._favoritesCache = new Set();
++                        window._favoritesCache.add(profile.user_id);
++                    }
++                    showToast('Erreur lors de la sauvegarde');
++                }
++            }
++        });
++    }
++
+     // Ï▓Ï▒ Ï¿Ï»Ïí Ïº┘ä┘àÏ¡ÏºÏ»Ï½Ï®
+-    document.getElementById('btn-start-chat').addEventListener('click', () => {
++    document.getElementById('btn-start-chat').addEventListener('click', async () => {
++        if (!currentUser) return;
++        if (profile.user_id && !profile.user_id.startsWith('bot_')) {
++            await ensureChatRequest(profile.user_id);
++        }
+         openChatWindow(profile);
+     });
+ 
+@@ -2269,31 +2509,66 @@ async function openChatWindow(receiverProfile) {
+ 
+     if (chatNameEl) chatNameEl.textContent = receiverProfile.full_name || 'Utilisateur';
+     if (chatAvatarEl) {
+-        const initial = (receiverProfile.full_name || '?').charAt(0).toUpperCase();
+-        const genderClass = receiverProfile.gender === 'female' ? 'female' : 'male';
+-        chatAvatarEl.className = `chat-user-avatar ${genderClass}`;
+-        if (receiverProfile.avatar_url) {
+-            chatAvatarEl.innerHTML = `<img src="${sanitizeUrl(receiverProfile.avatar_url)}" alt="" loading="lazy">`;
++        if (receiverProfile.is_group) {
++            chatAvatarEl.className = 'chat-user-avatar';
++            chatAvatarEl.style.background = 'linear-gradient(135deg, #ff3366, #3b82f6)';
++            chatAvatarEl.style.display = 'flex';
++            chatAvatarEl.style.alignItems = 'center';
++            chatAvatarEl.style.justifyContent = 'center';
++            chatAvatarEl.innerHTML = `<i class="fas fa-users" style="color:white; font-size:16px;"></i>`;
+         } else {
+-            chatAvatarEl.textContent = initial;
++            const initial = (receiverProfile.full_name || '?').charAt(0).toUpperCase();
++            const genderClass = receiverProfile.gender === 'female' ? 'female' : 'male';
++            chatAvatarEl.className = `chat-user-avatar ${genderClass}`;
++            chatAvatarEl.style.background = '';
++            if (receiverProfile.avatar_url) {
++                chatAvatarEl.innerHTML = `<img src="${sanitizeUrl(receiverProfile.avatar_url)}" alt="" loading="lazy">`;
++            } else {
++                chatAvatarEl.textContent = initial;
++            }
+         }
+     }
+     if (chatStatusEl) {
+-        const isOnline = onlineUsers.has(receiverProfile.user_id);
+-        if (isOnline) {
+-            chatStatusEl.textContent = 'En ligne';
+-            chatStatusEl.style.color = '#22c55e';
+-            lastSeenTimeMap.set(receiverProfile.user_id, new Date().toISOString());
+-        } else {
+-            const lastSeen = lastSeenTimeMap.get(receiverProfile.user_id) || receiverProfile.last_seen || receiverProfile.created_at;
+-            chatStatusEl.textContent = lastSeen ? `Derni├¿re connexion: ${formatRelativeTime(lastSeen)}` : 'Hors ligne';
++        if (receiverProfile.is_group) {
++            const names = (receiverProfile.members || []).map(m => m.full_name.split(' ')[0]).join(', ');
++            chatStatusEl.textContent = names ? `Groupe: ${names}` : 'Groupe';
+             chatStatusEl.style.color = 'var(--text-muted)';
++        } else {
++            const isOnline = onlineUsers.has(receiverProfile.user_id);
++            if (isOnline) {
++                chatStatusEl.textContent = 'En ligne';
++                chatStatusEl.style.color = '#22c55e';
++                lastSeenTimeMap.set(receiverProfile.user_id, new Date().toISOString());
++            } else {
++                const lastSeen = lastSeenTimeMap.get(receiverProfile.user_id) || receiverProfile.last_seen || receiverProfile.created_at;
++                chatStatusEl.textContent = lastSeen ? `Derni├¿re connexion: ${formatRelativeTime(lastSeen)}` : 'Hors ligne';
++                chatStatusEl.style.color = 'var(--text-muted)';
++            }
+         }
+     }
+ 
+     // ÏÑÏ©┘çÏºÏ▒ ┘åÏº┘üÏ░Ï® Ïº┘äÏ┤ÏºÏ¬
+     if (chatWindow) chatWindow.classList.add('active');
+ 
++    // Ïº┘äÏ¬Ï¡┘é┘é ┘à┘å Ï¡Ïº┘äÏ® ÏÀ┘äÏ¿ Ïº┘ä┘àÏ¡ÏºÏ»Ï½Ï® (┘ç┘ä ┘ç┘ê ÏÀ┘äÏ¿ ┘êÏºÏ▒Ï» ┘àÏ╣┘ä┘éÏƒ)
++    const acceptBar = document.getElementById('chat-request-accept-bar');
++    const inputArea = document.querySelector('.chat-input-area');
++    const req = window._chatRequestsByPartner ? window._chatRequestsByPartner.get(receiverProfile.user_id) : null;
++
++    if (req && req.status === 'pending' && req.sender_id === receiverProfile.user_id) {
++        if (acceptBar) {
++            acceptBar.style.display = 'flex';
++            const acceptBarText = document.getElementById('accept-bar-text');
++            if (acceptBarText) {
++                acceptBarText.textContent = `Demande de discussion de ${receiverProfile.full_name || 'cet utilisateur'}`;
++            }
++        }
++        if (inputArea) inputArea.style.display = 'none';
++    } else {
++        if (acceptBar) acceptBar.style.display = 'none';
++        if (inputArea) inputArea.style.display = 'flex';
++    }
++
+     // Ï¬┘üÏ▒┘èÏ║ Ïº┘äÏ▒Ï│ÏºÏª┘ä Ïº┘ä┘éÏ»┘è┘àÏ® ┘êÏ╣Ï▒ÏÂ ┘àÏñÏ┤Ï▒ Ï¬Ï¡┘à┘è┘ä
+     const messagesContainer = document.getElementById('chat-messages-container');
+     if (messagesContainer) {
+@@ -2304,14 +2579,19 @@ async function openChatWindow(receiverProfile) {
+         `;
+     }
+ 
+-    // Ï¬Ï╣┘ä┘è┘à ┘â┘ä Ïº┘äÏ▒Ï│ÏºÏª┘ä ┘â┘à┘éÏ▒┘êÏíÏ® Ïú┘ê┘äÏº┘ï ┘éÏ¿┘ä Ïº┘äÏ¬Ï¡┘à┘è┘ä
+-    await markAllMessagesAsRead(receiverProfile.user_id);
++    if (receiverProfile.is_group || (receiverProfile.user_id && receiverProfile.user_id.startsWith('bot_'))) {
++        // Ï¬Ï¡┘à┘è┘ä Ïº┘äÏ▒Ï│ÏºÏª┘ä Ïº┘äÏ│ÏºÏ¿┘éÏ® ┘ä┘ä┘àÏ¼┘à┘êÏ╣Ï® Ïú┘ê Ïº┘äÏ¿┘êÏ¬
++        await loadChatMessages();
++    } else {
++        // Ï¬Ï╣┘ä┘è┘à ┘â┘ä Ïº┘äÏ▒Ï│ÏºÏª┘ä ┘â┘à┘éÏ▒┘êÏíÏ® Ïú┘ê┘äÏº┘ï ┘éÏ¿┘ä Ïº┘äÏ¬Ï¡┘à┘è┘ä
++        await markAllMessagesAsRead(receiverProfile.user_id);
+ 
+-    // Ï¬Ï¡┘à┘è┘ä Ïº┘äÏ▒Ï│ÏºÏª┘ä Ïº┘äÏ│ÏºÏ¿┘éÏ®
+-    await loadChatMessages();
++        // Ï¬Ï¡┘à┘è┘ä Ïº┘äÏ▒Ï│ÏºÏª┘ä Ïº┘äÏ│ÏºÏ¿┘éÏ®
++        await loadChatMessages();
+ 
+-    // Ïº┘äÏºÏ┤Ï¬Ï▒Ïº┘â ┘ü┘è Ïº┘ä┘ê┘éÏ¬ Ïº┘äÏ¡┘é┘è┘é┘è ┘ä┘ä┘à┘èÏ│ÏºÏ¼ÏºÏ¬ Ïº┘äÏ¼Ï»┘èÏ»Ï®
+-    subscribeToMessages();
++        // Ïº┘äÏºÏ┤Ï¬Ï▒Ïº┘â ┘ü┘è Ïº┘ä┘ê┘éÏ¬ Ïº┘äÏ¡┘é┘è┘é┘è ┘ä┘ä┘à┘èÏ│ÏºÏ¼ÏºÏ¬ Ïº┘äÏ¼Ï»┘èÏ»Ï®
++        subscribeToMessages();
++    }
+ }
+ 
+ // 2. ÏÑÏ║┘äÏº┘é ┘åÏº┘üÏ░Ï® Ïº┘äÏ┤ÏºÏ¬
+@@ -2329,11 +2609,36 @@ function closeChatWindow() {
+     }
+ }
+ 
+-// 3. Ï¼┘äÏ¿ Ï▒Ï│ÏºÏª┘ä Ïº┘ä┘àÏ¡ÏºÏ»Ï½Ï® ┘à┘å ┘éÏºÏ╣Ï»Ï® Ïº┘äÏ¿┘èÏº┘åÏºÏ¬
+ async function loadChatMessages() {
+     const container = document.getElementById('chat-messages-container');
+     if (!container || !currentUser || !activeChatUserId) return;
+ 
++    if (activeChatUserProfile && (activeChatUserProfile.is_group === true || activeChatUserId.startsWith('bot_'))) {
++        container.innerHTML = '';
++        lastMessageDate = null;
++        let msgs = [];
++        if (activeChatUserProfile.is_group) {
++            msgs = window._groupMessages[activeChatUserId] || [];
++        } else {
++            msgs = window._botMessages[activeChatUserId] || [];
++        }
++
++        if (msgs.length > 0) {
++            msgs.forEach(msg => {
++                appendMessageBubble(msg);
++            });
++        } else {
++            container.innerHTML = `
++                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:var(--text-muted); gap:8px;">
++                    <i class="far fa-comments" style="font-size:24px; opacity:0.5;"></i>
++                    <p style="font-size:13px;">Aucun message. D├®marrer la conversation maintenant !</p>
++                </div>
++            `;
++        }
++        container.scrollTop = container.scrollHeight;
++        return;
++    }
++
+     try {
+         const { data: messages, error } = await sb
+             .from('messages')
+@@ -2420,15 +2865,13 @@ function subscribeToMessages() {
+         .on('postgres_changes', {
+             event: 'INSERT',
+             schema: 'public',
+-            table: 'messages'
++            table: 'messages',
++            filter: `receiver_id=eq.${currentUser.id}`
+         }, payload => {
+             const newMsg = payload.new;
+ 
+             // ┘ç┘ä Ïº┘äÏ▒Ï│Ïº┘äÏ® Ï¬Ï«ÏÁ Ïº┘äÏ┤ÏºÏ¬ Ïº┘ä┘à┘üÏ¬┘êÏ¡ Ï¡Ïº┘ä┘èÏº┘ïÏƒ
+-            if (activeChatUserId && (
+-                (newMsg.sender_id === currentUser.id && newMsg.receiver_id === activeChatUserId) ||
+-                (newMsg.sender_id === activeChatUserId && newMsg.receiver_id === currentUser.id)
+-            )) {
++            if (activeChatUserId && newMsg.sender_id === activeChatUserId) {
+                 // ÏÑÏ▓Ïº┘äÏ® Ï▒Ï│Ïº┘äÏ® "┘äÏº Ï¬┘êÏ¼Ï» Ï▒Ï│ÏºÏª┘ä Ï│ÏºÏ¿┘éÏ®" ÏÑÏ░Ïº ┘âÏº┘åÏ¬ ┘à┘êÏ¼┘êÏ»Ï®
+                 const container = document.getElementById('chat-messages-container');
+                 if (container && container.querySelector('.far')) {
+@@ -2473,14 +2916,28 @@ function appendMessageBubble(msg) {
+ 
+     // Ï¬Ï¡Ï»┘èÏ» Ï¿┘èÏº┘åÏºÏ¬ Ïº┘äÏú┘üÏºÏ¬ÏºÏ▒
+     let avatarInitial, avatarGender;
++    let avatarInner = '?';
+     if (isMyMsg) {
+         avatarInitial = currentUserProfile ? (currentUserProfile.full_name || 'M').charAt(0).toUpperCase() : 'M';
+         avatarGender = currentUserProfile ? (currentUserProfile.gender === 'female' ? 'female' : 'male') : 'male';
++        avatarInner = currentUserProfile && currentUserProfile.avatar_url
++            ? `<img src="${sanitizeUrl(currentUserProfile.avatar_url)}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`
++            : avatarInitial;
+     } else {
+-        // Ï¿┘èÏº┘åÏºÏ¬ Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à Ïº┘äÏóÏ«Ï▒ ┘à┘å Ïº┘äÏ¬Ï▒┘ê┘èÏ│Ï®
+-        const chatNameEl = document.getElementById('chat-user-name');
+-        avatarInitial = chatNameEl ? (chatNameEl.textContent || '?').charAt(0).toUpperCase() : '?';
+-        avatarGender = document.querySelector('.chat-user-avatar')?.classList.contains('female') ? 'female' : 'male';
++        if (msg.sender_name) {
++            avatarInitial = msg.sender_name.charAt(0).toUpperCase();
++            avatarGender = msg.sender_gender === 'female' ? 'female' : 'male';
++            avatarInner = msg.sender_avatar
++                ? `<img src="${sanitizeUrl(msg.sender_avatar)}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`
++                : avatarInitial;
++        } else {
++            const chatNameEl = document.getElementById('chat-user-name');
++            avatarInitial = chatNameEl ? (chatNameEl.textContent || '?').charAt(0).toUpperCase() : '?';
++            avatarGender = document.querySelector('.chat-user-avatar')?.classList.contains('female') ? 'female' : 'male';
++            avatarInner = activeChatUserProfile && activeChatUserProfile.avatar_url
++                ? `<img src="${sanitizeUrl(activeChatUserProfile.avatar_url)}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`
++                : avatarInitial;
++        }
+     }
+ 
+     // Ïº┘ä┘ü┘éÏºÏ╣Ï®
+@@ -2489,7 +2946,11 @@ function appendMessageBubble(msg) {
+     // === Ï▒Ï│Ïº┘äÏ® ÏÁ┘êÏ▒Ï® ===
+     if (msgType === 'image' && msg.media_url) {
+         bubble.className = `msg-bubble ${isMyMsg ? 'sent' : 'received'} image-msg`;
++        const nameHeader = (!isMyMsg && activeChatUserProfile && activeChatUserProfile.is_group && msg.sender_name)
++            ? `<span class="group-msg-sender-name" style="display:block; font-size:10.5px; font-weight:700; color:var(--color-primary); margin-bottom:4px; font-family:'Outfit', sans-serif; text-align:left;">${escapeHtml(msg.sender_name)}</span>`
++            : '';
+         bubble.innerHTML = `
++            ${nameHeader}
+             <img src="${sanitizeUrl(msg.media_url)}" alt="image" loading="lazy">
+             <span class="msg-time">${timeStr} ${readBadge}</span>
+         `;
+@@ -2525,14 +2990,18 @@ function appendMessageBubble(msg) {
+         // === Ï▒Ï│Ïº┘äÏ® ┘åÏÁ┘èÏ® ===
+     } else {
+         bubble.className = `msg-bubble ${isMyMsg ? 'sent' : 'received'}`;
++        const nameHeader = (!isMyMsg && activeChatUserProfile && activeChatUserProfile.is_group && msg.sender_name)
++            ? `<span class="group-msg-sender-name" style="display:block; font-size:10.5px; font-weight:700; color:var(--color-primary); margin-bottom:4px; font-family:'Outfit', sans-serif; text-align:left;">${escapeHtml(msg.sender_name)}</span>`
++            : '';
+         bubble.innerHTML = `
++            ${nameHeader}
+             <span class="msg-text">${escapeHtml(msg.content)}</span>
+             <span class="msg-time">${timeStr} ${readBadge}</span>
+         `;
+     }
+ 
+     // Ï¬Ï¼┘à┘èÏ╣ Ïº┘äÏÁ┘ü: avatar + ┘ü┘éÏºÏ╣Ï®
+-    row.innerHTML = `<div class="msg-avatar ${avatarGender}">${avatarInitial}</div>`;
++    row.innerHTML = `<div class="msg-avatar ${avatarGender}">${avatarInner}</div>`;
+     row.appendChild(bubble);
+ 
+     container.appendChild(row);
+@@ -2629,94 +3098,467 @@ function escapeHtml(text) {
+     return str.replace(/[&<>"']/g, function (m) { return map[m]; });
+ }
+ 
+-// 7. Ï¼┘äÏ¿ ┘éÏºÏª┘àÏ® Ïº┘ä┘àÏ¡ÏºÏ»Ï½ÏºÏ¬ Ïº┘ä┘åÏ┤ÏÀÏ® (Chats Tab)
+-async function loadActiveChats() {
+-    const container = document.getElementById('chats-list-container');
+-    if (!container || !currentUser) return;
+-
+-    container.innerHTML = `
+-        <div style="display:flex; flex-direction:column; align-items:center; padding:40px 0; gap:12px;">
+-            <div class="loading-spinner"></div>
+-            <p style="color:var(--text-muted); font-size:13px;">Chargement des discussions...</p>
+-        </div>
+-    `;
+-
+-    try {
+-        // Ï¼┘äÏ¿ Ïº┘äÏ▒Ï│ÏºÏª┘ä Ïº┘äÏ¬┘è ┘èÏ┤ÏºÏ▒┘â ┘ü┘è┘çÏº Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à Ïº┘äÏ¡Ïº┘ä┘è
+-        const { data: messages, error } = await sb
+-            .from('messages')
+-            .select('sender_id, receiver_id, content, created_at')
+-            .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
+-            .order('created_at', { ascending: false })
+-            .limit(200);
+-
+-        if (error) throw error;
+-
+-        if (!messages || messages.length === 0) {
+-            container.innerHTML = `
+-                <div class="empty-state" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; text-align:center;">
+-                    <i class="fas fa-comments" style="font-size:40px; color:var(--text-muted); opacity:0.4; margin-bottom:12px;"></i>
+-                    <p style="color:var(--text-muted); font-size:14px;">Aucune discussion active pour le moment.<br>Commencez ├á discuter avec des personnes ├á proximit├® !</p>
++// Add Note Modal and Save logic
++function openEditNoteModal() {
++    let modal = document.getElementById('edit-note-modal');
++    if (!modal) {
++        modal = document.createElement('div');
++        modal.id = 'edit-note-modal';
++        modal.className = 'modal';
++        modal.innerHTML = `
++            <div class="modal-content glass-card" style="max-width:400px; padding: 24px; border-radius: 24px; display:flex; flex-direction:column; gap:16px;">
++                <div style="display:flex; justify-content:space-between; align-items:center;">
++                    <h3 style="margin:0; font-size:18px; font-weight:800; color:var(--text-white);">Votre note</h3>
++                    <span class="close-modal-btn" id="btn-close-note-modal" style="font-size:24px; cursor:pointer; font-weight:bold; color:var(--text-muted);">&times;</span>
+                 </div>
+-            `;
+-            return;
+-        }
++                <p style="color:var(--text-muted); font-size:13px; margin:0;">Partagez une id├®e ou une humeur (max 60 caract├¿res).</p>
++                <textarea id="note-input-text" maxlength="60" placeholder="Quoi de neuf ?" style="width:100%; height:80px; border-radius:12px; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--text-white); font-family:inherit; font-size:14px; resize:none; outline:none; box-sizing:border-box;"></textarea>
++                <div style="display:flex; justify-content:flex-end; gap:12px;">
++                    <button class="btn-delete" id="btn-delete-note" style="background:#ef4444; border:none; color:#ffffff; font-weight:700; border-radius:12px; cursor:pointer; padding:8px 16px; display:none; font-family:inherit;">Supprimer</button>
++                    <button class="btn-save" id="btn-save-note" style="background:#ff3366; border:none; color:#ffffff; font-weight:700; border-radius:12px; cursor:pointer; padding:8px 16px; font-family:inherit;">Partager</button>
++                </div>
++            </div>
++        `;
++        document.body.appendChild(modal);
+ 
+-        // ÏºÏ│Ï¬Ï«Ï▒ÏºÏ¼ ┘éÏºÏª┘àÏ® Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à┘è┘å Ïº┘ä┘üÏ▒┘èÏ»┘è┘å ┘êÏóÏ«Ï▒ Ï▒Ï│Ïº┘äÏ® + ÏÑÏ¡ÏÁÏºÏª┘èÏºÏ¬
+-        const chatPartnersMap = new Map();
+-        messages.forEach(msg => {
+-            const partnerId = msg.sender_id === currentUser.id ? msg.receiver_id : msg.sender_id;
+-            if (partnerId === currentUser.id) return;
+-            if (!chatPartnersMap.has(partnerId)) {
+-                chatPartnersMap.set(partnerId, {
+-                    content: msg.content,
+-                    created_at: msg.created_at,
+-                    time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+-                    sentCount: 0,
+-                    receivedCount: 0
+-                });
+-            }
+-            const entry = chatPartnersMap.get(partnerId);
+-            if (msg.sender_id === currentUser.id) {
+-                entry.sentCount = (entry.sentCount || 0) + 1;
+-            } else {
+-                entry.receivedCount = (entry.receivedCount || 0) + 1;
++        modal.querySelector('#btn-close-note-modal').addEventListener('click', () => {
++            modal.style.display = 'none';
++        });
++        modal.querySelector('#btn-save-note').addEventListener('click', async () => {
++            const text = modal.querySelector('#note-input-text').value.trim();
++            await saveUserNote(text);
++            modal.style.display = 'none';
++        });
++        modal.querySelector('#btn-delete-note').addEventListener('click', async () => {
++            await saveUserNote('');
++            modal.style.display = 'none';
++        });
++        modal.addEventListener('click', (e) => {
++            if (e.target === modal) {
++                modal.style.display = 'none';
+             }
+         });
++    }
+ 
+-        const partnerIds = Array.from(chatPartnersMap.keys()).filter(id => !blockedUserIds.has(id));
++    const currentNote = currentUserProfile?.note || '';
++    modal.querySelector('#note-input-text').value = currentNote;
++    modal.querySelector('#btn-delete-note').style.display = currentNote ? 'block' : 'none';
++    modal.style.display = 'flex';
++}
+ 
+-        if (partnerIds.length === 0) {
+-            container.innerHTML = `
+-                <div class="empty-state" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; text-align:center;">
+-                    <i class="fas fa-comments" style="font-size:40px; color:var(--text-muted); opacity:0.4; margin-bottom:12px;"></i>
+-                    <p style="color:var(--text-muted); font-size:14px;">Aucune discussion active pour le moment.<br>Commencez ├á discuter avec des personnes ├á proximit├® !</p>
++// === Compose Options & Group Creation Modal ===
++function openComposeOptionsModal() {
++    let modal = document.getElementById('compose-options-modal');
++    if (modal) modal.remove();
++
++    modal = document.createElement('div');
++    modal.id = 'compose-options-modal';
++    modal.className = 'modal';
++    modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.75); display:flex; align-items:center; justify-content:center; z-index:2000; animation:fadeInModal 0.25s ease;';
++
++    // Build the list of contacts
++    const contacts = latestDiscoveryProfiles || [];
++
++    const showMainView = () => {
++        modal.innerHTML = `
++            <div class="modal-content glass-card" style="max-width:400px; width:90%; padding: 24px; border-radius: 24px; display:flex; flex-direction:column; gap:16px; background: rgba(30, 30, 38, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
++                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
++                    <h3 style="margin:0; font-size:19px; font-weight:800; color:#ffffff; font-family:'Outfit', sans-serif;">D├®marrer</h3>
++                    <span class="close-modal-btn" id="btn-close-compose" style="font-size:24px; cursor:pointer; font-weight:bold; color:rgba(255,255,255,0.5); transition: color 0.2s;">&times;</span>
+                 </div>
+-            `;
+-            return;
+-        }
++                
++                <div style="display:flex; flex-direction:column; gap:12px;">
++                    <!-- Option 1: Chat Individuel -->
++                    <button class="compose-option-row" id="option-private-chat" style="display:flex; align-items:center; gap:16px; width:100%; padding:14px 16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:16px; text-align:left; cursor:pointer; transition:all 0.2s ease;">
++                        <div style="width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, #3b82f6, #1d4ed8); display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:16px;">
++                            <i class="fas fa-user"></i>
++                        </div>
++                        <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
++                            <span style="font-size:14.5px; font-weight:700; color:#ffffff;">Discussion priv├®e</span>
++                            <span style="font-size:12px; color:rgba(255,255,255,0.5);">Discuter avec un membre ├á proximit├®</span>
++                        </div>
++                        <i class="fas fa-chevron-right" style="font-size:12px; color:rgba(255,255,255,0.3);"></i>
++                    </button>
+ 
+-        // Ï¼┘äÏ¿ Ïº┘ä┘à┘ä┘üÏºÏ¬ Ïº┘äÏ┤Ï«ÏÁ┘èÏ®
+-        const { data: profiles, error: profileErr } = await sb
+-            .from('profiles')
+-            .select('*')
+-            .in('user_id', partnerIds);
++                    <!-- Option 2: Cr├®er un groupe -->
++                    <button class="compose-option-row" id="option-create-group" style="display:flex; align-items:center; gap:16px; width:100%; padding:14px 16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:16px; text-align:left; cursor:pointer; transition:all 0.2s ease;">
++                        <div style="width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, #ff3366, #db2777); display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:16px;">
++                            <i class="fas fa-users"></i>
++                        </div>
++                        <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
++                            <span style="font-size:14.5px; font-weight:700; color:#ffffff;">Cr├®er un groupe</span>
++                            <span style="font-size:12px; color:rgba(255,255,255,0.5);">Cr├®er un chat avec plusieurs membres</span>
++                        </div>
++                        <i class="fas fa-chevron-right" style="font-size:12px; color:rgba(255,255,255,0.3);"></i>
++                    </button>
++                </div>
++            </div>
++        `;
+ 
+-        if (profileErr) throw profileErr;
++        modal.querySelector('#btn-close-compose').addEventListener('click', () => {
++            modal.remove();
++        });
+ 
+-        // Ï¼┘äÏ¿ Ï╣Ï»Ï» Ïº┘äÏ▒Ï│ÏºÏª┘ä Ï║┘èÏ▒ Ïº┘ä┘à┘éÏ▒┘êÏíÏ®
+-        const { data: unreadData } = await sb
+-            .from('messages')
+-            .select('sender_id')
+-            .eq('receiver_id', currentUser.id)
+-            .eq('is_read', false)
+-            .in('sender_id', partnerIds);
++        modal.querySelector('#option-private-chat').addEventListener('click', () => {
++            showPrivateChatSelector();
++        });
+ 
+-        const unreadCountMap = new Map();
+-        if (unreadData) {
+-            unreadData.forEach(row => {
+-                unreadCountMap.set(row.sender_id, (unreadCountMap.get(row.sender_id) || 0) + 1);
++        modal.querySelector('#option-create-group').addEventListener('click', () => {
++            showGroupCreator();
++        });
++    };
++
++    const showPrivateChatSelector = () => {
++        let contactRowsHtml = '';
++        if (contacts.length === 0) {
++            contactRowsHtml = `<p style="color:rgba(255,255,255,0.4); font-size:13px; text-align:center; padding:20px 0;">Aucun contact disponible pour le moment.</p>`;
++        } else {
++            contactRowsHtml = contacts.map(c => {
++                const initial = (c.full_name || '?').charAt(0).toUpperCase();
++                const avatarInner = c.avatar_url
++                    ? `<img src="${sanitizeUrl(c.avatar_url)}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`
++                    : initial;
++                const genderClass = c.gender === 'female' ? 'female' : 'male';
++                return `
++                    <div class="compose-contact-item" data-user-id="${c.user_id}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; cursor:pointer; transition:background 0.2s;">
++                        <div class="chat-item-avatar ${genderClass}" style="width:40px; height:40px; flex-shrink:0;">${avatarInner}</div>
++                        <span style="font-size:14px; font-weight:700; color:#ffffff; flex:1;">${escapeHtml(c.full_name || 'Utilisateur')}</span>
++                        <i class="fas fa-paper-plane" style="font-size:12px; color:#ff3366; opacity:0.8;"></i>
++                    </div>
++                `;
++            }).join('');
++        }
++
++        modal.innerHTML = `
++            <div class="modal-content glass-card" style="max-width:400px; width:90%; padding: 24px; border-radius: 24px; display:flex; flex-direction:column; gap:16px; background: rgba(30, 30, 38, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
++                <div style="display:flex; justify-content:space-between; align-items:center;">
++                    <button id="btn-back-compose" style="background:none; border:none; color:rgba(255,255,255,0.5); cursor:pointer; font-size:14px; display:flex; align-items:center; gap:5px;"><i class="fas fa-chevron-left"></i> Retour</button>
++                    <h3 style="margin:0; font-size:17px; font-weight:800; color:#ffffff; font-family:'Outfit', sans-serif;">Discussion</h3>
++                    <span class="close-modal-btn" id="btn-close-compose" style="font-size:24px; cursor:pointer; font-weight:bold; color:rgba(255,255,255,0.5);">&times;</span>
++                </div>
++
++                <div class="chats-inline-search" style="margin: 0; padding: 6px 10px; background:rgba(255,255,255,0.04);">
++                    <i class="fas fa-search"></i>
++                    <input type="text" id="contact-search-input" placeholder="Rechercher par nom..." style="font-size:13px; width:100%; border:none; outline:none; background:transparent; color:#ffffff;">
++                </div>
++
++                <div class="compose-contacts-list" style="max-height:250px; overflow-y:auto; display:flex; flex-direction:column; gap:4px; padding-right:4px;">
++                    ${contactRowsHtml}
++                </div>
++            </div>
++        `;
++
++        modal.querySelector('#btn-close-compose').addEventListener('click', () => {
++            modal.remove();
++        });
++        modal.querySelector('#btn-back-compose').addEventListener('click', () => {
++            showMainView();
++        });
++
++        // Search filtering
++        modal.querySelector('#contact-search-input').addEventListener('input', (e) => {
++            const query = e.target.value.toLowerCase().trim();
++            const items = modal.querySelectorAll('.compose-contact-item');
++            items.forEach(item => {
++                const name = item.textContent.toLowerCase();
++                item.style.display = name.includes(query) ? '' : 'none';
++            });
++        });
++
++        // Selection event listener
++        modal.querySelectorAll('.compose-contact-item').forEach(itemEl => {
++            itemEl.addEventListener('click', () => {
++                const uId = itemEl.getAttribute('data-user-id');
++                const p = contacts.find(x => x.user_id === uId);
++                if (p) {
++                    modal.remove();
++                    openChatWindow(p);
++                }
++            });
++        });
++    };
++
++    const showGroupCreator = () => {
++        let contactCheckboxesHtml = '';
++        if (contacts.length === 0) {
++            contactCheckboxesHtml = `<p style="color:rgba(255,255,255,0.4); font-size:13px; text-align:center; padding:20px 0;">Aucun membre disponible pour le groupe.</p>`;
++        } else {
++            contactCheckboxesHtml = contacts.map(c => {
++                const initial = (c.full_name || '?').charAt(0).toUpperCase();
++                const avatarInner = c.avatar_url
++                    ? `<img src="${sanitizeUrl(c.avatar_url)}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`
++                    : initial;
++                const genderClass = c.gender === 'female' ? 'female' : 'male';
++                return `
++                    <label class="compose-group-member-row" style="display:flex; align-items:center; gap:12px; padding:8px 10px; border-radius:12px; cursor:pointer; transition:background 0.2s;">
++                        <input type="checkbox" class="group-member-checkbox" data-user-id="${c.user_id}" style="accent-color:#ff3366; width:16px; height:16px;">
++                        <div class="chat-item-avatar ${genderClass}" style="width:36px; height:36px; flex-shrink:0;">${avatarInner}</div>
++                        <span style="font-size:13.5px; font-weight:700; color:#ffffff; flex:1;">${escapeHtml(c.full_name || 'Utilisateur')}</span>
++                    </label>
++                `;
++            }).join('');
++        }
++
++        modal.innerHTML = `
++            <div class="modal-content glass-card" style="max-width:400px; width:90%; padding: 24px; border-radius: 24px; display:flex; flex-direction:column; gap:16px; background: rgba(30, 30, 38, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
++                <div style="display:flex; justify-content:space-between; align-items:center;">
++                    <button id="btn-back-compose" style="background:none; border:none; color:rgba(255,255,255,0.5); cursor:pointer; font-size:14px; display:flex; align-items:center; gap:5px;"><i class="fas fa-chevron-left"></i> Retour</button>
++                    <h3 style="margin:0; font-size:17px; font-weight:800; color:#ffffff; font-family:'Outfit', sans-serif;">Cr├®er un groupe</h3>
++                    <span class="close-modal-btn" id="btn-close-compose" style="font-size:24px; cursor:pointer; font-weight:bold; color:rgba(255,255,255,0.5);">&times;</span>
++                </div>
++
++                <div style="display:flex; flex-direction:column; gap:12px;">
++                    <div style="display:flex; flex-direction:column; gap:6px;">
++                        <label style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.5px;">Nom du groupe</label>
++                        <input type="text" id="group-name-input" placeholder="Ex: Les Amis, Soir├®e..." style="width:100%; border-radius:12px; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#ffffff; font-family:inherit; font-size:14px; outline:none; box-sizing:border-box;">
++                    </div>
++
++                    <div style="display:flex; flex-direction:column; gap:6px;">
++                        <label style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.5px;">S├®lectionner des membres</label>
++                        <div class="compose-group-members-list" style="max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:2px; padding-right:4px;">
++                            ${contactCheckboxesHtml}
++                        </div>
++                    </div>
++                </div>
++
++                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:8px;">
++                    <button class="btn-save" id="btn-create-group-action" style="background:linear-gradient(135deg, #ff3366, #db2777); border:none; color:#ffffff; font-weight:700; border-radius:12px; cursor:pointer; padding:10px 20px; font-family:inherit; font-size:13.5px; width:100%; box-shadow:0 4px 12px rgba(255,51,102,0.25);">Cr├®er le groupe</button>
++                </div>
++            </div>
++        `;
++
++        modal.querySelector('#btn-close-compose').addEventListener('click', () => {
++            modal.remove();
++        });
++        modal.querySelector('#btn-back-compose').addEventListener('click', () => {
++            showMainView();
++        });
++
++        // Click create group action
++        modal.querySelector('#btn-create-group-action').addEventListener('click', () => {
++            const groupNameInput = modal.querySelector('#group-name-input');
++            const groupName = groupNameInput ? groupNameInput.value.trim() : '';
++            if (!groupName) {
++                showToast("Veuillez saisir un nom pour le groupe ! ÔÜá´©Å");
++                return;
++            }
++
++            const checkedBoxes = modal.querySelectorAll('.group-member-checkbox:checked');
++            if (checkedBoxes.length === 0) {
++                showToast("Veuillez s├®lectionner au moins un membre ! ÔÜá´©Å");
++                return;
++            }
++
++            const selectedUsers = [];
++            checkedBoxes.forEach(chk => {
++                const userId = chk.getAttribute('data-user-id');
++                const u = contacts.find(x => x.user_id === userId);
++                if (u) selectedUsers.push(u);
+             });
++
++            // Create the new simulated group
++            const groupId = 'group_' + Date.now();
++            const newGroup = {
++                user_id: groupId,
++                full_name: groupName,
++                is_group: true,
++                members: selectedUsers,
++                avatar_url: null,
++                last_seen: new Date().toISOString(),
++                created_at: new Date().toISOString(),
++                note: ""
++            };
++
++            window._simulatedGroups = window._simulatedGroups || [];
++            window._simulatedGroups.push(newGroup);
++
++            // Persist
++            try {
++                localStorage.setItem('haymoi_simulated_groups', JSON.stringify(window._simulatedGroups));
++            } catch (e) {
++                console.error(e);
++            }
++
++            modal.remove();
++            showToast("Groupe cr├®├® avec succ├¿s ! ­ƒÄë");
++
++            // Reload chat view and open it!
++            loadActiveChats();
++            setTimeout(() => {
++                openChatWindow(newGroup);
++            }, 300);
++        });
++    };
++
++    // Initialize with main menu
++    showMainView();
++    document.body.appendChild(modal);
++
++    modal.addEventListener('click', (e) => {
++        if (e.target === modal) {
++            modal.remove();
++        }
++    });
++}
++
++async function saveUserNote(text) {
++    if (!currentUser) return;
++    try {
++        const { error } = await sb
++            .from('profiles')
++            .update({ note: text || null })
++            .eq('user_id', currentUser.id);
++
++        if (error) throw error;
++
++        if (currentUserProfile) {
++            currentUserProfile.note = text || null;
++        }
++
++        await loadActiveChats();
++    } catch (err) {
++        console.error("Erreur lors de la sauvegarde de la note:", err);
++        alert("Erreur lors de la sauvegarde de la note: " + err.message);
++    }
++}
++
++async function loadActiveChats() {
++    const container = document.getElementById('chats-list-container');
++    if (!container || !currentUser) return;
++
++    try {
++        await loadChatRequests();
++    } catch (e) {
++        console.error("Error loading chat requests in loadActiveChats:", e);
++    }
++
++    container.innerHTML = `
++        <div style="display:flex; flex-direction:column; align-items:center; padding:40px 0; gap:12px;">
++            <div class="loading-spinner"></div>
++            <p style="color:var(--text-muted); font-size:13px;">Discussions...</p>
++        </div>
++    `;
++
++    try {
++        // Ï¼┘äÏ¿ Ïº┘äÏ▒Ï│ÏºÏª┘ä Ïº┘äÏ¬┘è ┘èÏ┤ÏºÏ▒┘â ┘ü┘è┘çÏº Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à Ïº┘äÏ¡Ïº┘ä┘è
++        const { data: messages, error } = await sb
++            .from('messages')
++            .select('sender_id, receiver_id, content, created_at')
++            .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
++            .order('created_at', { ascending: false })
++            .limit(200);
++
++        if (error) throw error;
++
++        // ÏºÏ│Ï¬Ï«Ï▒ÏºÏ¼ ┘éÏºÏª┘àÏ® Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à┘è┘å Ïº┘ä┘üÏ▒┘èÏ»┘è┘å ┘êÏóÏ«Ï▒ Ï▒Ï│Ïº┘äÏ® + ÏÑÏ¡ÏÁÏºÏª┘èÏºÏ¬
++        const chatPartnersMap = new Map();
++        if (messages) {
++            messages.forEach(msg => {
++                const partnerId = msg.sender_id === currentUser.id ? msg.receiver_id : msg.sender_id;
++                if (partnerId === currentUser.id) return;
++                if (!chatPartnersMap.has(partnerId)) {
++                    chatPartnersMap.set(partnerId, {
++                        content: msg.content,
++                        created_at: msg.created_at,
++                        time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
++                        sentCount: 0,
++                        receivedCount: 0
++                    });
++                }
++                const entry = chatPartnersMap.get(partnerId);
++                if (msg.sender_id === currentUser.id) {
++                    entry.sentCount = (entry.sentCount || 0) + 1;
++                } else {
++                    entry.receivedCount = (entry.receivedCount || 0) + 1;
++                }
++            });
++        }
++
++        // Ï»┘àÏ¼ ┘àÏ¡ÏºÏ»Ï½ÏºÏ¬ Ïº┘äÏ¿┘êÏ¬Ï│ Ïº┘ä┘àÏ¡┘ä┘èÏ®
++        if (window._botMessages) {
++            Object.keys(window._botMessages).forEach(botId => {
++                const botMsgs = window._botMessages[botId] || [];
++                if (botMsgs.length === 0) return;
++                const lastMsg = botMsgs[botMsgs.length - 1];
++                if (!chatPartnersMap.has(botId)) {
++                    chatPartnersMap.set(botId, {
++                        content: lastMsg.content,
++                        created_at: lastMsg.created_at,
++                        time: new Date(lastMsg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
++                        sentCount: botMsgs.filter(m => m.sender_id === currentUser.id).length,
++                        receivedCount: botMsgs.filter(m => m.sender_id === botId).length
++                    });
++                }
++            });
++        }
++
++        const partnerIds = Array.from(chatPartnersMap.keys()).filter(id => !blockedUserIds.has(id));
++
++        // Ï¼┘äÏ¿ ┘éÏºÏª┘àÏ® Ïº┘ä┘à┘üÏÂ┘äÏºÏ¬ Ïº┘äÏ¡Ïº┘ä┘èÏ® ┘ä┘ä┘àÏ│Ï¬Ï«Ï»┘à
++        const { data: favoritesRows } = await sb
++            .from('favorites')
++            .select('favorite_user_id')
++            .eq('user_id', currentUser.id);
++
++        const favoritesSet = new Set(favoritesRows ? favoritesRows.map(r => r.favorite_user_id) : []);
++
++        // Ï¼┘äÏ¿ Ïº┘ä┘à┘ä┘üÏºÏ¬ Ïº┘äÏ┤Ï«ÏÁ┘èÏ® ┘ä┘äÏ┤Ï▒┘âÏºÏí
++        let profiles = [];
++        const realPartnerIds = partnerIds.filter(id => !id.startsWith('bot_'));
++        if (realPartnerIds.length > 0) {
++            const { data: fetchedProfiles, error: profileErr } = await sb
++                .from('profiles')
++                .select('*')
++                .in('user_id', realPartnerIds);
++            if (profileErr) throw profileErr;
++            if (fetchedProfiles) profiles = fetchedProfiles;
++        }
++
++        // ÏÑÏÂÏº┘üÏ® Ï¿Ï▒┘ê┘üÏº┘è┘äÏºÏ¬ Ïº┘äÏ¿┘êÏ¬Ï│ Ïº┘ä┘åÏ┤ÏÀÏ® ┘àÏ¡┘ä┘èÏº┘ï ÏÑ┘ä┘ë Ïº┘ä┘éÏºÏª┘àÏ®
++        const botPartnerIds = partnerIds.filter(id => id.startsWith('bot_'));
++        botPartnerIds.forEach(botId => {
++            const botProfile = MOCK_BOTS.find(b => b.user_id === botId);
++            if (botProfile && !profiles.some(p => p.user_id === botId)) {
++                profiles.push(botProfile);
++            }
++        });
++
++        // Ï¼┘äÏ¿ Ïº┘ä┘à┘ä┘üÏºÏ¬ Ïº┘äÏ┤Ï«ÏÁ┘èÏ® ┘ä┘ä┘à┘üÏÂ┘äÏºÏ¬ Ïº┘äÏ¬┘è ┘ä┘èÏ│Ï¬ ┘ü┘è ┘éÏºÏª┘àÏ® Ïº┘äÏ»Ï▒Ï»Ï┤Ï® Ïº┘ä┘åÏ┤ÏÀÏ®
++        const favIdsToFetch = Array.from(favoritesSet).filter(id => !id.startsWith('bot_') && !chatPartnersMap.has(id) && !blockedUserIds.has(id));
++        if (favIdsToFetch.length > 0) {
++            const { data: fetchedFavProfiles } = await sb
++                .from('profiles')
++                .select('*')
++                .in('user_id', favIdsToFetch);
++            if (fetchedFavProfiles) {
++                profiles = profiles.concat(fetchedFavProfiles);
++            }
++        }
++
++        // ÏÑÏÂÏº┘üÏ® Ï¿Ï▒┘ê┘üÏº┘è┘äÏºÏ¬ Ïº┘äÏ¿┘êÏ¬Ï│ Ïº┘ä┘à┘üÏÂ┘äÏ® ┘èÏ»┘ê┘èÏº┘ï
++        const botFavIds = Array.from(favoritesSet).filter(id => id.startsWith('bot_') && !chatPartnersMap.has(id) && !blockedUserIds.has(id));
++        botFavIds.forEach(botId => {
++            const botProfile = MOCK_BOTS.find(b => b.user_id === botId);
++            if (botProfile && !profiles.some(p => p.user_id === botId)) {
++                profiles.push(botProfile);
++            }
++        });
++
++        // Ï¼┘äÏ¿ Ï╣Ï»Ï» Ïº┘äÏ▒Ï│ÏºÏª┘ä Ï║┘èÏ▒ Ïº┘ä┘à┘éÏ▒┘êÏíÏ®
++        const unreadCountMap = new Map();
++        if (partnerIds.length > 0) {
++            const { data: unreadData } = await sb
++                .from('messages')
++                .select('sender_id')
++                .eq('receiver_id', currentUser.id)
++                .eq('is_read', false)
++                .in('sender_id', partnerIds);
++
++            if (unreadData) {
++                unreadData.forEach(row => {
++                    unreadCountMap.set(row.sender_id, (unreadCountMap.get(row.sender_id) || 0) + 1);
++                });
++            }
+         }
+ 
+         container.innerHTML = '';
+@@ -2735,122 +3577,363 @@ async function loadActiveChats() {
+             });
+ 
+             // === Update Global App Header Title ===
+-            const headerTitleCount = document.getElementById('header-chats-count');
+-            if (headerTitleCount) {
+-                headerTitleCount.textContent = `${uniqueProfiles.length} conversation${uniqueProfiles.length !== 1 ? 's' : ''}`;
+-            } else {
+-                const headerTitle = document.getElementById('header-title');
+-                if (headerTitle) {
+-                    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+-                    const titleColor = isLight ? '#111827' : '#ffffff';
+-                    headerTitle.innerHTML = `
+-                        <div class="chats-section-title-block" style="text-align: left; display: flex; flex-direction: column; gap: 2px;">
+-                            <h2 class="chats-section-title" style="color: ${titleColor}; font-size: 26px; font-weight: 800; margin: 0; line-height: 1.1;">Chats</h2>
+-                            <span id="header-chats-count" class="chats-section-count" style="font-size: 13px; font-weight: 600; color: var(--text-muted); opacity: 0.8;">${uniqueProfiles.length} conversation${uniqueProfiles.length !== 1 ? 's' : ''}</span>
++            const headerTitle = document.getElementById('header-title');
++            if (headerTitle) {
++                const isLight = document.documentElement.getAttribute('data-theme') === 'light';
++                const titleColor = isLight ? '#111827' : '#ffffff';
++                headerTitle.innerHTML = `
++                    <div class="chats-section-title-block" style="text-align: left; display: flex; flex-direction: column; gap: 2px;">
++                        <h2 class="chats-section-title" style="color: ${titleColor}; font-size: 26px; font-weight: 800; margin: 0; line-height: 1.1;">Chats</h2>
++                        <span class="chats-section-subtitle" style="color: var(--text-muted); font-size: 13px; font-weight: 500; margin: 2px 0 0 0;">Stay connected and chat with people</span>
++                    </div>
++                `;
++            }
++
++            // 1. Render Instagram Notes section at the very top!
++            const notesSection = document.createElement('div');
++            notesSection.className = 'chats-notes-section';
++
++            // Gather profiles for notes: online OR has note (only from users in active chats)
++            const notesProfiles = uniqueProfiles.filter(p => chatPartnersMap.has(p.user_id) && (onlineUsers.has(p.user_id) || (p.note && p.note.trim() !== '')));
++
++            // Render current user's note bubble
++            const myInitial = (currentUserProfile?.full_name || '?').charAt(0).toUpperCase();
++            const myGenderClass = currentUserProfile?.gender === 'female' ? 'female' : 'male';
++            const myNoteText = currentUserProfile?.note ? escapeHtml(currentUserProfile.note) : 'Note...';
++            const myHasNoteClass = currentUserProfile?.note ? 'has-note' : 'empty-note';
++
++            let notesSliderHtml = `
++                <div class="note-item my-note-item" id="my-note-bubble-btn">
++                    <div class="note-bubble-wrapper">
++                        <div class="note-bubble ${myHasNoteClass}">
++                            ${myNoteText}
+                         </div>
+-                    `;
++                        <div class="note-avatar ${myGenderClass}">
++                            ${currentUserProfile?.avatar_url ? `<img src="${sanitizeUrl(currentUserProfile.avatar_url)}" alt="" loading="lazy">` : myInitial}
++                            <span class="note-add-plus">+</span>
++                        </div>
++                    </div>
++                    <span class="note-name" translate="no">Votre note</span>
++                </div>
++            `;
++
++            notesSliderHtml += notesProfiles.map(p => {
++                const initial = (p.full_name || '?').charAt(0).toUpperCase();
++                const genderClass = p.gender === 'female' ? 'female' : 'male';
++                const isOnline = onlineUsers.has(p.user_id);
++                const noteText = p.note ? escapeHtml(p.note) : '';
++                const firstName = (p.full_name || 'Utilisateur').split(' ')[0];
++                const hasStoryClass = noteText ? 'has-story' : '';
++
++                return `
++                    <div class="note-item partner-note-item" data-user-id="${p.user_id}">
++                        <div class="note-bubble-wrapper">
++                            ${noteText ? `
++                            <div class="note-bubble has-note">
++                                ${noteText}
++                            </div>
++                            ` : ''}
++                            <div class="note-avatar ${genderClass} ${hasStoryClass}">
++                                ${p.avatar_url ? `<img src="${sanitizeUrl(p.avatar_url)}" alt="" loading="lazy">` : initial}
++                                ${isOnline ? '<span class="note-online-dot"></span>' : ''}
++                        <span class="note-name">${escapeHtml(firstName)}</span>
++                    </div>
++                `;
++            }).join('');
++
++            notesSection.innerHTML = `
++                <span class="chats-notes-label">Notes</span>
++                <div class="chats-notes-slider">
++                    ${notesSliderHtml}
++                </div>
++            `;
++
++            // Click listener for current user note
++            notesSection.querySelector('#my-note-bubble-btn').addEventListener('click', () => {
++                openEditNoteModal();
++            });
++
++            // Click listeners for partner note items
++            notesSection.querySelectorAll('.partner-note-item').forEach(itemEl => {
++                itemEl.addEventListener('click', () => {
++                    const uId = itemEl.getAttribute('data-user-id');
++                    const p = notesProfiles.find(x => x.user_id === uId);
++                    if (p) openChatWindow(p);
++                });
++            });
++
++            container.appendChild(notesSection);
++
++            // === Ï¬ÏÁ┘å┘è┘ü Ïº┘ä┘àÏ¡ÏºÏ»Ï½ÏºÏ¬ ÏÑ┘ä┘ë Ï▒Ï│ÏºÏª┘ä Ï╣ÏºÏ»┘èÏ® ┘êÏÀ┘äÏ¿ÏºÏ¬ ===
++            function getProfileChatCategory(profileId) {
++                if (!chatPartnersMap.has(profileId)) return 'hidden';
++
++                if (!window._chatRequestsByPartner) return 'messages';
++                const req = window._chatRequestsByPartner.get(profileId);
++                if (!req) return 'messages'; // Ïº┘ä┘åÏ©Ïº┘à Ïº┘ä┘éÏ»┘è┘à Ïú┘ê Ï¿Ï»┘ê┘å ÏÀ┘äÏ¿
++
++                if (req.status === 'accepted') return 'messages';
++                if (req.status === 'pending') {
++                    if (req.sender_id === currentUser.id) {
++                        return 'messages'; // ÏÀ┘äÏ¿ ┘àÏ▒Ï│┘ä ┘à┘å Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à Ïº┘äÏ¡Ïº┘ä┘è ┘èÏ©┘çÏ▒ ┘ü┘è Ïº┘äÏ▒Ï│ÏºÏª┘ä
++                    } else {
++                        return 'requests'; // ÏÀ┘äÏ¿ ┘éÏºÏ»┘à ┘àÏ╣┘ä┘é ┘èÏ©┘çÏ▒ ┘ü┘è Ïº┘äÏÀ┘äÏ¿ÏºÏ¬
++                    }
+                 }
++                return 'hidden'; // ┘àÏ▒┘ü┘êÏÂ Ïú┘ê Ï¡Ïº┘äÏ® ÏúÏ«Ï▒┘ë ┘àÏ«┘ü┘èÏ®
++            }
++
++            const messagesProfiles = uniqueProfiles.filter(p => getProfileChatCategory(p.user_id) === 'messages');
++            const requestsProfiles = uniqueProfiles.filter(p => getProfileChatCategory(p.user_id) === 'requests');
++            const favoritesProfiles = uniqueProfiles.filter(p => favoritesSet.has(p.user_id));
++
++            window._activeChatListTab = window._activeChatListTab || 'messages';
++            const activeTab = window._activeChatListTab;
++
++            // 2. Render conversation header row below Notes with modern capsule pills switcher (Image 3)
++            const headerRow = document.createElement('div');
++            headerRow.className = 'chats-header-row';
++            headerRow.style.display = 'flex';
++            headerRow.style.flexDirection = 'column';
++            headerRow.style.alignItems = 'stretch';
++            headerRow.style.gap = '8px';
++
++            const myAvatarUrl = currentUserProfile?.avatar_url;
++            const myAvatarHtml = myAvatarUrl
++                ? `<img src="${sanitizeUrl(myAvatarUrl)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
++                : myInitial;
++
++            headerRow.innerHTML = `
++                <div class="chats-tabs-container" style="margin-top: 8px;">
++                    <button class="chats-tab-btn ${activeTab === 'messages' ? 'active' : ''}" id="chats-tab-messages">
++                        <i class="far fa-comment"></i>
++                        <span>Chats</span>
++                        ${messagesProfiles.length > 0 ? `<span class="chats-tab-badge">${messagesProfiles.length}</span>` : ''}
++                    </button>
++                    <button class="chats-tab-btn ${activeTab === 'requests' ? 'active' : ''}" id="chats-tab-requests">
++                        <i class="fas fa-inbox"></i>
++                        <span>Application</span>
++                        ${requestsProfiles.length > 0 ? `<span class="chats-tab-badge">${requestsProfiles.length}</span>` : ''}
++                    </button>
++                    <button class="chats-tab-btn ${activeTab === 'favorites' ? 'active' : ''}" id="chats-tab-favorites">
++                        <i class="far fa-star"></i>
++                        <span>Favorites</span>
++                        ${favoritesProfiles.length > 0 ? `<span class="chats-tab-badge" style="background:#fbbf24; border-color:#ffffff; box-shadow: 0 2px 5px rgba(251, 191, 36, 0.25);">${favoritesProfiles.length}</span>` : ''}
++                    </button>
++                </div>
++            `;
++            container.appendChild(headerRow);
++
++            // ÏúÏ▓Ï▒ÏºÏ▒ Ïº┘äÏ¬Ï¿Ï»┘è┘ä
++            headerRow.querySelector('#chats-tab-messages').addEventListener('click', () => {
++                window._activeChatListTab = 'messages';
++                loadActiveChats();
++            });
++            headerRow.querySelector('#chats-tab-requests').addEventListener('click', () => {
++                window._activeChatListTab = 'requests';
++                loadActiveChats();
++            });
++            headerRow.querySelector('#chats-tab-favorites').addEventListener('click', () => {
++                window._activeChatListTab = 'favorites';
++                loadActiveChats();
++            });
++
++            let activeProfiles = activeTab === 'messages'
++                ? messagesProfiles
++                : activeTab === 'requests'
++                    ? requestsProfiles
++                    : favoritesProfiles;
++
++            if (activeTab === 'messages') {
++                activeProfiles = [...(window._simulatedGroups || []), ...activeProfiles];
+             }
+ 
+-            // === Ï¿ÏÀÏº┘éÏ® Ï¬Ï¡Ï¬┘ê┘è Ï╣┘ä┘ë ┘â┘ä Ïº┘ä┘Ç items ===
+-            const listCard = document.createElement('div');
+-            listCard.className = 'chats-list-card';
+-            container.appendChild(listCard);
+-
+-            uniqueProfiles.forEach((profile, index) => {
+-                const lastChat = chatPartnersMap.get(profile.user_id);
+-                const initial = (profile.full_name || '?').charAt(0).toUpperCase();
+-                const genderClass = profile.gender === 'female' ? 'female' : 'male';
+-                const unreadCount = unreadCountMap.get(profile.user_id) || 0;
+-                const hasUnread = unreadCount > 0;
+-
+-                const item = document.createElement('div');
+-                item.className = `chat-item ${genderClass}${hasUnread ? ' chat-item-unread' : ''}`;
+-                item.setAttribute('data-user-id', profile.user_id);
+-
+-                const isOnline = onlineUsers.has(profile.user_id);
+-                const age = calculateAge(profile.dob);
+-
+-                // Ï¡Ï│ÏºÏ¿ Ïº┘ä┘ê┘éÏ¬ ┘à┘åÏ░ ÏóÏ«Ï▒ Ï▒Ï│Ïº┘äÏ® Ï¿Ïº┘äÏ»┘éÏºÏª┘é
+-                const lastMsgDate = lastChat.created_at ? new Date(lastChat.created_at) : null;
+-                let timeBadgeText = '0m';
+-                if (lastMsgDate) {
+-                    const diffMs = Date.now() - lastMsgDate.getTime();
+-                    const diffMins = Math.floor(diffMs / 60000);
+-                    const diffHrs = Math.floor(diffMins / 60);
+-                    if (diffMins < 60) {
+-                        timeBadgeText = `${diffMins}m`;
+-                    } else if (diffHrs < 24) {
+-                        timeBadgeText = `${diffHrs}h`;
++            // === Inline search bar ===
++            const inlineSearchDiv = document.createElement('div');
++            inlineSearchDiv.className = 'chats-inline-search';
++            inlineSearchDiv.innerHTML = `
++                <i class="fas fa-search"></i>
++                <input type="text" id="chats-inline-search-input" placeholder="Rechercher une conversation..." autocomplete="off">
++            `;
++            container.appendChild(inlineSearchDiv);
++
++            // Search filter logic
++            inlineSearchDiv.querySelector('#chats-inline-search-input').addEventListener('input', (e) => {
++                const query = e.target.value.toLowerCase().trim();
++                const items = container.querySelectorAll('.chat-item');
++                items.forEach(item => {
++                    const nameEl = item.querySelector('.chat-item-name');
++                    const name = nameEl ? nameEl.textContent.toLowerCase() : '';
++                    item.style.display = name.includes(query) ? '' : 'none';
++                });
++            });
++
++            if (activeProfiles.length === 0) {
++                const emptyData = {
++                    messages: { icon: 'fa-comments', title: 'Aucune conversation', subtitle: 'Commencez ├á discuter avec des personnes ├á proximit├® !', cta: 'D├®couvrir' },
++                    requests: { icon: 'fa-inbox', title: 'Aucune demande', subtitle: 'Les demandes de discussion appara├«tront ici.', cta: null },
++                    favorites: { icon: 'fa-star', title: 'Aucun favori', subtitle: 'Ajoutez des personnes ├á vos favoris pour les retrouver ici.', cta: null }
++                };
++                const ed = emptyData[activeTab] || emptyData.messages;
++
++                const emptyStateDiv = document.createElement('div');
++                emptyStateDiv.className = 'chats-empty-state';
++                emptyStateDiv.innerHTML = `
++                    <div class="chats-empty-icon"><i class="fas ${ed.icon}"></i></div>
++                    <h3 class="chats-empty-title">${ed.title}</h3>
++                    <p class="chats-empty-subtitle">${ed.subtitle}</p>
++                    ${ed.cta ? `<button class="chats-empty-cta" id="chats-empty-discover-btn"><i class="fas fa-compass" style="margin-right:6px;"></i>${ed.cta}</button>` : ''}
++                `;
++                container.appendChild(emptyStateDiv);
++
++                // CTA button action
++                const discoverBtn = emptyStateDiv.querySelector('#chats-empty-discover-btn');
++                if (discoverBtn) {
++                    discoverBtn.addEventListener('click', () => {
++                        switchAppView('trouver');
++                    });
++                }
++            } else {
++                // === Ï¿ÏÀÏº┘éÏ® Ï¬Ï¡Ï¬┘ê┘è Ï╣┘ä┘ë ┘â┘ä Ïº┘ä┘Ç items ===
++                const listCard = document.createElement('div');
++                listCard.className = 'chats-list-card';
++                container.appendChild(listCard);
++
++                activeProfiles.forEach((profile, index) => {
++                    let lastChat;
++                    if (profile.is_group) {
++                        const groupMsgs = window._groupMessages[profile.user_id] || [];
++                        lastChat = groupMsgs.length > 0 ? groupMsgs[groupMsgs.length - 1] : {
++                            content: "Aucun message - Cliquez pour discuter !",
++                            created_at: profile.created_at,
++                            sender_id: null
++                        };
+                     } else {
+-                        timeBadgeText = `${Math.floor(diffHrs / 24)}j`;
++                        lastChat = chatPartnersMap.get(profile.user_id) || {
++                            content: "Aucun message - Cliquez pour discuter !",
++                            created_at: null,
++                            sender_id: null
++                        };
+                     }
+-                }
++                    const initial = (profile.full_name || '?').charAt(0).toUpperCase();
++                    const genderClass = profile.is_group ? 'group' : (profile.gender === 'female' ? 'female' : 'male');
++                    const unreadCount = profile.is_group ? 0 : (unreadCountMap.get(profile.user_id) || 0);
++                    const hasUnread = unreadCount > 0;
++
++                    const item = document.createElement('div');
++                    item.className = `chat-item ${genderClass}${hasUnread ? ' chat-item-unread' : ''} chat-item-stagger`;
++                    item.style.animationDelay = `${index * 0.06}s`;
++                    item.setAttribute('data-user-id', profile.user_id);
++
++                    const isOnline = profile.is_group ? false : onlineUsers.has(profile.user_id);
++
++                    // Relative time for display
++                    const lastMsgDate = lastChat.created_at ? new Date(lastChat.created_at) : null;
++                    let timeDisplay = '';
++                    if (isOnline) {
++                        timeDisplay = '<span class="chat-item-online-text">En ligne</span>';
++                    } else if (lastMsgDate) {
++                        const diffMs = Date.now() - lastMsgDate.getTime();
++                        const diffMins = Math.floor(diffMs / 60000);
++                        const diffHrs = Math.floor(diffMins / 60);
++                        if (diffMins < 1) timeDisplay = "├Ç l'instant";
++                        else if (diffMins < 60) timeDisplay = `${diffMins} min`;
++                        else if (diffHrs < 24) timeDisplay = `${diffHrs}h`;
++                        else if (diffHrs < 48) timeDisplay = 'Hier';
++                        else timeDisplay = `${Math.floor(diffHrs / 24)}j`;
++                    } else {
++                        const lastSeenTime = profile.last_seen || profile.created_at;
++                        timeDisplay = formatRelativeTime(lastSeenTime);
++                    }
++
++                    const age = calculateAge(profile.dob);
+ 
+-                // Ï¡Ï│ÏºÏ¿ Ïº┘ä┘àÏ│Ïº┘üÏ® (km)
+-                let distBadgeHtml = '';
+-                if (currentUserProfile && currentUserProfile.latitude && currentUserProfile.longitude && profile.latitude && profile.longitude) {
+-                    const dist = calculateDistance(
+-                        currentUserProfile.latitude, currentUserProfile.longitude,
+-                        profile.latitude, profile.longitude
+-                    );
+-                    if (dist !== null) {
+-                        const distValue = dist < 1
+-                            ? `${Math.round(dist * 1000)}m`
+-                            : `${dist.toFixed(1)}km`;
+-                        distBadgeHtml = `<span class="chat-stat-badge chat-stat-km ${genderClass}"><i class="fas fa-location-dot"></i>${distValue}</span>`;
++                    // calculate distance
++                    let distanceTextHTML = '';
++                    if (currentUserProfile && currentUserProfile.latitude && currentUserProfile.longitude && profile.latitude && profile.longitude) {
++                        const dist = calculateDistance(currentUserProfile.latitude, currentUserProfile.longitude, profile.latitude, profile.longitude);
++                        if (dist !== null) {
++                            const distValue = dist < 1 ? `${Math.round(dist * 1000)} m` : `${dist.toFixed(1)} km`;
++                            distanceTextHTML = `<span style="display:inline-flex; align-items:center; gap:3px;"><i class="fas fa-location-dot" style="color: #60a5fa; font-size:10px;"></i>${distValue}</span>`;
++                        }
++                    }
++                    const distBadgeHTML = distanceTextHTML
++                        ? `<span class="distance-badge">${distanceTextHTML}</span>`
++                        : `<span class="distance-badge"><i class="fas fa-location-dot"></i> ?</span>`;
++
++                    // Outgoing pending request text label
++                    const isOutgoingPending = window._chatRequestsByPartner &&
++                        window._chatRequestsByPartner.get(profile.user_id)?.status === 'pending' &&
++                        window._chatRequestsByPartner.get(profile.user_id)?.sender_id === currentUser.id;
++
++                    // Message status icon (only for messages sent by current user)
++                    const isSentByMe = lastChat.sender_id === currentUser?.id;
++                    let msgStatusHtml = '';
++                    if (isSentByMe && !isOutgoingPending) {
++                        if (hasUnread) {
++                            msgStatusHtml = '<span class="chat-msg-status"><i class="fas fa-check"></i></span>';
++                        } else {
++                            msgStatusHtml = '<span class="chat-msg-status read"><i class="fas fa-check-double"></i></span>';
++                        }
+                     }
+-                }
+ 
+-                // Ï┤ÏºÏ▒Ï® Ïº┘äÏ¼┘åÏ│ ┘êÏº┘äÏ╣┘àÏ▒
+-                const isFemale = profile.gender === 'female';
+-                const genderIcon = isFemale ? 'fa-venus' : 'fa-mars';
+-                const ageDisplay = age !== '-' ? age : '?';
+-
+-                // ┘åÏÁ Ïº┘ä┘ê┘éÏ¬ Ïº┘ä┘è┘à┘è┘å┘è
+-                const lastSeenTime = profile.last_seen || profile.created_at;
+-                const relativeTime = formatRelativeTime(lastSeenTime);
+-                const timeDisplay = isOnline
+-                    ? '<span class="chat-item-online-text">En ligne</span>'
+-                    : relativeTime;
+-
+-                item.innerHTML = `
+-                    <div class="chat-item-left-border ${genderClass}"></div>
+-                    <div class="chat-item-avatar-wrapper" style="position: relative; flex-shrink: 0;">
+-                        <div class="chat-item-avatar ${genderClass}">
++                    const lastMsgContent = isOutgoingPending
++                        ? `<span style="color:var(--text-muted); font-style:italic;"><i class="fas fa-hourglass-start" style="margin-right:4px;"></i>En attente d'acceptation</span>`
++                        : escapeHtml(lastChat.content);
++
++                    const maxMsgLen = 38;
++                    const truncatedMsg = isOutgoingPending ? lastMsgContent : (lastMsgContent.length > maxMsgLen ? lastMsgContent.substring(0, maxMsgLen) + 'ÔÇª' : lastMsgContent);
++
++                    let avatarInnerHtml = '';
++                    let badgeRowHtml = '';
++
++                    if (profile.is_group) {
++                        avatarInnerHtml = `<div class="chat-item-avatar" style="background: linear-gradient(135deg, #ff3366, #3b82f6); display:flex; align-items:center; justify-content:center; color:white; font-size:16px; border:none !important;"><i class="fas fa-users"></i></div>`;
++                        badgeRowHtml = `<span class="distance-badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;"><i class="fas fa-users" style="margin-right:3px;"></i>${profile.members ? profile.members.length : 0} membres</span>`;
++                    } else {
++                        avatarInnerHtml = `<div class="chat-item-avatar ${genderClass}">
+                             ${profile.avatar_url ? `<img src="${sanitizeUrl(profile.avatar_url)}" alt="" loading="lazy">` : initial}
++                        </div>`;
++                        badgeRowHtml = `
++                            <span class="age-tag">${age !== '-' ? age : '?'} <i class="${profile.gender === 'female' ? 'fas fa-venus' : 'fas fa-mars'}"></i></span>
++                            ${distBadgeHTML}
++                        `;
++                    }
++
++                    item.innerHTML = `
++                        <div class="chat-item-avatar-wrapper" style="position: relative; flex-shrink: 0;">
++                            ${avatarInnerHtml}
++                            ${isOnline ? '<span class="online-dot"></span>' : ''}
+                         </div>
+-                        ${isOnline ? '<span class="online-dot"></span>' : ''}
+-                    </div>
+-                    <div class="chat-item-details">
+-                        <div class="chat-item-name-row">
+-                            <span class="chat-item-name${hasUnread ? ' chat-item-name-bold' : ''}">
+-                                ${escapeHtml(profile.full_name || 'Utilisateur')}
+-                                ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 10px;" title="VIP"></i>' : ''}
+-                            </span>
+-                            <span class="chat-item-time-right">${timeDisplay}</span>
++                        <div class="chat-item-details">
++                            <div class="chat-item-name-row">
++                                <span class="chat-item-name${hasUnread ? ' chat-item-name-bold' : ''}">
++                                    ${escapeHtml(profile.full_name || 'Utilisateur')}
++                                    ${profile.is_vip ? ' <i class="fas fa-gem" style="color: #fbbf24; font-size: 10px;" title="VIP"></i>' : ''}
++                                </span>
++                                <span class="chat-item-time-right">${timeDisplay}</span>
++                            </div>
++                            <div class="chat-item-badges-row" style="display: flex; align-items: center; gap: 6px; margin: 3px 0;">
++                                ${badgeRowHtml}
++                            </div>
++                            <div class="chat-item-lastmsg-row">
++                                ${msgStatusHtml}
++                                <p class="chat-item-lastmsg${hasUnread ? ' chat-item-lastmsg-unread' : ''}">${truncatedMsg}</p>
++                            </div>
+                         </div>
+-                        <div class="chat-item-badge-row">
+-                            <span class="chat-stat-badge chat-stat-gender ${genderClass}">
+-                                <i class="fas ${genderIcon}"></i>
+-                                ${ageDisplay}
+-                            </span>
+-                            ${distBadgeHtml}
++                        <div class="chat-item-chevron" style="display:flex; flex-direction:column; align-items:flex-end; justify-content:center; gap:4px;">
++                            ${hasUnread ? `<span class="chat-unread-count-badge">${unreadCount > 99 ? '99+' : unreadCount}</span>` : ''}
++                            <i class="fas fa-chevron-right chat-item-arrow" style="font-size:12px; margin-top:2px;"></i>
+                         </div>
+-                        <p class="chat-item-lastmsg${hasUnread ? ' chat-item-lastmsg-unread' : ''}">${escapeHtml(lastChat.content)}</p>
+-                    </div>
+-                    <div class="chat-item-chevron">
+-                        ${hasUnread ? `<span class="chat-item-unread-badge">${unreadCount > 99 ? '99+' : unreadCount}</span>` : ''}
+-                        <i class="fas fa-chevron-right chat-item-arrow"></i>
+-                    </div>
+-                `;
++                    `;
+ 
+-                item.addEventListener('click', () => {
+-                    openChatWindow(profile);
+-                });
++                    item.addEventListener('click', () => {
++                        openChatWindow(profile);
++                    });
+ 
+-                listCard.appendChild(item);
+-            });
++                    listCard.appendChild(item);
++                });
++            }
+         } else {
+             container.innerHTML = `
+                 <div class="empty-state" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; text-align:center;">
+@@ -2944,36 +4027,63 @@ async function loadActiveChats() {
+     document.head.appendChild(style);
+ })();
+ 
+-document.addEventListener('DOMContentLoaded', () => {
+-    const loginBtn = document.getElementById('login-btn');
+-    const tiktokBtn = document.getElementById('tiktok-btn');
+-    const facebookBtn = document.getElementById('facebook-btn');
+-    const logoutBtn = document.getElementById('logout-btn');
++function initializeApp() {
++    // ÏºÏ│Ï¬Ï«Ï»Ïº┘à Ï¬┘ü┘ê┘èÏÂ Ïº┘äÏúÏ¡Ï»ÏºÏ½ (Event Delegation) ┘äÏ¬┘üÏºÏ»┘è Ï¬┘ä┘ü ┘àÏ│Ï¬┘àÏ╣┘è Ïº┘ä┘å┘éÏ▒ÏºÏ¬ Ï¿Ï│Ï¿Ï¿ Ï¬Ï▒Ï¼┘àÏ® Ïº┘ä┘àÏ¬ÏÁ┘üÏ¡ (Edge/Google Translate)
++    document.addEventListener('click', async (e) => {
++        const targetSearchBtn = e.target.closest('#chats-search-btn-round');
++        if (targetSearchBtn) {
++            switchAppView('trouver');
++            setTimeout(() => {
++                const input = document.getElementById('discovery-search-input');
++                if (input) input.focus();
++            }, 100);
++            return;
++        }
+ 
+-    if (loginBtn) {
+-        loginBtn.addEventListener('click', async () => {
+-            await sb.auth.signInWithOAuth({
+-                provider: 'google',
+-                options: { redirectTo }
+-            });
+-        });
+-    }
++        const targetChatsAvatar = e.target.closest('#chats-user-avatar') || e.target.closest('#header-user-avatar');
++        if (targetChatsAvatar) {
++            switchAppView('profil');
++            return;
++        }
+ 
+-    if (facebookBtn) {
+-        facebookBtn.addEventListener('click', async () => {
+-            await sb.auth.signInWithOAuth({
+-                provider: 'facebook',
+-                options: { redirectTo }
+-            });
+-        });
+-    }
++        const targetLoginBtn = e.target.closest('#login-btn');
++        if (targetLoginBtn) {
++            try {
++                const { error } = await sb.auth.signInWithOAuth({
++                    provider: 'google',
++                    options: { redirectTo }
++                });
++                if (error) throw error;
++            } catch (err) {
++                console.error("Google login error:", err);
++                alert("Erreur de connexion Google: " + err.message);
++            }
++            return;
++        }
+ 
+-    if (tiktokBtn) {
+-        tiktokBtn.addEventListener('click', () => {
++        const targetFacebookBtn = e.target.closest('#facebook-btn');
++        if (targetFacebookBtn) {
++            try {
++                const { error } = await sb.auth.signInWithOAuth({
++                    provider: 'facebook',
++                    options: { redirectTo }
++                });
++                if (error) throw error;
++            } catch (err) {
++                console.error("Facebook login error:", err);
++                alert("Erreur de connexion Facebook: " + err.message);
++            }
++            return;
++        }
++
++        const targetTiktokBtn = e.target.closest('#tiktok-btn');
++        if (targetTiktokBtn) {
+             alert("La connexion via TikTok n'est pas prise en charge directement par Supabase. Vous devez configurer un fournisseur OAuth personnalis├® dans la console Supabase.");
+-        });
+-    }
++            return;
++        }
++    });
+ 
++    const logoutBtn = document.getElementById('logout-btn');
+     if (logoutBtn) {
+         logoutBtn.addEventListener('click', async () => {
+             await updateLastSeenInDB();
+@@ -3265,7 +4415,13 @@ document.addEventListener('DOMContentLoaded', () => {
+             if (defaultTab) defaultTab.click();
+         });
+     }
+-});
++}
++
++if (document.readyState === 'loading') {
++    document.addEventListener('DOMContentLoaded', initializeApp);
++} else {
++    initializeApp();
++}
+ 
+ // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+ // === ┘åÏ©Ïº┘à ÏÑÏ▒Ï│Ïº┘ä Ïº┘äÏÁ┘êÏ▒ (Image Upload & Send) ===
+@@ -3597,6 +4753,122 @@ async function loadFavoritesCache() {
+     }
+ }
+ 
++// === ┘åÏ©Ïº┘à ÏÀ┘äÏ¿ÏºÏ¬ Ïº┘ä┘àÏ¡ÏºÏ»Ï½Ï® (Chat Requests System) ===
++window._chatRequests = [];
++window._chatRequestsByPartner = new Map();
++
++async function loadChatRequests() {
++    if (!currentUser) return;
++    window._chatRequests = [];
++    window._chatRequestsByPartner = new Map();
++    try {
++        const { data, error } = await sb
++            .from('chat_requests')
++            .select('*')
++            .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
++
++        if (error) {
++            if (error.code === '42P01') {
++                debugLog("loadChatRequests: Table 'chat_requests' does not exist yet.", true);
++                return;
++            }
++            throw error;
++        }
++
++        if (data) {
++            window._chatRequests = data;
++            data.forEach(row => {
++                const partnerId = row.sender_id === currentUser.id ? row.receiver_id : row.sender_id;
++                window._chatRequestsByPartner.set(partnerId, row);
++            });
++        }
++        debugLog(`loadChatRequests: Loaded ${window._chatRequests.length} requests.`);
++    } catch (err) {
++        debugLog("loadChatRequests: Error: " + err.message, true);
++    }
++}
++
++async function ensureChatRequest(partnerId) {
++    if (!currentUser) return null;
++
++    if (window._chatRequestsByPartner && window._chatRequestsByPartner.has(partnerId)) {
++        return window._chatRequestsByPartner.get(partnerId);
++    }
++
++    try {
++        const { data, error } = await sb
++            .from('chat_requests')
++            .select('*')
++            .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${partnerId}),and(sender_id.eq.${partnerId},receiver_id.eq.${currentUser.id})`);
++
++        if (error && error.code !== '42P01') throw error;
++
++        if (data && data.length > 0) {
++            const req = data[0];
++            if (!window._chatRequestsByPartner) window._chatRequestsByPartner = new Map();
++            window._chatRequestsByPartner.set(partnerId, req);
++            return req;
++        }
++
++        const newReq = {
++            sender_id: currentUser.id,
++            receiver_id: partnerId,
++            status: 'pending'
++        };
++
++        const { data: insertData, error: insertError } = await sb
++            .from('chat_requests')
++            .insert([newReq])
++            .select();
++
++        if (insertError) throw insertError;
++
++        if (insertData && insertData.length > 0) {
++            const createdReq = insertData[0];
++            if (!window._chatRequestsByPartner) window._chatRequestsByPartner = new Map();
++            window._chatRequestsByPartner.set(partnerId, createdReq);
++            if (!window._chatRequests) window._chatRequests = [];
++            window._chatRequests.push(createdReq);
++            return createdReq;
++        }
++    } catch (err) {
++        console.error("Error in ensureChatRequest:", err);
++    }
++    return null;
++}
++
++async function updateChatRequestStatus(partnerId, newStatus) {
++    if (!currentUser) return;
++    try {
++        const req = window._chatRequestsByPartner ? window._chatRequestsByPartner.get(partnerId) : null;
++        if (!req) return;
++
++        const { data, error } = await sb
++            .from('chat_requests')
++            .update({ status: newStatus })
++            .eq('id', req.id)
++            .select();
++
++        if (error) throw error;
++
++        if (data && data.length > 0) {
++            const updatedReq = data[0];
++            window._chatRequestsByPartner.set(partnerId, updatedReq);
++
++            const idx = window._chatRequests.findIndex(r => r.id === req.id);
++            if (idx !== -1) {
++                window._chatRequests[idx] = updatedReq;
++            }
++
++            showToast(newStatus === 'accepted' ? 'Demande accept├®e Ô£à' : 'Demande ignor├®e');
++            await loadActiveChats();
++        }
++    } catch (err) {
++        console.error("Error in updateChatRequestStatus:", err);
++        showToast("Erreur lors de la mise ├á jour");
++    }
++}
++
+ async function loadContactsView() {
+     const container = document.getElementById('contacts-list-container');
+     if (!container || !currentUser) return;
+@@ -4412,7 +5684,7 @@ function getLevelProgress(visitsCount, friendsCount) {
+ 
+ function getLevelIcon(visitsCount, friendsCount) {
+     const level = calculateUserLevel(visitsCount, friendsCount);
+-    const icons = ['­ƒî▒','­ƒî┐','Ô¡É','­ƒîƒ','­ƒÆ½','­ƒöÑ','­ƒÆÄ','­ƒææ','­ƒÅå','­ƒÜÇ'];
++    const icons = ['­ƒî▒', '­ƒî┐', 'Ô¡É', '­ƒîƒ', '­ƒÆ½', '­ƒöÑ', '­ƒÆÄ', '­ƒææ', '­ƒÅå', '­ƒÜÇ'];
+     return icons[level - 1] || '­ƒî▒';
+ }
+ 
+@@ -4630,9 +5902,9 @@ function openHashtagEditor(profile, user) {
+         <!-- Selected tags preview -->
+         <div class="hm-ht-selected-preview" id="hm-ht-sel-preview">
+             ${selectedTags.length === 0
+-                ? `<span class="hm-ht-sel-empty">Aucun hashtag s├®lectionn├® (max ${MAX_TAGS})</span>`
+-                : selectedTags.map(t => `<span class="hm-ht-sel-chip">${escapeHtml(t)} <span class="rm" data-remove="${t.replace(/"/g,'&quot;')}">Ô£ò</span></span>`).join('')
+-            }
++            ? `<span class="hm-ht-sel-empty">Aucun hashtag s├®lectionn├® (max ${MAX_TAGS})</span>`
++            : selectedTags.map(t => `<span class="hm-ht-sel-chip">${escapeHtml(t)} <span class="rm" data-remove="${t.replace(/"/g, '&quot;')}">Ô£ò</span></span>`).join('')
++        }
+         </div>
+ 
+         <!-- Categories -->
+@@ -4664,7 +5936,7 @@ function openHashtagEditor(profile, user) {
+             preview.innerHTML = `<span class="hm-ht-sel-empty">Aucun hashtag s├®lectionn├® (max ${MAX_TAGS})</span>`;
+         } else {
+             preview.innerHTML = selectedTags.map(t =>
+-                `<span class="hm-ht-sel-chip">${escapeHtml(t)} <span class="rm" data-remove="${t.replace(/"/g,'&quot;')}">Ô£ò</span></span>`
++                `<span class="hm-ht-sel-chip">${escapeHtml(t)} <span class="rm" data-remove="${t.replace(/"/g, '&quot;')}">Ô£ò</span></span>`
+             ).join('');
+             // remove click
+             preview.querySelectorAll('.rm').forEach(rmEl => {
+@@ -4950,6 +6222,18 @@ function openAdvancedFilterModal(profiles, listContainer) {
+             font-weight: 800;
+             font-size: 13px;
+         }
++        #adv-filter-modal .hm-vip-icon-wrapper {
++            width: 28px;
++            height: 28px;
++            border-radius: 7px;
++            background: linear-gradient(135deg, #f59e0b, #fbbf24);
++            color: #fff;
++            display: flex;
++            align-items: center;
++            justify-content: center;
++            font-size: 13px;
++            flex-shrink: 0;
++        }
+         /* ÔöÇÔöÇ Toggle iOS ÔöÇÔöÇ */
+         #adv-filter-modal .hm-toggle-wrap {
+             position: relative;
+@@ -5058,7 +6342,9 @@ function openAdvancedFilterModal(profiles, listContainer) {
+             <!-- VIP -->
+             <div class="hm-vip" id="adv-vip-card">
+                 <div class="hm-vip-label">
+-                    <i class="fas fa-gem"></i>
++                    <span class="hm-vip-icon-wrapper">
++                        <i class="fas fa-gem"></i>
++                    </span>
+                     R├®serv├® aux membres VIP
+                 </div>
+                 <label class="hm-toggle-wrap">

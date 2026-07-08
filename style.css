@@ -702,7 +702,7 @@ body {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 6px 6px 95px 6px;
+    padding: 6px;
     position: relative;
     z-index: 1;
 }
@@ -732,8 +732,8 @@ body {
 
 /* Ã˜Â´Ã˜Â±Ã™Å Ã˜Â· Ã˜Â§Ã™â€žÃ˜ÂªÃ™â€ Ã™â€šÃ™â€ž Ã˜Â§Ã™â€žÃ˜Â³Ã™ÂÃ™â€žÃ™Å  */
 .bottom-nav {
-    position: absolute;
-    bottom: 20px;
+    position: fixed;
+    bottom: 0;
     left: 16px;
     right: 16px;
     height: 70px;
@@ -746,7 +746,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 9999;
     direction: ltr;
 }
 
@@ -1425,17 +1425,19 @@ body {
     color: #fff;
     flex-shrink: 0;
     position: relative;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
 }
 
 .user-avatar.male {
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    border: 2px solid rgba(59, 130, 246, 0.3);
+    border: none !important;
 }
 
 .user-avatar.female {
     background: linear-gradient(135deg, #db2777, #c026d3);
-    border: 2px solid rgba(219, 39, 119, 0.3);
+    border: none !important;
 }
 
 /* Ù†Ù‚Ø·Ø© Ø­Ø§Ù„Ø© Ø§Ù„Ø§ØªØµØ§Ù„ */
@@ -6617,7 +6619,7 @@ body {
     flex-direction: column;
     align-items: center;
     background: transparent;
-    padding: 0 10px 10px 10px;
+    padding: 0 10px 180px 10px !important;
     min-height: calc(100vh - 161px);
     min-height: calc(100dvh - 161px);
     box-sizing: border-box;
@@ -7292,7 +7294,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 22px;
     color: #fff;
     flex-shrink: 0;
 }
@@ -7658,8 +7660,8 @@ body {
 [data-theme="dark"] .profil-card-new-clean .social-account-link-btn,
 [data-theme="dark"] .profil-card-new-clean #edit-name-btn {
     background: #ffffff !important;
-    border: 1.5px solid #000000 !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08) !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
 }
 
 /* Hover state for black border edit and link buttons */
@@ -7673,13 +7675,17 @@ body {
 [data-theme="dark"] .profil-card-new-clean .social-account-link-btn:hover,
 [data-theme="dark"] .profil-card-new-clean #edit-name-btn:hover {
     background: #f3f4f6 !important;
-    border-color: #000000 !important;
 }
 
 /* Specific edit pen colors based on platform and layout */
-.profil-card-new-clean .social-account-edit-btn i,
+.profil-card-new-clean .social-account-edit-btn i {
+    font-size: 15px !important;
+    transition: color 0.2s !important;
+}
+
 .profil-card-new-clean #edit-name-btn i {
     font-size: 15px !important;
+    color: #6b7280 !important;
 }
 
 /* Instagram: Pink pen */
@@ -7699,16 +7705,17 @@ body {
     color: #1877f2 !important;
 }
 /* Name Edit: Blue pen */
-.profil-card-new-clean #edit-name-btn i {
+.profil-card-new-clean #edit-name-btn:hover i {
     color: #0066ff !important;
 }
 
-/* Link/Visiter button inside circles (Dark slate/black color!) */
+/* Link/Visiter button inside circles */
 .profil-card-new-clean .social-account-link-btn i,
 .profil-card-new-clean .social-account-link-btn.disabled i {
-    color: #111827 !important;
+    color: #9ca3af !important;
     opacity: 1 !important;
     font-size: 14px !important;
+    transition: color 0.2s !important;
 }
 .profil-card-new-clean .social-account-link-btn:hover i {
     color: #0066ff !important;
@@ -7819,6 +7826,45 @@ body {
     gap: 12px;
 }
 
+.longpress-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50px;
+    background: rgba(20, 20, 25, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Light theme for long press */
+[data-theme="light"] .longpress-circle {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    color: #1e293b !important;
+}
+
+.longpress-text {
+    position: absolute;
+    bottom: -22px;
+    white-space: nowrap;
+    font-size: 10px;
+    font-weight: 700;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3px 8px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
 [data-theme="light"] .chats-notes-section {
     background: rgba(255, 255, 255, 0.45) !important;
     border: 1px solid rgba(255, 255, 255, 0.5) !important;
@@ -7913,14 +7959,10 @@ body {
     font-weight: bold;
     font-size: 20px;
     position: relative;
-    border: 2.5px solid #111827;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
     background: #1f2937;
 }
 
 [data-theme="light"] .note-avatar {
-    border-color: #ffffff !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
     background: #e2e8f0 !important;
 }
 

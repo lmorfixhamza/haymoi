@@ -377,6 +377,8 @@ function translateApp(lang) {
             loadActiveChats();
         } else if (viewId === 'profil' && typeof loadOwnProfile === 'function' && currentUser) {
             loadOwnProfile(currentUser);
+        } else if (viewId === 'map' && typeof loadMapView === 'function') {
+            loadMapView();
         }
     }
 }
@@ -1026,6 +1028,16 @@ function initAppTabs() {
                 }
             }
         }
+        
+        // التحميل عند الدخول لـ Map
+        if (viewId === 'map' && typeof loadMapView === 'function') {
+            loadMapView();
+        }
+
+        // التحميل عند الدخول لـ Pour Toi
+        if (viewId === 'pourtoi' && typeof loadPourToiView === 'function') {
+            loadPourToiView();
+        }
     };
 
     // ربط أزرار الشريط السفلي بالتنقل
@@ -1454,7 +1466,7 @@ async function loadOwnProfile(user) {
                     ${socialLinksSection}
 
                     <!-- About Me Section -->
-                    <div class="prf-section-title prf-section-title-center">
+                    <div class="prf-section-title prf-section-title-center" style="margin-top: 25px;">
                         <i class="fas fa-comment"></i>
                         About me
                     </div>
@@ -1479,17 +1491,35 @@ async function loadOwnProfile(user) {
                         </div>
                     </div>
 
-                    <!-- Edit Profile Button -->
-                    <button id="edit-profile-btn" class="edit-profile-btn prf-edit-btn">
-                        <i class="fas fa-pen"></i>
-                        Edit Profile
-                    </button>
+                    <!-- VIP Cards Section -->
+                    <div class="profil-vip-section" style="display: flex; gap: 12px; margin: 20px auto 16px auto; padding: 0; width: 90%; max-width: 350px;">
+                        <!-- VIP Normal -->
+                        <div class="hm-vip-card" style="flex: 1; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 20px; padding: 20px 10px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25); cursor: pointer; transition: transform 0.2s;">
+                            <i class="fas fa-gem" style="font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"></i>
+                            <span style="font-weight: 700; font-size: 14px; letter-spacing: 0.5px;">VIP</span>
+                            <span style="font-size: 11px; opacity: 0.8; margin-top: 2px;">Avantages exclusifs</span>
+                        </div>
+                        <!-- SVIP المميز -->
+                        <div class="hm-vip-card" style="flex: 1; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 20px; padding: 20px 10px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); cursor: pointer; transition: transform 0.2s;">
+                            <i class="fas fa-crown" style="font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"></i>
+                            <span style="font-weight: 800; font-size: 14px; letter-spacing: 0.5px;">SVIP</span>
+                            <span style="font-size: 11px; opacity: 0.8; margin-top: 2px;">Premium +</span>
+                        </div>
+                    </div>
 
-                    <!-- Logout Button -->
-                    <button id="logout-btn-app" class="prf-logout-btn">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span data-i18n="settings_logout">Se déconnecter</span>
-                    </button>
+                    <div style="display: flex; flex-direction: column; gap: 8px; width: 90%; max-width: 350px; margin: 0 auto; align-items: center;">
+                        <!-- Edit Profile Button -->
+                        <button id="edit-profile-btn" class="edit-profile-btn prf-edit-btn" style="margin:0; width: 100%; min-height: 50px; font-size: 16px;">
+                            <i class="fas fa-pen"></i>
+                            Edit Profile
+                        </button>
+    
+                        <!-- Logout Button -->
+                        <button id="logout-btn-app" class="prf-logout-btn" style="margin:0; width: 100%; min-height: 50px; font-size: 16px;">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span data-i18n="settings_logout">Se déconnecter</span>
+                        </button>
+                    </div>
 
                     <!-- Settings Bottom Sheet -->
                     <div id="settings-sheet-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:3000;"></div>
@@ -6796,7 +6826,7 @@ function showFindLongPressMenu(anchorEl) {
             color: 'rgba(59, 130, 246, 0.55)', // glowing blue
             text: 'الخريطة',
             action: () => {
-                showToast('الخريطة ستكون متوفرة قريباً 🗺️');
+                window.switchAppView('map');
             }
         },
         {
@@ -6931,119 +6961,6 @@ const MOCK_POSTS = [
         likedByUser: false
     }
 ];
-
-// === View Loader for "Pour toi" ===
-function loadPourToiView() {
-    const container = document.getElementById('pourtoi-feed-container');
-    if (!container) return;
-
-    // Set page header title
-    const headerTitle = document.getElementById('header-title');
-    if (headerTitle) {
-        headerTitle.style.display = '';
-        headerTitle.style.width = '100%';
-        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-        const titleColor = isLight ? '#111827' : '#ffffff';
-        headerTitle.innerHTML = `
-            <div class="chats-section-title-block" style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%;">
-                <h2 class="chats-section-title" style="color: ${titleColor}; font-size: 26px; font-weight: 800; margin: 0; line-height: 1.1;">Pour toi</h2>
-                <span class="chats-section-subtitle" style="color: var(--text-muted); font-size: 13px; font-weight: 500; margin: 2px 0 0 0;">Découvrez les publications publiques</span>
-            </div>
-        `;
-    }
-
-    // Hide top search bar
-    const headerSearch = document.getElementById('header-search-container');
-    if (headerSearch) headerSearch.style.display = 'none';
-
-    // Hide top tab buttons
-    const headerAvatar = document.getElementById('header-user-avatar');
-    const notifBell = document.getElementById('notif-bell-btn');
-    const tabSearch = document.getElementById('tab-search');
-    const tabGroups = document.getElementById('tab-groups');
-    const tabVip = document.getElementById('tab-vip');
-    const headerSettingsBtn = document.getElementById('header-settings-btn');
-    const headerComposeBtn = document.getElementById('header-compose-btn');
-
-    if (headerAvatar) headerAvatar.style.display = 'none';
-    if (notifBell) notifBell.style.display = 'none';
-    if (tabSearch) tabSearch.style.display = 'none';
-    if (tabGroups) tabGroups.style.display = 'none';
-    if (tabVip) tabVip.style.display = 'none';
-    if (headerSettingsBtn) headerSettingsBtn.style.display = 'none';
-    if (headerComposeBtn) headerComposeBtn.style.display = 'none';
-
-    if (!window._pourToiPosts) {
-        window._pourToiPosts = JSON.parse(JSON.stringify(MOCK_POSTS));
-    }
-
-    container.innerHTML = window._pourToiPosts.map(post => {
-        const likedClass = post.likedByUser ? 'liked' : '';
-        const heartIcon = post.likedByUser ? 'fas fa-heart' : 'far fa-heart';
-        const genderClass = post.gender === 'female' ? 'female' : 'male';
-        return `
-            <div class="pourtoi-post-card" data-post-id="${post.post_id}">
-                <div class="pourtoi-post-header">
-                    <div class="pourtoi-post-avatar ${genderClass}" data-user-id="${post.user_id}">
-                        <img src="${post.avatar_url}" alt="" loading="lazy">
-                    </div>
-                    <div class="pourtoi-post-user-info">
-                        <span class="pourtoi-post-user-name" data-user-id="${post.user_id}">${escapeHtml(post.full_name)}</span>
-                        <span class="pourtoi-post-time">${post.time}</span>
-                    </div>
-                </div>
-                
-                <div class="pourtoi-post-media">
-                    <img src="${post.media_url}" alt="" loading="lazy">
-                </div>
-                
-                <div class="pourtoi-post-actions">
-                    <button class="pourtoi-post-action-btn like-btn ${likedClass}" data-post-id="${post.post_id}">
-                        <i class="${heartIcon}"></i>
-                        <span class="like-count">${post.likes}</span>
-                    </button>
-                    <button class="pourtoi-post-action-btn">
-                        <i class="far fa-comment"></i>
-                        <span>${post.comments}</span>
-                    </button>
-                </div>
-                
-                <div class="pourtoi-post-caption">
-                    ${escapeHtml(post.caption)}
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    // Add event listeners for liking
-    container.querySelectorAll('.like-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const pId = btn.getAttribute('data-post-id');
-            const post = window._pourToiPosts.find(p => p.post_id === pId);
-            if (post) {
-                post.likedByUser = !post.likedByUser;
-                if (post.likedByUser) {
-                    post.likes += 1;
-                    btn.classList.add('liked');
-                    btn.querySelector('i').className = 'fas fa-heart';
-                } else {
-                    post.likes -= 1;
-                    btn.classList.remove('liked');
-                    btn.querySelector('i').className = 'far fa-heart';
-                }
-                btn.querySelector('.like-count').textContent = post.likes;
-            }
-        });
-    });
-
-    // Add event listeners for profile clicks (avatar + name)
-    container.querySelectorAll('.pourtoi-post-avatar, .pourtoi-post-user-name').forEach(el => {
-        el.addEventListener('click', () => {
-            const uId = el.getAttribute('data-user-id');
-            openProfileFromPost(uId);
-        });
-    });
-}
 
 // === Helper to Open Profile from Post ===
 async function openProfileFromPost(userId) {

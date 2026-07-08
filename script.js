@@ -163,6 +163,12 @@ const LANG_DICTIONARY = {
         "chats_search_placeholder": "Rechercher une conversation...",
         "chats_note_label": "Note...",
         "chats_my_note_title": "Votre note",
+        "chats_empty_title_chats": "Aucune conversation",
+        "chats_empty_subtitle_chats": "Commencez à discuter avec des personnes à proximité !",
+        "chats_empty_title_requests": "Aucune demande",
+        "chats_empty_subtitle_requests": "Les demandes de discussion apparaîtront ici.",
+        "chats_empty_title_favorites": "Aucun favori",
+        "chats_empty_subtitle_favorites": "Ajoutez des personnes à vos favoris pour les retrouver ici.",
 
         // Contacts
         "contacts_empty_msg": "Aucun contact pour le moment.",
@@ -213,6 +219,12 @@ const LANG_DICTIONARY = {
         "chats_search_placeholder": "ابحث عن محادثة...",
         "chats_note_label": "ملاحظة...",
         "chats_my_note_title": "ملاحظتك",
+        "chats_empty_title_chats": "لا محادثات",
+        "chats_empty_subtitle_chats": "ابدأ الدردشة مع أشخاص قريبين منك!",
+        "chats_empty_title_requests": "لا طلبات",
+        "chats_empty_subtitle_requests": "ستظهر طلبات الدردشة هنا.",
+        "chats_empty_title_favorites": "لا يوجد مفضلون",
+        "chats_empty_subtitle_favorites": "أضف أشخاصا إلى مفضلاتك لتجدهم هنا.",
 
         // Contacts
         "contacts_empty_msg": "لا يوجد أي جهة اتصال حالياً.",
@@ -263,6 +275,12 @@ const LANG_DICTIONARY = {
         "chats_search_placeholder": "Search conversation...",
         "chats_note_label": "Note...",
         "chats_my_note_title": "Your note",
+        "chats_empty_title_chats": "No conversations",
+        "chats_empty_subtitle_chats": "Start chatting with nearby people!",
+        "chats_empty_title_requests": "No requests",
+        "chats_empty_subtitle_requests": "Chat requests will appear here.",
+        "chats_empty_title_favorites": "No favorites",
+        "chats_empty_subtitle_favorites": "Add people to your favorites to find them here.",
 
         // Contacts
         "contacts_empty_msg": "No contacts at the moment.",
@@ -406,7 +424,8 @@ const MOCK_BOTS = [
         instagram: 'farida_alami',
         tiktok: 'farida_alami',
         whatsapp: '+212600000001',
-        facebook: 'farida.alami'
+        facebook: 'farida.alami',
+        note: 'New photo soon 📸'
     },
     {
         user_id: 'bot_youssef_male',
@@ -422,7 +441,8 @@ const MOCK_BOTS = [
         is_online: true,
         created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
         instagram: 'youssef_bennani',
-        whatsapp: '+212600000002'
+        whatsapp: '+212600000002',
+        note: 'Sport time 🏃‍♂️'
     },
     {
         user_id: 'bot_amina_female',
@@ -438,11 +458,12 @@ const MOCK_BOTS = [
         is_online: false,
         created_at: new Date(Date.now() - 3600000 * 12).toISOString(),
         instagram: 'amina_art',
-        tiktok: 'amina_art'
+        tiktok: 'amina_art',
+        note: 'سلام ✨'
     },
     {
         user_id: 'bot_mehdi_male',
-        full_name: 'Mehdi Naciri',
+        full_name: 'Mehdi Nejiri',
         gender: 'male',
         dob: '1998-11-05',
         bio: 'Gamer 🎮 et créateur de contenu. Viens discuter ! ✌️',
@@ -454,7 +475,8 @@ const MOCK_BOTS = [
         is_online: false,
         created_at: new Date(Date.now() - 3600000 * 24).toISOString(),
         instagram: 'mehdi_naciri',
-        tiktok: 'mehdi_gaming'
+        tiktok: 'mehdi_gaming',
+        note: 'Streaming 🎮'
     },
     {
         user_id: 'bot_salma_female',
@@ -469,7 +491,8 @@ const MOCK_BOTS = [
         is_verified: true,
         is_online: true,
         created_at: new Date(Date.now() - 3600000 * 48).toISOString(),
-        instagram: 'salma_tazi'
+        instagram: 'salma_tazi',
+        note: 'Café time ☕'
     }
 ];
 
@@ -3908,8 +3931,10 @@ async function loadActiveChats() {
             const notesSection = document.createElement('div');
             notesSection.className = 'chats-notes-section';
 
-            // Gather profiles for notes: online OR has note (only from users in active chats)
-            const notesProfiles = uniqueProfiles.filter(p => chatPartnersMap.has(p.user_id) && (onlineUsers.has(p.user_id) || (p.note && p.note.trim() !== '')));
+            // Gather profiles for notes: online OR has note (only from users in active chats) + MOCK_BOTS notes
+            const realNotesProfiles = uniqueProfiles.filter(p => chatPartnersMap.has(p.user_id) && (onlineUsers.has(p.user_id) || (p.note && p.note.trim() !== '')));
+            const botNotesProfiles = MOCK_BOTS.filter(b => b.note && b.note.trim() !== '' && !realNotesProfiles.some(r => r.user_id === b.user_id));
+            const notesProfiles = [...realNotesProfiles, ...botNotesProfiles];
 
             // Render current user's note bubble
             const myInitial = (currentUserProfile?.full_name || '?').charAt(0).toUpperCase();
@@ -4088,19 +4113,21 @@ async function loadActiveChats() {
 
             if (activeProfiles.length === 0) {
                 const emptyData = {
-                    messages: { icon: 'fa-comments', title: 'Aucune conversation', subtitle: 'Commencez à discuter avec des personnes à proximité !', cta: 'Découvrir' },
-                    requests: { icon: 'fa-inbox', title: 'Aucune demande', subtitle: 'Les demandes de discussion apparaîtront ici.', cta: null },
-                    favorites: { icon: 'fa-star', title: 'Aucun favori', subtitle: 'Ajoutez des personnes à vos favoris pour les retrouver ici.', cta: null }
+                    messages: { icon: 'fa-comments', title: 'chats_empty_title_chats', subtitle: 'chats_empty_subtitle_chats', cta: 'Découvrir' },
+                    requests: { icon: 'fa-inbox', title: 'chats_empty_title_requests', subtitle: 'chats_empty_subtitle_requests', cta: null },
+                    favorites: { icon: 'fa-star', title: 'chats_empty_title_favorites', subtitle: 'chats_empty_subtitle_favorites', cta: null }
                 };
                 const ed = emptyData[activeTab] || emptyData.messages;
 
                 const emptyStateDiv = document.createElement('div');
-                emptyStateDiv.className = 'chats-empty-state';
+                emptyStateDiv.className = `chats-empty-state ${activeTab}-empty`;
                 emptyStateDiv.innerHTML = `
                     <div class="chats-empty-icon"><i class="fas ${ed.icon}"></i></div>
-                    <h3 class="chats-empty-title">${ed.title}</h3>
-                    <p class="chats-empty-subtitle">${ed.subtitle}</p>
-                    ${ed.cta ? `<button class="chats-empty-cta" id="chats-empty-discover-btn"><i class="fas fa-compass" style="margin-right:6px;"></i>${ed.cta}</button>` : ''}
+                    <div class="chats-empty-info">
+                        <h3 class="chats-empty-title">${_t(ed.title)}</h3>
+                        <p class="chats-empty-subtitle">${_t(ed.subtitle)}</p>
+                        ${ed.cta ? `<button class="chats-empty-cta" id="chats-empty-discover-btn"><i class="fas fa-compass" style="margin-right:6px;"></i>${_t(ed.cta)}</button>` : ''}
+                    </div>
                 `;
                 container.appendChild(emptyStateDiv);
 

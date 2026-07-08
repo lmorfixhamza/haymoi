@@ -4312,17 +4312,23 @@ body {
 [data-theme="light"] body,
 [data-theme="light"] .app-body {
     background-color: #ffffff !important;
-    background-image: none !important;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(161, 196, 253, 0.6) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(251, 194, 235, 0.6) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(161, 196, 253, 0.6) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(255, 221, 225, 0.6) 0px, transparent 50%) !important;
+    min-height: 100vh !important;
+    background-attachment: fixed !important;
     color: #111;
 }
 
 [data-theme="light"] .video-overlay {
-    background-color: #ffffff !important;
+    background-color: transparent !important;
     background-image: none !important;
 }
 
 [data-theme="light"] .app-container {
-    background-color: #ffffff !important;
+    background-color: transparent !important;
     background-image: none !important;
     --text-white: #111827;
     --text-muted: #6b7280;
@@ -7829,6 +7835,8 @@ body {
     overflow-x: auto;
     padding: 10px 4px 4px 4px;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
 }
 
 .chats-notes-slider::-webkit-scrollbar {
@@ -7843,7 +7851,7 @@ body {
     cursor: pointer;
     position: relative;
     flex-shrink: 0;
-    width: 70px;
+    width: 76px;
 }
 
 .note-bubble-wrapper {
@@ -7856,15 +7864,15 @@ body {
 .note-bubble {
     background: #1f2937;
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     padding: 6px 12px;
     border-radius: 18px;
-    font-size: 11px;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
     margin-bottom: 8px;
     position: relative;
-    max-width: 80px;
+    max-width: 85px;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
@@ -7873,8 +7881,8 @@ body {
 
 [data-theme="light"] .note-bubble {
     background: #ffffff !important;
-    color: #111827 !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
@@ -7896,8 +7904,8 @@ body {
 }
 
 .note-avatar {
-    width: 62px;
-    height: 62px;
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -7934,7 +7942,21 @@ body {
 }
 
 .note-avatar.has-story {
-    border-color: #ff3366 !important;
+    border: none !important;
+    padding: 3.5px !important;
+}
+
+.note-avatar.has-story.female {
+    background: linear-gradient(135deg, #f472b6, #db2777) !important;
+}
+
+.note-avatar.has-story.male {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+}
+
+.note-avatar.has-story img {
+    border: none !important;
+    box-sizing: border-box;
 }
 
 .note-add-plus {
@@ -8365,6 +8387,113 @@ body {
     background: rgba(255, 255, 255, 0.9) !important;
     border: 1px solid rgba(0, 0, 0, 0.08) !important;
     color: #1e293b !important;
+}
+
+/* Redesigned Empty States Layout (Centered & Beautiful) */
+.chats-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 60px 24px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    animation: hmFadeIn 0.35s ease-out;
+}
+
+@keyframes hmFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.chats-empty-icon {
+    font-size: 56px;
+    margin-bottom: 8px;
+    width: auto;
+    height: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Beautiful color themes for different empty tabs */
+.chats-empty-state.favorites-empty .chats-empty-icon {
+    color: #fbbf24;
+    filter: drop-shadow(0 4px 12px rgba(251, 191, 36, 0.25));
+}
+
+.chats-empty-state.requests-empty .chats-empty-icon {
+    color: #6366f1;
+    filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.25));
+}
+
+.chats-empty-state.messages-empty .chats-empty-icon {
+    color: #3b82f6;
+    filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.25));
+}
+
+[data-theme="dark"] .chats-empty-icon {
+    opacity: 0.9;
+}
+
+.chats-empty-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.chats-empty-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+}
+
+[data-theme="dark"] .chats-empty-title {
+    color: #ffffff;
+}
+
+.chats-empty-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.6;
+    max-width: 290px;
+}
+
+[data-theme="dark"] .chats-empty-subtitle {
+    color: #94a3b8;
+}
+
+.chats-empty-cta {
+    margin-top: 14px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: #ffffff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    transition: all 0.3s ease;
+}
+
+.chats-empty-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45);
+}
+
+/* Center My Profile headings */
+.prf-section-title-center {
+    justify-content: center !important;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 
 

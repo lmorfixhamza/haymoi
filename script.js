@@ -1007,7 +1007,55 @@ function initAppTabs() {
 
     // ربط أزرار الشريط السفلي بالتنقل
     navBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
+        let pressTimer = null;
+        let isLongPress = false;
+
+        // فقط لزر البحث (btn-nav-trouver) نفعل الضغط المطول
+        if (btn.id === 'btn-nav-trouver') {
+            const startPress = (e) => {
+                isLongPress = false;
+                btn._longPressed = false;
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    btn._longPressed = true;
+                    showFindLongPressMenu(btn);
+                }, 500); // 500ms
+            };
+
+            const cancelPress = () => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+            };
+
+            // Mouse events
+            btn.addEventListener('mousedown', startPress);
+            btn.addEventListener('mouseup', () => {
+                cancelPress();
+            });
+            btn.addEventListener('mouseleave', cancelPress);
+
+            // Touch events
+            btn.addEventListener('touchstart', startPress, { passive: true });
+            btn.addEventListener('touchend', (e) => {
+                cancelPress();
+                if (isLongPress) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }, { passive: false });
+            btn.addEventListener('touchmove', cancelPress, { passive: true });
+            btn.addEventListener('touchcancel', cancelPress);
+        }
+
+        btn.addEventListener('click', (e) => {
+            if (btn._longPressed) {
+                btn._longPressed = false; // Reset flag
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+            }
             const id = btn.id.replace('btn-nav-', '');
             window.switchAppView(id);
         });
@@ -2594,7 +2642,7 @@ function openUserModal(profile) {
                 <p>${escapeHtml(profile.bio || "Cet utilisateur n'a pas encore rédigé de biographie.")}</p>
             </div>
             ${profile.user_id !== currentUser?.id ? `
-            <button class="btn-follow-user" id="btn-modal-follow">
+            <button class="btn-follow-user ${profile.gender === 'female' ? 'female' : 'male'}" id="btn-modal-follow">
                 <i class="${window._favoritesCache && window._favoritesCache.has(profile.user_id) ? 'fas fa-star' : 'far fa-star'}" style="color: ${window._favoritesCache && window._favoritesCache.has(profile.user_id) ? '#fbbf24' : 'inherit'}"></i>
                 <span>${window._favoritesCache && window._favoritesCache.has(profile.user_id) ? 'Suivi' : 'Suivre'}</span>
             </button>
@@ -6684,96 +6732,117 @@ function openAdvancedFilterModal(profiles, listContainer) {
 
 // === Clic Long Menu on 'Find' Tab ===
 function showFindLongPressMenu(anchorEl) {
-    const existing = document.getElementById('find-longpress-menu');
+    const existing = document.getElementById('find-longpress-overlay');
     if (existing) existing.remove();
 
-    const menu = document.createElement('div');
-    menu.id = 'find-longpress-menu';
-    menu.style.cssText = `
-        position: fixed;
-        bottom: 80px;
-        left: 16px;
-        z-index: 2500;
-        padding: 8px;
-        border-radius: 16px;
-        background: rgba(30, 30, 38, 0.95);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        min-width: 140px;
-        animation: popUpMenu 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    `;
+    // Create the overlay container
+    const overlay = document.createElement('div');
+    overlay.id = 'find-longpress-overlay';
 
+    // Calculate dimensions
     const rect = anchorEl.getBoundingClientRect();
-    const menuWidth = 140;
-    let leftPos = rect.left + (rect.width / 2) - (menuWidth / 2);
-    if (leftPos < 10) leftPos = 10;
-    menu.style.left = leftPos + 'px';
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top; // Align center of indicator circle
 
-    menu.innerHTML = `
-        <button class="longpress-menu-item" id="menu-opt-find" style="display:flex; align-items:center; gap:10px; width:100%; padding:10px 14px; background:none; border:none; color:#fff; text-align:left; cursor:pointer; font-family:'Outfit', sans-serif; font-size:14px; font-weight:700; border-radius:10px; transition:background 0.2s;">
-            <i class="fas fa-location-dot" style="color:#3b82f6; font-size:14px; width:16px; text-align:center;"></i>
-            <span>Find</span>
-        </button>
-        <button class="longpress-menu-item" id="menu-opt-pourtoi" style="display:flex; align-items:center; gap:10px; width:100%; padding:10px 14px; background:none; border:none; color:#fff; text-align:left; cursor:pointer; font-family:'Outfit', sans-serif; font-size:14px; font-weight:700; border-radius:10px; transition:background 0.2s;">
-            <i class="fas fa-play-circle" style="color:#ec4899; font-size:14px; width:16px; text-align:center;"></i>
-            <span>Pour toi</span>
-        </button>
+    // Determine the center of the menu group to prevent going off-screen
+    // We need at least 75px from edges to fit the side items (35px offset + 35px radius/padding + label safety)
+    const menuBaseX = Math.max(75, Math.min(window.innerWidth - 75, centerX));
+
+    // Define positions for floating items (made center higher and sides closer)
+    const itemsData = [
+        {
+            id: 'opt-pourtoi',
+            endX: menuBaseX,
+            endY: centerY - 190, // Pushed even higher to clear label space
+            icon: 'fas fa-clone',
+            color: 'rgba(244, 63, 94, 0.55)', // glowing rose
+            text: 'من أجلك',
+            action: () => {
+                window.switchAppView('pourtoi');
+            }
+        },
+        {
+            id: 'opt-map',
+            endX: menuBaseX + 35, // Brought even closer (from 42 to 35)
+            endY: centerY - 85,
+            icon: 'fas fa-map',
+            color: 'rgba(59, 130, 246, 0.55)', // glowing blue
+            text: 'الخريطة',
+            action: () => {
+                showToast('الخريطة ستكون متوفرة قريباً 🗺️');
+            }
+        },
+        {
+            id: 'opt-search',
+            endX: menuBaseX - 35, // Brought even closer (from -42 to -35)
+            endY: centerY - 85,
+            icon: 'fas fa-location-dot',
+            color: 'rgba(139, 92, 246, 0.55)', // glowing violet
+            text: 'ابحث عن',
+            action: () => {
+                window.switchAppView('trouver');
+            }
+        }
+    ];
+
+    // Create HTML structure (No SVG lines)
+    overlay.innerHTML = `
+        <div id="longpress-backdrop"></div>
     `;
 
-    document.body.appendChild(menu);
+    // Add items
+    itemsData.forEach(data => {
+        // Create the item element
+        const itemEl = document.createElement('div');
+        itemEl.className = 'longpress-item';
+        
+        // Initial position is at the anchor (button) center
+        itemEl.style.left = `${centerX}px`;
+        itemEl.style.top = `${centerY}px`;
+        
+        // Calculate the translation distance
+        const dx = data.endX - centerX;
+        const dy = data.endY - centerY;
+        
+        itemEl.style.setProperty('--dx', `${dx}px`);
+        itemEl.style.setProperty('--dy', `${dy}px`);
+        
+        itemEl.innerHTML = `
+            <button class="longpress-circle" style="--glow-color: ${data.color};">
+                <i class="${data.icon}"></i>
+            </button>
+            <div class="longpress-label">
+                <span>${data.text}</span>
+            </div>
+        `;
 
-    const items = menu.querySelectorAll('.longpress-menu-item');
-    items.forEach(item => {
-        item.style.color = '#ffffff';
-        item.addEventListener('mouseenter', () => {
-            item.style.background = 'rgba(255, 255, 255, 0.08)';
+        // Action click
+        itemEl.querySelector('.longpress-circle').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeMenu();
+            data.action();
         });
-        item.addEventListener('mouseleave', () => {
-            item.style.background = 'none';
-        });
+
+        overlay.appendChild(itemEl);
     });
 
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    if (isLight) {
-        menu.style.background = 'rgba(255, 255, 255, 0.98)';
-        menu.style.border = '1px solid rgba(0, 0, 0, 0.08)';
-        menu.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)';
-        items.forEach(item => {
-            item.style.color = '#1e293b';
-            item.addEventListener('mouseenter', () => {
-                item.style.background = 'rgba(0, 0, 0, 0.03)';
-            });
-            item.addEventListener('mouseleave', () => {
-                item.style.background = 'none';
-            });
-        });
+    document.body.appendChild(overlay);
+
+    // Active state with timeout for animations
+    setTimeout(() => {
+        overlay.classList.add('active');
+    }, 20);
+
+    // Close function
+    function closeMenu() {
+        overlay.classList.remove('active');
+        setTimeout(() => {
+            overlay.remove();
+        }, 550);
     }
 
-    menu.querySelector('#menu-opt-find').addEventListener('click', () => {
-        menu.remove();
-        window.switchAppView('trouver');
-    });
-
-    menu.querySelector('#menu-opt-pourtoi').addEventListener('click', () => {
-        menu.remove();
-        window.switchAppView('pourtoi');
-    });
-
-    const outsideClick = (e) => {
-        if (!menu.contains(e.target) && !anchorEl.contains(e.target)) {
-            menu.remove();
-            document.removeEventListener('click', outsideClick);
-            document.removeEventListener('touchstart', outsideClick);
-        }
-    };
-    setTimeout(() => {
-        document.addEventListener('click', outsideClick);
-        document.addEventListener('touchstart', outsideClick);
-    }, 100);
+    // Close on clicking backdrop
+    overlay.querySelector('#longpress-backdrop').addEventListener('click', closeMenu);
 }
 
 // === Mock Data for "Pour toi" ===

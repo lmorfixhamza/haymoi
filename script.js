@@ -123,8 +123,245 @@ let requireVerifiedFilter = false; // الأعضاء الموثقين فقط
 let blockedUserIds = new Set(); // قائمة المحظورين
 let globalMessageSubscription = null; // اشتراك الإشعارات العالمي
 let latestDiscoveryProfiles = []; // تخزين آخر قائمة بروفايل تم جلبها للاستكشاف
-let discoveryLastFetchTime = 0; // ┘ê┘éÏ¬ ÏóÏ«Ï▒ Ï¼┘äÏ¿ ┘ä┘äÏ¿┘èÏº┘åÏºÏ¬ - ┘ä┘äÏ¬Ï¡┘â┘à ┘ü┘è Ïº┘ä┘âÏºÏ┤
-const DISCOVERY_CACHE_MS = 60000; // ┘âÏºÏ┤ ┘ä┘àÏ»Ï® Ï»┘é┘è┘éÏ® ┘êÏºÏ¡Ï»Ï® ┘äÏ¬Ï¼┘åÏ¿ Ïº┘äÏÀ┘äÏ¿ÏºÏ¬ Ïº┘ä┘àÏ¬┘âÏ▒Ï▒Ï®
+let discoveryLastFetchTime = 0; // وقت آخر جلب للبيانات - للتحكم في الكاش
+const DISCOVERY_CACHE_MS = 60000; // كاش لمدة دقيقة واحدة لتجنب الطلبات المتكررة
+
+// ═══════════════════════════════════════════════════
+// === نظام الترجمة متعدد اللغات (i18n) - Arabe / Français / Anglais ===
+// ═══════════════════════════════════════════════════
+const LANG_DICTIONARY = {
+    fr: {
+        // Général / Navigation
+        "nav_trouver": "trouver",
+        "nav_chats": "chats",
+        "nav_contacts": "contacts",
+        "nav_profil": "profil",
+
+        // Écrans de chargement / Splash
+        "splash_title": "Bienvenue sur HayMoi",
+        "splash_tagline": "Explorez les personnes proches de vous en toute sérénité",
+        "loading_people": "Recherche de personnes proches...",
+        "loading_profile": "Chargement du profil...",
+
+        // Paramètres
+        "settings_title": "Paramètres",
+        "settings_appearance": "Apparence",
+        "settings_theme_dark": "Mode sombre",
+        "settings_theme_light": "Mode clair",
+        "settings_language": "Langue",
+        "settings_lang_name": "Français",
+        "settings_logout": "Se déconnecter",
+        "settings_cancel": "Annuler",
+
+        // Liste de discussions (Chats)
+        "chats_title": "Chats",
+        "chats_subtitle": "Restez connecté et discutez avec les gens",
+        "chats_empty_msg": "Aucune conversation active pour le moment.",
+        "chats_tab_chats": "Chats",
+        "chats_tab_app": "Application",
+        "chats_tab_fav": "Favoris",
+        "chats_search_placeholder": "Rechercher une conversation...",
+        "chats_note_label": "Note...",
+        "chats_my_note_title": "Votre note",
+
+        // Contacts
+        "contacts_empty_msg": "Aucun contact pour le moment.",
+
+        // Discovery
+        "discovery_search_placeholder": "Rechercher par ID...",
+        "chat_input_placeholder": "Dites quelque chose...",
+
+        // Autres messages de statut
+        "status_online": "En ligne",
+        "status_just_now": "À l'instant",
+        "status_yesterday": "Hier",
+        "status_age_mars": "ans ♂",
+        "status_age_venus": "ans ♀",
+        "status_distance_unknown": "distance inconnue",
+        "social_not_added": "Non ajouté"
+    },
+    ar: {
+        // General / Navigation
+        "nav_trouver": "استكشف",
+        "nav_chats": "المحادثات",
+        "nav_contacts": "جهات الاتصال",
+        "nav_profil": "حسابي",
+
+        // Splash Screen
+        "splash_title": "مرحباً بك في HayMoi",
+        "splash_tagline": "استكشف الأشخاص القريبين منك بكل أمان وسهولة",
+        "loading_people": "جاري البحث عن أشخاص قريبين...",
+        "loading_profile": "جاري تحميل الملف الشخصي...",
+
+        // Settings
+        "settings_title": "الإعدادات",
+        "settings_appearance": "المظهر",
+        "settings_theme_dark": "الوضع الداكن",
+        "settings_theme_light": "الوضع الفاتح",
+        "settings_language": "اللغة",
+        "settings_lang_name": "العربية",
+        "settings_logout": "تسجيل الخروج",
+        "settings_cancel": "إلغاء",
+
+        // Chats
+        "chats_title": "المحادثات",
+        "chats_subtitle": "ابقَ على اتصال وتحدث مع الأشخاص من حولك",
+        "chats_empty_msg": "لا توجد محادثات نشطة حالياً.",
+        "chats_tab_chats": "المحادثات",
+        "chats_tab_app": "التطبيق",
+        "chats_tab_fav": "المفضلة",
+        "chats_search_placeholder": "ابحث عن محادثة...",
+        "chats_note_label": "ملاحظة...",
+        "chats_my_note_title": "ملاحظتك",
+
+        // Contacts
+        "contacts_empty_msg": "لا يوجد أي جهة اتصال حالياً.",
+
+        // Discovery
+        "discovery_search_placeholder": "ابحث بواسطة المعرف...",
+        "chat_input_placeholder": "اكتب شيئاً...",
+
+        // Statuses
+        "status_online": "نشط الآن",
+        "status_just_now": "الآن",
+        "status_yesterday": "أمس",
+        "status_age_mars": "سنة ♂",
+        "status_age_venus": "سنة ♀",
+        "status_distance_unknown": "المسافة غير معروفة",
+        "social_not_added": "لم يتم الربط"
+    },
+    en: {
+        // General / Navigation
+        "nav_trouver": "discover",
+        "nav_chats": "chats",
+        "nav_contacts": "contacts",
+        "nav_profil": "profile",
+
+        // Splash Screen
+        "splash_title": "Welcome to HayMoi",
+        "splash_tagline": "Explore people near you in complete serenity",
+        "loading_people": "Searching for nearby people...",
+        "loading_profile": "Loading profile...",
+
+        // Settings
+        "settings_title": "Settings",
+        "settings_appearance": "Appearance",
+        "settings_theme_dark": "Dark mode",
+        "settings_theme_light": "Light mode",
+        "settings_language": "Language",
+        "settings_lang_name": "English",
+        "settings_logout": "Log out",
+        "settings_cancel": "Cancel",
+
+        // Chats
+        "chats_title": "Chats",
+        "chats_subtitle": "Stay connected and chat with people",
+        "chats_empty_msg": "No active conversations at the moment.",
+        "chats_tab_chats": "Chats",
+        "chats_tab_app": "Application",
+        "chats_tab_fav": "Favorites",
+        "chats_search_placeholder": "Search conversation...",
+        "chats_note_label": "Note...",
+        "chats_my_note_title": "Your note",
+
+        // Contacts
+        "contacts_empty_msg": "No contacts at the moment.",
+
+        // Discovery
+        "discovery_search_placeholder": "Search by ID...",
+        "chat_input_placeholder": "Say something...",
+
+        // Statuses
+        "status_online": "Online",
+        "status_just_now": "Just now",
+        "status_yesterday": "Yesterday",
+        "status_age_mars": "years old ♂",
+        "status_age_venus": "years old ♀",
+        "status_distance_unknown": "distance unknown",
+        "social_not_added": "Not added"
+    }
+};
+
+// اللغة الحالية المحفوظة أو الفرنسية كافتراضي
+let currentLang = localStorage.getItem('haymoi-lang') || 'fr';
+
+// دالة مساعدة لجلب النص المترجم مع fallback للفرنسية
+function _t(key) {
+    return (LANG_DICTIONARY[currentLang] && LANG_DICTIONARY[currentLang][key])
+        || (LANG_DICTIONARY['fr'][key])
+        || key;
+}
+
+// دالة تطبيق الترجمة على كامل الصفحة (نصوص ثابتة + اتجاه الكتابة)
+function translateApp(lang) {
+    if (!LANG_DICTIONARY[lang]) lang = 'fr';
+    currentLang = lang;
+    localStorage.setItem('haymoi-lang', lang);
+
+    // ضبط اتجاه الكتابة (RTL للعربية، LTR للباقي)
+    if (lang === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+    } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', lang);
+    }
+
+    // ترجمة العناصر الثابتة عبر [data-i18n]
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (LANG_DICTIONARY[lang] && LANG_DICTIONARY[lang][key]) {
+            el.textContent = LANG_DICTIONARY[lang][key];
+        }
+    });
+
+    // ترجمة placeholders عبر [data-i18n-placeholder]
+    const placeholderEls = document.querySelectorAll('[data-i18n-placeholder]');
+    placeholderEls.forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (LANG_DICTIONARY[lang] && LANG_DICTIONARY[lang][key]) {
+            el.placeholder = LANG_DICTIONARY[lang][key];
+        }
+    });
+
+    // تحديث خانة البحث في الدردشات إن وجدت
+    const chatSearch = document.getElementById('chats-inline-search-input');
+    if (chatSearch && LANG_DICTIONARY[lang]["chats_search_placeholder"]) {
+        chatSearch.placeholder = LANG_DICTIONARY[lang]["chats_search_placeholder"];
+    }
+
+    // تحديث خانة البحث في الاستكشاف
+    const discoverySearch = document.getElementById('discovery-search-input');
+    if (discoverySearch && LANG_DICTIONARY[lang]["discovery_search_placeholder"]) {
+        discoverySearch.placeholder = LANG_DICTIONARY[lang]["discovery_search_placeholder"];
+    }
+
+    // تحديث خانة إدخال الدردشة المباشرة
+    const chatInput = document.getElementById('chat-input');
+    if (chatInput && LANG_DICTIONARY[lang]["chat_input_placeholder"]) {
+        chatInput.placeholder = LANG_DICTIONARY[lang]["chat_input_placeholder"];
+    }
+
+    // تحديث نص اللغة المعروض في الإعدادات
+    const langLabel = document.getElementById('language-display-label');
+    if (langLabel) {
+        langLabel.textContent = LANG_DICTIONARY[lang]["settings_lang_name"];
+    }
+    const langSelectEl = document.getElementById('language-select-dropdown');
+    if (langSelectEl) langSelectEl.value = lang;
+
+    // إعادة رسم الواجهة النشطة لتطبيق الترجمة على العناصر المولدة ديناميكياً
+    const activeView = document.querySelector('.app-view.active');
+    if (activeView) {
+        const viewId = activeView.id.replace('view-', '');
+        if (viewId === 'chats' && typeof loadActiveChats === 'function') {
+            loadActiveChats();
+        } else if (viewId === 'profil' && typeof loadOwnProfile === 'function' && currentUser) {
+            loadOwnProfile(currentUser);
+        }
+    }
+}
 
 // === Simulated Group Chats (Local Session & Persistence) ===
 window._simulatedGroups = [];
@@ -158,7 +395,7 @@ const MOCK_BOTS = [
         full_name: 'Farida Alami',
         gender: 'female',
         dob: '2003-05-15',
-        bio: 'Passionn├®e de photo, voyages et caf├® ÔÿòÔ£¿ LetÔÇÖs chat!',
+        bio: 'Passionnée de photo, voyages et café ☕✨ Let’s chat!',
         avatar_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
         latitude: 33.5731,
         longitude: -7.5898,
@@ -176,7 +413,7 @@ const MOCK_BOTS = [
         full_name: 'Youssef Bennani',
         gender: 'male',
         dob: '2000-08-20',
-        bio: 'D├®veloppeur web ­ƒÆ╗ grand sportif ­ƒÅâÔÇìÔÖé´©Å Toujours positif !',
+        bio: 'Développeur web 💻 grand sportif 🏃‍♂️ Toujours positif !',
         avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
         latitude: 33.5750,
         longitude: -7.5920,
@@ -192,7 +429,7 @@ const MOCK_BOTS = [
         full_name: 'Amina El Fassi',
         gender: 'female',
         dob: '2005-02-10',
-        bio: 'Artiste peintre ­ƒÄ¿ fan de musique classique et de lecture ­ƒôû',
+        bio: 'Artiste peintre 🎨 fan de musique classique et de lecture 📖',
         avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
         latitude: 33.5710,
         longitude: -7.5850,
@@ -208,7 +445,7 @@ const MOCK_BOTS = [
         full_name: 'Mehdi Naciri',
         gender: 'male',
         dob: '1998-11-05',
-        bio: 'Gamer ­ƒÄ« et cr├®ateur de contenu. Viens discuter ! Ô£î´©Å',
+        bio: 'Gamer 🎮 et créateur de contenu. Viens discuter ! ✌️',
         avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
         latitude: 33.5780,
         longitude: -7.6010,
@@ -224,7 +461,7 @@ const MOCK_BOTS = [
         full_name: 'Salma Tazi',
         gender: 'female',
         dob: '2001-03-30',
-        bio: 'Pharmacienne ­ƒÆè voyageuse du monde Ô£ê´©Å Amoureuse des chats ­ƒÉ▒',
+        bio: 'Pharmacienne 💊 voyageuse du monde ✈️ Amoureuse des chats 🐱',
         avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
         latitude: 33.5680,
         longitude: -7.5800,
@@ -236,7 +473,7 @@ const MOCK_BOTS = [
     }
 ];
 
-// Ï¡Ï│ÏºÏ¿ Ïº┘ä┘àÏ│Ïº┘üÏ® Ï¿┘è┘å ┘å┘éÏÀÏ¬┘è┘å Ï¼Ï║Ï▒Ïº┘ü┘èÏ¬┘è┘å Ï¿Ïº┘ä┘â┘è┘ä┘ê┘àÏ¬Ï▒
+// حساب المسافة بين نقطتين جغرافيتين بالكيلومتر
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const l1 = parseFloat(lat1);
     const ln1 = parseFloat(lon1);
@@ -292,13 +529,13 @@ function formatRelativeTime(dateString) {
     const diffDay = Math.floor(diffHr / 24);
 
     if (diffSec < 60) {
-        return 'À l\'instant';
+        return _t('status_just_now');
     } else if (diffMin < 60) {
         return `Il y a ${diffMin} min`;
     } else if (diffHr < 24) {
         return `Il y a ${diffHr} h`;
     } else if (diffDay === 1) {
-        return 'Hier';
+        return _t('status_yesterday');
     } else if (diffDay === 2) {
         return 'Il y a 2 jours';
     } else if (diffDay < 7) {
@@ -509,11 +746,11 @@ function updateOnlineDotsInUI() {
                     if (distancePart) {
                         metaTextEl.textContent = `${distancePart} · Maintenant`;
                     } else {
-                        metaTextEl.textContent = 'En ligne';
+                        metaTextEl.textContent = _t('status_online');
                     }
                 }
                 if (statusTextEl) {
-                    statusTextEl.textContent = 'En ligne';
+                    statusTextEl.textContent = _t('status_online');
                     statusTextEl.classList.add('online');
                 }
                 // تحديث وقت آخر ظهور محلياً طالما هو متصل
@@ -560,7 +797,7 @@ function updateOnlineDotsInUI() {
         if (chatStatusEl) {
             const isOnline = onlineUsers.has(activeChatUserId);
             if (isOnline) {
-                chatStatusEl.textContent = 'En ligne';
+                chatStatusEl.textContent = _t('status_online');
                 chatStatusEl.style.color = '#22c55e';
                 lastSeenTimeMap.set(activeChatUserId, new Date().toISOString());
             } else {
@@ -581,9 +818,9 @@ function initAppTabs() {
     // إذا لم نكن في app.html نخرج من الدالة
     if (!navBtns.length || !views.length) return;
 
-    // Ï»Ïº┘äÏ® Ï¬Ï¿Ï»┘è┘ä Ïº┘äÏú┘éÏ│Ïº┘à
+    // دالة تبديل الأقسام
     window.switchAppView = function (viewId) {
-        // ÏÑÏ░Ïº ┘âÏº┘å Ï¬Ï¿┘ê┘èÏ¿ VIPÏî ┘å┘é┘ê┘à ┘ü┘éÏÀ Ï¿Ïº┘äÏ¬ÏúÏ½┘èÏ▒ Ïº┘äÏ¿ÏÁÏ▒┘è ┘ä┘ä┘àÏñÏ┤Ï▒ ┘êÏº┘äÏ▓Ï▒
+        // إذا كان تبويب VIP، نقوم فقط بالتأثير البصري للمؤشر والزر
         if (viewId === 'vip') {
             const targetBtn = document.getElementById('btn-nav-vip');
             if (targetBtn) {
@@ -603,7 +840,7 @@ function initAppTabs() {
         return;
     }
 
-        // ÏÑÏ«┘üÏºÏí ┘â┘ä Ïº┘äÏú┘éÏ│Ïº┘à
+        // إخفاء كل الأقسام
         views.forEach(v => v.classList.remove('active'));
         navBtns.forEach(b => b.classList.remove('active'));
 
@@ -730,7 +967,7 @@ function initAppTabs() {
                                 navigator.clipboard.writeText(idVal.textContent).catch(() => { });
                                 const orig = idVal.style.color;
                                 idVal.style.color = '#4ade80';
-                                showToast('ID copi├® Ô£à');
+                                showToast('ID copié ✅');
                                 setTimeout(() => { idVal.style.color = orig; }, 1800);
                             }
                         });
@@ -905,18 +1142,18 @@ async function loadOwnProfile(user) {
         debugLog(`loadOwnProfile: Fetch completed. Profile found: ${!!profile}`);
 
         if (profile) {
-            currentUserProfile = profile; // Ï¡┘üÏ© Ïº┘ä┘à┘ä┘ü Ïº┘äÏ┤Ï«ÏÁ┘è Ïº┘äÏ¡Ïº┘ä┘è ┘ä┘ä┘àÏ│Ï¬Ï«Ï»┘à Ï¿┘àÏº ┘ü┘è┘ç Ïº┘äÏÑÏ¡Ï»ÏºÏ½┘èÏºÏ¬
+            currentUserProfile = profile; // حفظ الملف الشخصي الحالي للمستخدم بما فيه الإحداثيات
 
-            // Ï¡Ï│ÏºÏ¿ Ï╣Ï»Ï» Ïº┘äÏúÏÁÏ»┘éÏºÏí (Ï╣Ï»Ï» Ïº┘äÏúÏ┤Ï«ÏºÏÁ Ïº┘äÏ░┘è┘å Ï¬┘êÏºÏÁ┘ä┘åÏº ┘àÏ╣┘ç┘à)
+            // حساب عدد الأصدقاء (عدد الأشخاص الذين تواصلنا معهم)
             let friendsCount = profile.friends_count || 0;
             try {
-                // Ïº┘ä┘àÏ¡Ïº┘ê┘äÏ® Ïº┘äÏú┘ê┘ä┘ë: ÏºÏ│Ï¬Ï╣┘àÏº┘ä Database Function (RPC) ┘ä┘äÏúÏ»ÏºÏí Ïº┘äÏ╣Ïº┘ä┘è ┘êÏ¬┘üÏºÏ»┘è Ï¬Ï¡┘à┘è┘ä Ïó┘äÏº┘ü Ïº┘äÏ▒Ï│ÏºÏª┘ä
+                // المحاولة الأولى: استعمال Database Function (RPC) للأداء العالي وتفادي تحميل آلاف الرسائل
                 const { data: rpcCount, error: rpcError } = await sb.rpc('get_unique_friends_count', { user_id_param: user.id });
 
                 if (!rpcError && rpcCount !== null) {
                     friendsCount = rpcCount;
                 } else {
-                    // Ïº┘ä┘àÏ¡Ïº┘ê┘äÏ® Ïº┘äÏ½Ïº┘å┘èÏ® (Fallback): ÏÑÏ░Ïº ┘ä┘à Ï¬┘â┘å Ïº┘äÏ»Ïº┘äÏ® ┘à┘ç┘èÏúÏ® ┘ü┘è Supabase Ï¿Ï╣Ï»
+                    // المحاولة الثانية (Fallback): إذا لم تكن الدالة مهيأة في Supabase بعد
                     const { data: userMessages } = await sb
                         .from('messages')
                         .select('sender_id, receiver_id')
@@ -932,7 +1169,7 @@ async function loadOwnProfile(user) {
                     }
                 }
 
-                // Ï¬Ï¡Ï»┘èÏ½ ┘ü┘è Ïº┘äÏ»ÏºÏ¬ÏºÏ¿┘èÏ▓ ┘äÏ¬Ï«Ï▓┘è┘å┘çÏº
+                // تحديث في الداتابيز لتخزينها
                 if (friendsCount !== profile.friends_count) {
                     await sb.from('profiles').update({ friends_count: friendsCount }).eq('user_id', user.id);
                     profile.friends_count = friendsCount;
@@ -992,7 +1229,7 @@ async function loadOwnProfile(user) {
                             <div class="prf-social-icon prf-icon-instagram"><i class="fab fa-instagram"></i></div>
                             <div class="prf-social-text">
                                 <span class="prf-platform-name">INSTAGRAM</span>
-                                <span class="prf-platform-user" id="social-instagram-name">${profile.instagram ? '@' + escapeHtml(profile.instagram) : 'Not added'}</span>
+                                <span class="prf-platform-user" id="social-instagram-name">${profile.instagram ? '@' + escapeHtml(profile.instagram) : _t('social_not_added')}</span>
                             </div>
                         </div>
                         <div class="prf-social-actions">
@@ -1006,7 +1243,7 @@ async function loadOwnProfile(user) {
                             <div class="prf-social-icon prf-icon-whatsapp"><i class="fab fa-whatsapp"></i></div>
                             <div class="prf-social-text">
                                 <span class="prf-platform-name">WHATSAPP</span>
-                                <span class="prf-platform-user" id="social-whatsapp-name">${profile.whatsapp ? escapeHtml(profile.whatsapp) : 'Not added'}</span>
+                                <span class="prf-platform-user" id="social-whatsapp-name">${profile.whatsapp ? escapeHtml(profile.whatsapp) : _t('social_not_added')}</span>
                             </div>
                         </div>
                         <div class="prf-social-actions">
@@ -1020,7 +1257,7 @@ async function loadOwnProfile(user) {
                             <div class="prf-social-icon prf-icon-tiktok"><i class="fab fa-tiktok"></i></div>
                             <div class="prf-social-text">
                                 <span class="prf-platform-name">TIKTOK</span>
-                                <span class="prf-platform-user" id="social-tiktok-name">${profile.tiktok ? '@' + escapeHtml(profile.tiktok) : 'Not added'}</span>
+                                <span class="prf-platform-user" id="social-tiktok-name">${profile.tiktok ? '@' + escapeHtml(profile.tiktok) : _t('social_not_added')}</span>
                             </div>
                         </div>
                         <div class="prf-social-actions">
@@ -1034,7 +1271,7 @@ async function loadOwnProfile(user) {
                             <div class="prf-social-icon prf-icon-facebook"><i class="fab fa-facebook-f"></i></div>
                             <div class="prf-social-text">
                                 <span class="prf-platform-name">FACEBOOK</span>
-                                <span class="prf-platform-user" id="social-facebook-name">${profile.facebook ? escapeHtml(profile.facebook) : 'Not added'}</span>
+                                <span class="prf-platform-user" id="social-facebook-name">${profile.facebook ? escapeHtml(profile.facebook) : _t('social_not_added')}</span>
                             </div>
                         </div>
                         <div class="prf-social-actions">
@@ -1156,7 +1393,7 @@ async function loadOwnProfile(user) {
                             <div class="prf-about-text" id="profil-bio-text">
                                 ${profile.bio
                     ? escapeHtml(profile.bio)
-                    : `Add a bio or hashtags to describe <span style="color:#ffa500;">Ô£¿</span> yourself`
+                    : `Add a bio or hashtags to describe <span style="color:#ffa500;">✨</span> yourself`
                 }
                             </div>
                             <button class="prf-btn-round" id="bio-edit-hashtag-btn" title="Modifier" style="flex-shrink:0;">
@@ -1180,7 +1417,7 @@ async function loadOwnProfile(user) {
                     <!-- Logout Button -->
                     <button id="logout-btn-app" class="prf-logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
-                        Se déconnecter
+                        <span data-i18n="settings_logout">Se déconnecter</span>
                     </button>
 
                     <!-- Settings Bottom Sheet -->
@@ -1188,7 +1425,7 @@ async function loadOwnProfile(user) {
                     <div id="settings-sheet" class="settings-sheet-panel">
                         <!-- Handle bar -->
                         <div class="settings-sheet-handle"></div>
-                        <h3 class="settings-sheet-title">Paramètres</h3>
+                        <h3 class="settings-sheet-title" data-i18n="settings_title">Paramètres</h3>
 
                         <!-- Connected Provider -->
                         ${provider ? `
@@ -1213,8 +1450,8 @@ async function loadOwnProfile(user) {
                                     <i class="fas fa-moon" id="theme-icon" style="font-size:16px;color:#a78bfa;"></i>
                                 </div>
                                 <div>
-                                    <div class="settings-row-label">Apparence</div>
-                                    <div class="settings-row-sublabel" id="theme-label">Mode sombre</div>
+                                    <div class="settings-row-label" data-i18n="settings_appearance">Apparence</div>
+                                    <div class="settings-row-sublabel" id="theme-label" data-i18n="settings_theme_dark">Mode sombre</div>
                                 </div>
                             </div>
                             <!-- iOS Toggle -->
@@ -1225,8 +1462,28 @@ async function loadOwnProfile(user) {
                             </label>
                         </div>
 
+                        <!-- Language Selector -->
+                        <div class="settings-row" style="margin-top: 10px;">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <div class="settings-icon-box" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
+                                    <i class="fas fa-globe" style="font-size:16px;color:#3b82f6;"></i>
+                                </div>
+                                <div>
+                                    <div class="settings-row-label" data-i18n="settings_language">Langue</div>
+                                    <div class="settings-row-sublabel" id="language-display-label">${LANG_DICTIONARY[currentLang]["settings_lang_name"]}</div>
+                                </div>
+                            </div>
+                            <div class="lang-selector-wrapper" style="position: relative;">
+                                <select id="language-select-dropdown" style="background: var(--bg-glass-hover); color: var(--text-white); border: 1px solid var(--border-glass); border-radius: 8px; padding: 6px 12px; font-family: inherit; font-size: 13.5px; cursor: pointer; outline: none;">
+                                    <option value="fr">Français</option>
+                                    <option value="ar">العربية</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <!-- Cancel -->
-                        <button id="close-settings-btn" class="settings-cancel-btn">Annuler</button>
+                        <button id="close-settings-btn" class="settings-cancel-btn" data-i18n="settings_cancel">Annuler</button>
                     </div>
                 </div>
             `;
@@ -1296,7 +1553,7 @@ async function loadOwnProfile(user) {
                             return;
                         }
                         if (trimmedName.length > 18) {
-                            alert("Le nom ne peut pas d├®passer 18 caract├¿res.");
+                            alert("Le nom ne peut pas dépasser 18 caractères.");
                             return;
                         }
 
@@ -1321,7 +1578,7 @@ async function loadOwnProfile(user) {
                                 displayNameEl.textContent = trimmedName;
                             }
 
-                            // Ï¬Ï¡Ï»┘èÏ½ Ïº┘äÏºÏ│┘à ┘ü┘è Ïº┘ä┘ç┘èÏ»Ï▒ Ïú┘èÏÂ┘ïÏº
+                            // تحديث الاسم في الهيدر أيضًا
                             const headerAvatar = document.getElementById('header-user-avatar');
                             if (headerAvatar && !profile.avatar_url) {
                                 const initial = trimmedName.charAt(0).toUpperCase();
@@ -1387,19 +1644,19 @@ async function loadOwnProfile(user) {
                         placeholder = 'ex: hamza.facebook';
                     }
 
-                    let promptMsg = `ÏúÏ»Ï«┘ä ÏºÏ│┘à Ï¡Ï│ÏºÏ¿┘â Ï╣┘ä┘ë ${platformLabel} (${placeholder}):\n\nÏºÏ¬Ï▒┘â┘ç ┘üÏºÏ▒Ï║Ïº┘ï ┘äÏ¡Ï░┘ü┘ç.`;
+                    let promptMsg = `أدخل اسم حسابك على ${platformLabel} (${placeholder}):\n\nاتركه فارغاً لحذفه.`;
                     if (platform === 'whatsapp') {
-                        promptMsg = `ÏúÏ»Ï«┘ä Ï▒┘é┘à Ïº┘ä┘êÏºÏ¬Ï│ÏºÏ¿ Ïº┘äÏ«ÏºÏÁ Ï¿┘â ┘àÏ╣ Ï▒┘àÏ▓ Ïº┘äÏ»┘ê┘äÏ® (${placeholder}):\n\nÏºÏ¬Ï▒┘â┘ç ┘üÏºÏ▒Ï║Ïº┘ï ┘äÏ¡Ï░┘ü┘ç.`;
+                        promptMsg = `أدخل رقم الواتساب الخاص بك مع رمز الدولة (${placeholder}):\n\nاتركه فارغاً لحذفه.`;
                     }
 
                     const newVal = prompt(promptMsg, currentVal);
-                    if (newVal === null) return; // Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à Ïú┘äÏ║┘ë
+                    if (newVal === null) return; // المستخدم ألغى
 
                     let trimmed = newVal.trim();
                     if (platform === 'instagram' || platform === 'tiktok') {
-                        trimmed = trimmed.replace(/^@/, ''); // ÏÑÏ▓Ïº┘äÏ® @ ÏÑÏ░Ïº ÏúÏÂÏº┘ü┘çÏº
+                        trimmed = trimmed.replace(/^@/, ''); // إزالة @ إذا أضافها
                     } else if (platform === 'whatsapp') {
-                        trimmed = trimmed.replace(/[+\s-]/g, ''); // ÏÑÏ▓Ïº┘äÏ® Ïº┘äÏ▒┘à┘êÏ▓ ┘êÏº┘ä┘àÏ│Ïº┘üÏºÏ¬
+                        trimmed = trimmed.replace(/[+\s-]/g, ''); // إزالة الرموز والمسافات
                     }
 
                     try {
@@ -1416,19 +1673,19 @@ async function loadOwnProfile(user) {
 
                         if (error) throw error;
 
-                        // Ï¬Ï¡Ï»┘èÏ½ Ïº┘äÏ¿┘èÏº┘åÏºÏ¬ Ïº┘ä┘àÏ¡┘ä┘èÏ®
+                        // تحديث البيانات المحلية
                         profile[platform] = trimmed || null;
                         if (currentUserProfile) currentUserProfile[platform] = trimmed || null;
 
-                        // Ï¬Ï¡Ï»┘èÏ½ Ïº┘ä┘êÏºÏ¼┘çÏ®
+                        // تحديث الواجهة
                         const nameEl = document.getElementById(`social-${platform}-name`);
                         if (nameEl) {
                             nameEl.innerHTML = trimmed
                                 ? (platform === 'instagram' || platform === 'tiktok' ? '@' + escapeHtml(trimmed) : escapeHtml(trimmed))
-                                : '<em style="opacity:0.5;">Non ajout├®</em>';
+                                : '<em style="opacity:0.5;">Non ajouté</em>';
                         }
 
-                        // Ï¬Ï¡Ï»┘èÏ½ Ïº┘äÏ▒ÏºÏ¿ÏÀ Ïº┘äÏ«ÏºÏ▒Ï¼┘è
+                        // تحديث الرابط الخارجي
                         btn.dataset.current = trimmed;
 
                         const itemEl = document.getElementById(`social-${platform}-item`);
@@ -1455,7 +1712,7 @@ async function loadOwnProfile(user) {
 
                     } catch (err) {
                         console.error(`Erreur modification ${platform}:`, err);
-                        alert(`Ï«ÏÀÏú ┘ü┘è Ï¬Ï╣Ï»┘è┘ä Ï¡Ï│ÏºÏ¿ ${platformLabel}`);
+                        alert(`خطأ في تعديل حساب ${platformLabel}`);
                     } finally {
                         btn.innerHTML = '<i class="fas fa-pen"></i>';
                         btn.disabled = false;
@@ -1496,11 +1753,20 @@ async function loadOwnProfile(user) {
             if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', closeSettingsSheet);
             if (settingsOverlay) settingsOverlay.addEventListener('click', closeSettingsSheet);
 
+            // === اختيار اللغة (Language Selector) ===
+            const langSelectDropdown = document.getElementById('language-select-dropdown');
+            if (langSelectDropdown) {
+                langSelectDropdown.value = currentLang;
+                langSelectDropdown.addEventListener('change', (e) => {
+                    translateApp(e.target.value);
+                });
+            }
+
             // ربط كليك زر الإعدادات الجديد في الهيدر لفتح قائمة الإعدادات
             const headerSettingsBtn = document.getElementById('header-settings-btn');
             if (headerSettingsBtn) headerSettingsBtn.addEventListener('click', openSettingsSheet);
 
-            // Ï▒Ï¿ÏÀ ┘â┘ä┘è┘â Ï▓Ï▒ Ïº┘äÏÑ┘åÏ┤ÏºÏí Ïº┘äÏ¼Ï»┘èÏ» ┘ü┘è Ïº┘ä┘ç┘èÏ»Ï▒ ┘ä┘üÏ¬Ï¡ Ï«┘èÏºÏ▒ÏºÏ¬ Ïº┘äÏ▒Ï│ÏºÏª┘ä ┘êÏº┘ä┘àÏ¼┘à┘êÏ╣ÏºÏ¬
+            // ربط كليك زر الإنشاء الجديد في الهيدر لفتح خيارات الرسائل والمجموعات
             const headerComposeBtn = document.getElementById('header-compose-btn');
             if (headerComposeBtn) {
                 headerComposeBtn.addEventListener('click', () => {
@@ -1513,13 +1779,13 @@ async function loadOwnProfile(user) {
                 if (isDark) {
                     document.documentElement.removeAttribute('data-theme');
                     if (themeIcon) { themeIcon.className = 'fas fa-moon'; themeIcon.style.color = '#a78bfa'; }
-                    if (themeLabel) themeLabel.textContent = 'Mode sombre';
+                    if (themeLabel) themeLabel.textContent = _t('settings_theme_dark');
                     if (themeTrack) themeTrack.style.background = 'rgba(255,255,255,0.15)';
                     if (themeThumb) themeThumb.style.transform = 'translateX(0)';
                 } else {
                     document.documentElement.setAttribute('data-theme', 'light');
                     if (themeIcon) { themeIcon.className = 'fas fa-sun'; themeIcon.style.color = '#fbbf24'; }
-                    if (themeLabel) themeLabel.textContent = 'Mode clair';
+                    if (themeLabel) themeLabel.textContent = _t('settings_theme_light');
                     if (themeTrack) themeTrack.style.background = '#a78bfa';
                     if (themeThumb) themeThumb.style.transform = 'translateX(22px)';
                 }
@@ -1711,7 +1977,7 @@ async function loadDiscoveryUsers(currentUser) {
             return;
         }
 
-        // Ï¬ÏÁ┘ü┘èÏ® Ïº┘äÏ¬┘âÏ▒ÏºÏ▒ÏºÏ¬ (ÏÑÏ¿┘éÏºÏí Ïº┘äÏ¿Ï▒┘ê┘üÏº┘è┘ä Ïº┘äÏú┘ê┘ä Ïº┘ä┘üÏ▒┘èÏ» ┘ä┘â┘ä ┘àÏ│Ï¬Ï«Ï»┘à)
+        // تصفية التكرارات (إبقاء البروفايل الأول الفريد لكل مستخدم)
         const uniqueProfiles = [];
         const seenUserIds = new Set();
         allProfiles.forEach(p => {
@@ -2324,8 +2590,8 @@ function openUserModal(profile) {
                 ${extraBoxes}
             </div>
             <div class="modal-bio-box">
-                <h4><i class="fas fa-comment-dots" style="margin-right: 6px;"></i> ├Ç propos de moi</h4>
-                <p>${escapeHtml(profile.bio || "Cet utilisateur n'a pas encore r├®dig├® de biographie.")}</p>
+                <h4><i class="fas fa-comment-dots" style="margin-right: 6px;"></i> À propos de moi</h4>
+                <p>${escapeHtml(profile.bio || "Cet utilisateur n'a pas encore rédigé de biographie.")}</p>
             </div>
             ${profile.user_id !== currentUser?.id ? `
             <button class="btn-follow-user" id="btn-modal-follow">
@@ -2335,7 +2601,7 @@ function openUserModal(profile) {
             ` : ''}
             <button class="btn-chat-start" id="btn-start-chat">
                 <i class="fas fa-paper-plane"></i>
-                D├®marrer un chat
+                Démarrer un chat
             </button>
             <div class="modal-action-row">
                 <button class="btn-modal-action" id="btn-modal-block">
@@ -2400,7 +2666,7 @@ function openUserModal(profile) {
         if (e.target === modal) modal.remove();
     });
 
-    // Ï▓Ï▒ Ïº┘ä┘àÏ¬ÏºÏ¿Ï╣Ï®
+    // زر المتابعة
     const followBtn = document.getElementById('btn-modal-follow');
     if (followBtn) {
         followBtn.addEventListener('click', async () => {
@@ -2409,23 +2675,23 @@ function openUserModal(profile) {
             const label = followBtn.querySelector('span');
             const isCurrentlyFollowing = icon.classList.contains('fas');
 
-            // Ï¬Ï¡Ï»┘èÏ½ Ïº┘ä┘êÏºÏ¼┘çÏ® ┘ü┘êÏ▒Ïº┘ï
+            // تحديث الواجهة فوراً
             if (!isCurrentlyFollowing) {
                 icon.className = 'fas fa-star';
                 icon.style.color = '#fbbf24';
                 label.textContent = 'Suivi';
                 if (!window._favoritesCache) window._favoritesCache = new Set();
                 window._favoritesCache.add(profile.user_id);
-                showToast('Ajout├® aux favoris Ô¡É');
+                showToast('Ajouté aux favoris ⭐');
             } else {
                 icon.className = 'far fa-star';
                 icon.style.color = 'inherit';
                 label.textContent = 'Suivre';
                 if (window._favoritesCache) window._favoritesCache.delete(profile.user_id);
-                showToast('Retir├® des favoris');
+                showToast('Retiré des favoris');
             }
 
-            // Ï¬Ï¡Ï»┘èÏ½ ┘éÏºÏ╣Ï»Ï® Ïº┘äÏ¿┘èÏº┘åÏºÏ¬
+            // تحديث قاعدة البيانات
             try {
                 if (profile.user_id && !profile.user_id.startsWith('bot_')) {
                     if (!isCurrentlyFollowing) {
@@ -2442,7 +2708,7 @@ function openUserModal(profile) {
                 }
             } catch (err) {
                 console.error('Erreur follow DB:', err);
-                // Ïº┘äÏ¬Ï▒ÏºÏ¼Ï╣ Ï╣┘å Ïº┘äÏ¬Ï║┘è┘èÏ▒ ÏÑÏ░Ïº ┘üÏ┤┘ä Ïº┘äÏ¡┘üÏ©
+                // التراجع عن التغيير إذا فشل الحفظ
                 if (profile.user_id && !profile.user_id.startsWith('bot_')) {
                     if (!isCurrentlyFollowing) {
                         icon.className = 'far fa-star';
@@ -2462,7 +2728,7 @@ function openUserModal(profile) {
         });
     }
 
-    // Ï▓Ï▒ Ï¿Ï»Ïí Ïº┘ä┘àÏ¡ÏºÏ»Ï½Ï®
+    // زر بدء المحادثة
     document.getElementById('btn-start-chat').addEventListener('click', async () => {
         if (!currentUser) return;
         if (profile.user_id && !profile.user_id.startsWith('bot_')) {
@@ -2537,21 +2803,21 @@ async function openChatWindow(receiverProfile) {
         } else {
             const isOnline = onlineUsers.has(receiverProfile.user_id);
             if (isOnline) {
-                chatStatusEl.textContent = 'En ligne';
+                chatStatusEl.textContent = _t('status_online');
                 chatStatusEl.style.color = '#22c55e';
                 lastSeenTimeMap.set(receiverProfile.user_id, new Date().toISOString());
             } else {
                 const lastSeen = lastSeenTimeMap.get(receiverProfile.user_id) || receiverProfile.last_seen || receiverProfile.created_at;
-                chatStatusEl.textContent = lastSeen ? `Derni├¿re connexion: ${formatRelativeTime(lastSeen)}` : 'Hors ligne';
+                chatStatusEl.textContent = lastSeen ? `Dernière connexion: ${formatRelativeTime(lastSeen)}` : 'Hors ligne';
                 chatStatusEl.style.color = 'var(--text-muted)';
             }
         }
     }
 
-    // ÏÑÏ©┘çÏºÏ▒ ┘åÏº┘üÏ░Ï® Ïº┘äÏ┤ÏºÏ¬
+    // إظهار نافذة الشات
     if (chatWindow) chatWindow.classList.add('active');
 
-    // Ïº┘äÏ¬Ï¡┘é┘é ┘à┘å Ï¡Ïº┘äÏ® ÏÀ┘äÏ¿ Ïº┘ä┘àÏ¡ÏºÏ»Ï½Ï® (┘ç┘ä ┘ç┘ê ÏÀ┘äÏ¿ ┘êÏºÏ▒Ï» ┘àÏ╣┘ä┘éÏƒ)
+    // التحقق من حالة طلب المحادثة (هل هو طلب وارد معلق؟)
     const acceptBar = document.getElementById('chat-request-accept-bar');
     const inputArea = document.querySelector('.chat-input-area');
     const req = window._chatRequestsByPartner ? window._chatRequestsByPartner.get(receiverProfile.user_id) : null;
@@ -2570,7 +2836,7 @@ async function openChatWindow(receiverProfile) {
         if (inputArea) inputArea.style.display = 'flex';
     }
 
-    // Ï¬┘üÏ▒┘èÏ║ Ïº┘äÏ▒Ï│ÏºÏª┘ä Ïº┘ä┘éÏ»┘è┘àÏ® ┘êÏ╣Ï▒ÏÂ ┘àÏñÏ┤Ï▒ Ï¬Ï¡┘à┘è┘ä
+    // تفريغ الرسائل القديمة وعرض مؤشر تحميل
     const messagesContainer = document.getElementById('chat-messages-container');
     if (messagesContainer) {
         messagesContainer.innerHTML = `
@@ -2581,21 +2847,21 @@ async function openChatWindow(receiverProfile) {
     }
 
     if (receiverProfile.is_group || (receiverProfile.user_id && receiverProfile.user_id.startsWith('bot_'))) {
-        // Ï¬Ï¡┘à┘è┘ä Ïº┘äÏ▒Ï│ÏºÏª┘ä Ïº┘äÏ│ÏºÏ¿┘éÏ® ┘ä┘ä┘àÏ¼┘à┘êÏ╣Ï® Ïú┘ê Ïº┘äÏ¿┘êÏ¬
+        // تحميل الرسائل السابقة للمجموعة أو البوت
         await loadChatMessages();
     } else {
-        // Ï¬Ï╣┘ä┘è┘à ┘â┘ä Ïº┘äÏ▒Ï│ÏºÏª┘ä ┘â┘à┘éÏ▒┘êÏíÏ® Ïú┘ê┘äÏº┘ï ┘éÏ¿┘ä Ïº┘äÏ¬Ï¡┘à┘è┘ä
+        // تعليم كل الرسائل كمقروءة أولاً قبل التحميل
         await markAllMessagesAsRead(receiverProfile.user_id);
 
-        // Ï¬Ï¡┘à┘è┘ä Ïº┘äÏ▒Ï│ÏºÏª┘ä Ïº┘äÏ│ÏºÏ¿┘éÏ®
+        // تحميل الرسائل السابقة
         await loadChatMessages();
 
-        // Ïº┘äÏºÏ┤Ï¬Ï▒Ïº┘â ┘ü┘è Ïº┘ä┘ê┘éÏ¬ Ïº┘äÏ¡┘é┘è┘é┘è ┘ä┘ä┘à┘èÏ│ÏºÏ¼ÏºÏ¬ Ïº┘äÏ¼Ï»┘èÏ»Ï®
+        // الاشتراك في الوقت الحقيقي للميساجات الجديدة
         subscribeToMessages();
     }
 }
 
-// 2. ÏÑÏ║┘äÏº┘é ┘åÏº┘üÏ░Ï® Ïº┘äÏ┤ÏºÏ¬
+// 2. إغلاق نافذة الشات
 function closeChatWindow() {
     const chatWindow = document.getElementById('chat-window');
     if (chatWindow) chatWindow.classList.remove('active');
@@ -2632,7 +2898,7 @@ async function loadChatMessages() {
             container.innerHTML = `
                 <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:var(--text-muted); gap:8px;">
                     <i class="far fa-comments" style="font-size:24px; opacity:0.5;"></i>
-                    <p style="font-size:13px;">Aucun message. D├®marrer la conversation maintenant !</p>
+                    <p style="font-size:13px;">Aucun message. Démarrer la conversation maintenant !</p>
                 </div>
             `;
         }
@@ -2733,14 +2999,14 @@ async function sendChatMessage() {
             if (members.length === 0) return;
             const randomMember = members[Math.floor(Math.random() * members.length)];
             const replies = [
-                "Salut tout le monde ! ­ƒÖî",
+                "Salut tout le monde ! 🙌",
                 "Oui, je suis d'accord !",
-                "Super id├®e ! ­ƒñ®",
-                "Comment ├ºa va ?",
+                "Super idée ! 🤩",
+                "Comment ça va ?",
                 "Salut ! Quoi de neuf ?",
-                "C'est cool de se retrouver ici ! ­ƒöÑ",
+                "C'est cool de se retrouver ici ! 🔥",
                 "Je vous rejoins plus tard !",
-                "Parfait ! ­ƒæì"
+                "Parfait ! 👍"
             ];
             const randomReply = replies[Math.floor(Math.random() * replies.length)];
 
@@ -2803,14 +3069,14 @@ async function sendChatMessage() {
         setTimeout(() => {
             if (activeChatUserId !== newMsg.receiver_id) return;
             const replies = [
-                "Salut ! Comment ├ºa va ? ­ƒÿè",
-                "Ravi de faire ta connaissance ! Tu es d'o├╣ ?",
-                "C'est super sympa de m'├®crire ! Quoi de neuf ?",
+                "Salut ! Comment ça va ? 😊",
+                "Ravi de faire ta connaissance ! Tu es d'où ?",
+                "C'est super sympa de m'écrire ! Quoi de neuf ?",
                 "Salut ! Tu fais quoi de beau aujourd'hui ?",
-                "Hey ! D├®sol├® je r├®ponds un peu tard, ├ºa va ?",
-                "Salut ! J'adore ton profil Ô£¿",
-                "Oui, tout ├á fait ! ­ƒæì",
-                "Cool ! ├Ç bient├┤t alors ­ƒæï"
+                "Hey ! Désolé je réponds un peu tard, ça va ?",
+                "Salut ! J'adore ton profil ✨",
+                "Oui, tout à fait ! 👍",
+                "Cool ! À bientôt alors 👋"
             ];
             const randomReply = replies[Math.floor(Math.random() * replies.length)];
 
@@ -2871,9 +3137,9 @@ function subscribeToMessages() {
         }, payload => {
             const newMsg = payload.new;
 
-            // ┘ç┘ä Ïº┘äÏ▒Ï│Ïº┘äÏ® Ï¬Ï«ÏÁ Ïº┘äÏ┤ÏºÏ¬ Ïº┘ä┘à┘üÏ¬┘êÏ¡ Ï¡Ïº┘ä┘èÏº┘ïÏƒ
+            // هل الرسالة تخص الشات المفتوح حالياً؟
             if (activeChatUserId && newMsg.sender_id === activeChatUserId) {
-                // ÏÑÏ▓Ïº┘äÏ® Ï▒Ï│Ïº┘äÏ® "┘äÏº Ï¬┘êÏ¼Ï» Ï▒Ï│ÏºÏª┘ä Ï│ÏºÏ¿┘éÏ®" ÏÑÏ░Ïº ┘âÏº┘åÏ¬ ┘à┘êÏ¼┘êÏ»Ï®
+                // إزالة رسالة "لا توجد رسائل سابقة" إذا كانت موجودة
                 const container = document.getElementById('chat-messages-container');
                 if (container && container.querySelector('.far')) {
                     container.innerHTML = '';
@@ -2915,7 +3181,7 @@ function appendMessageBubble(msg) {
     const row = document.createElement('div');
     row.className = `msg-row ${isMyMsg ? 'sent' : 'received'}`;
 
-    // Ï¬Ï¡Ï»┘èÏ» Ï¿┘èÏº┘åÏºÏ¬ Ïº┘äÏú┘üÏºÏ¬ÏºÏ▒
+    // تحديد بيانات الأفاتار
     let avatarInitial, avatarGender;
     let avatarInner = '?';
     if (isMyMsg) {
@@ -2941,10 +3207,10 @@ function appendMessageBubble(msg) {
         }
     }
 
-    // Ïº┘ä┘ü┘éÏºÏ╣Ï®
+    // الفقاعة
     const bubble = document.createElement('div');
 
-    // === Ï▒Ï│Ïº┘äÏ® ÏÁ┘êÏ▒Ï® ===
+    // === رسالة صورة ===
     if (msgType === 'image' && msg.media_url) {
         bubble.className = `msg-bubble ${isMyMsg ? 'sent' : 'received'} image-msg`;
         const nameHeader = (!isMyMsg && activeChatUserProfile && activeChatUserProfile.is_group && msg.sender_name)
@@ -2988,7 +3254,7 @@ function appendMessageBubble(msg) {
             playAudioMessage(playBtn, sanitizeUrl(msg.media_url), bubble);
         });
 
-        // === Ï▒Ï│Ïº┘äÏ® ┘åÏÁ┘èÏ® ===
+        // === رسالة نصية ===
     } else {
         bubble.className = `msg-bubble ${isMyMsg ? 'sent' : 'received'}`;
         const nameHeader = (!isMyMsg && activeChatUserProfile && activeChatUserProfile.is_group && msg.sender_name)
@@ -3001,7 +3267,7 @@ function appendMessageBubble(msg) {
         `;
     }
 
-    // Ï¬Ï¼┘à┘èÏ╣ Ïº┘äÏÁ┘ü: avatar + ┘ü┘éÏºÏ╣Ï®
+    // تجميع الصف: avatar + فقاعة
     row.innerHTML = `<div class="msg-avatar ${avatarGender}">${avatarInner}</div>`;
     row.appendChild(bubble);
 
@@ -3112,7 +3378,7 @@ function openEditNoteModal() {
                     <h3 style="margin:0; font-size:18px; font-weight:800; color:var(--text-white);">Votre note</h3>
                     <span class="close-modal-btn" id="btn-close-note-modal" style="font-size:24px; cursor:pointer; font-weight:bold; color:var(--text-muted);">&times;</span>
                 </div>
-                <p style="color:var(--text-muted); font-size:13px; margin:0;">Partagez une id├®e ou une humeur (max 60 caract├¿res).</p>
+                <p style="color:var(--text-muted); font-size:13px; margin:0;">Partagez une idée ou une humeur (max 60 caractères).</p>
                 <textarea id="note-input-text" maxlength="60" placeholder="Quoi de neuf ?" style="width:100%; height:80px; border-radius:12px; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--text-white); font-family:inherit; font-size:14px; resize:none; outline:none; box-sizing:border-box;"></textarea>
                 <div style="display:flex; justify-content:flex-end; gap:12px;">
                     <button class="btn-delete" id="btn-delete-note" style="background:#ef4444; border:none; color:#ffffff; font-weight:700; border-radius:12px; cursor:pointer; padding:8px 16px; display:none; font-family:inherit;">Supprimer</button>
@@ -3164,7 +3430,7 @@ function openComposeOptionsModal() {
         modal.innerHTML = `
             <div class="modal-content glass-card" style="max-width:400px; width:90%; padding: 24px; border-radius: 24px; display:flex; flex-direction:column; gap:16px; background: rgba(30, 30, 38, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
-                    <h3 style="margin:0; font-size:19px; font-weight:800; color:#ffffff; font-family:'Outfit', sans-serif;">D├®marrer</h3>
+                    <h3 style="margin:0; font-size:19px; font-weight:800; color:#ffffff; font-family:'Outfit', sans-serif;">Démarrer</h3>
                     <span class="close-modal-btn" id="btn-close-compose" style="font-size:24px; cursor:pointer; font-weight:bold; color:rgba(255,255,255,0.5); transition: color 0.2s;">&times;</span>
                 </div>
                 
@@ -3175,20 +3441,20 @@ function openComposeOptionsModal() {
                             <i class="fas fa-user"></i>
                         </div>
                         <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
-                            <span style="font-size:14.5px; font-weight:700; color:#ffffff;">Discussion priv├®e</span>
-                            <span style="font-size:12px; color:rgba(255,255,255,0.5);">Discuter avec un membre ├á proximit├®</span>
+                            <span style="font-size:14.5px; font-weight:700; color:#ffffff;">Discussion privée</span>
+                            <span style="font-size:12px; color:rgba(255,255,255,0.5);">Discuter avec un membre à proximité</span>
                         </div>
                         <i class="fas fa-chevron-right" style="font-size:12px; color:rgba(255,255,255,0.3);"></i>
                     </button>
 
-                    <!-- Option 2: Cr├®er un groupe -->
+                    <!-- Option 2: Créer un groupe -->
                     <button class="compose-option-row" id="option-create-group" style="display:flex; align-items:center; gap:16px; width:100%; padding:14px 16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:16px; text-align:left; cursor:pointer; transition:all 0.2s ease;">
                         <div style="width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, #ff3366, #db2777); display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:16px;">
                             <i class="fas fa-users"></i>
                         </div>
                         <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
-                            <span style="font-size:14.5px; font-weight:700; color:#ffffff;">Cr├®er un groupe</span>
-                            <span style="font-size:12px; color:rgba(255,255,255,0.5);">Cr├®er un chat avec plusieurs membres</span>
+                            <span style="font-size:14.5px; font-weight:700; color:#ffffff;">Créer un groupe</span>
+                            <span style="font-size:12px; color:rgba(255,255,255,0.5);">Créer un chat avec plusieurs membres</span>
                         </div>
                         <i class="fas fa-chevron-right" style="font-size:12px; color:rgba(255,255,255,0.3);"></i>
                     </button>
@@ -3304,18 +3570,18 @@ function openComposeOptionsModal() {
             <div class="modal-content glass-card" style="max-width:400px; width:90%; padding: 24px; border-radius: 24px; display:flex; flex-direction:column; gap:16px; background: rgba(30, 30, 38, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <button id="btn-back-compose" style="background:none; border:none; color:rgba(255,255,255,0.5); cursor:pointer; font-size:14px; display:flex; align-items:center; gap:5px;"><i class="fas fa-chevron-left"></i> Retour</button>
-                    <h3 style="margin:0; font-size:17px; font-weight:800; color:#ffffff; font-family:'Outfit', sans-serif;">Cr├®er un groupe</h3>
+                    <h3 style="margin:0; font-size:17px; font-weight:800; color:#ffffff; font-family:'Outfit', sans-serif;">Créer un groupe</h3>
                     <span class="close-modal-btn" id="btn-close-compose" style="font-size:24px; cursor:pointer; font-weight:bold; color:rgba(255,255,255,0.5);">&times;</span>
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:12px;">
                     <div style="display:flex; flex-direction:column; gap:6px;">
                         <label style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.5px;">Nom du groupe</label>
-                        <input type="text" id="group-name-input" placeholder="Ex: Les Amis, Soir├®e..." style="width:100%; border-radius:12px; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#ffffff; font-family:inherit; font-size:14px; outline:none; box-sizing:border-box;">
+                        <input type="text" id="group-name-input" placeholder="Ex: Les Amis, Soirée..." style="width:100%; border-radius:12px; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#ffffff; font-family:inherit; font-size:14px; outline:none; box-sizing:border-box;">
                     </div>
 
                     <div style="display:flex; flex-direction:column; gap:6px;">
-                        <label style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.5px;">S├®lectionner des membres</label>
+                        <label style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.5px;">Sélectionner des membres</label>
                         <div class="compose-group-members-list" style="max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:2px; padding-right:4px;">
                             ${contactCheckboxesHtml}
                         </div>
@@ -3323,7 +3589,7 @@ function openComposeOptionsModal() {
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:8px;">
-                    <button class="btn-save" id="btn-create-group-action" style="background:linear-gradient(135deg, #ff3366, #db2777); border:none; color:#ffffff; font-weight:700; border-radius:12px; cursor:pointer; padding:10px 20px; font-family:inherit; font-size:13.5px; width:100%; box-shadow:0 4px 12px rgba(255,51,102,0.25);">Cr├®er le groupe</button>
+                    <button class="btn-save" id="btn-create-group-action" style="background:linear-gradient(135deg, #ff3366, #db2777); border:none; color:#ffffff; font-weight:700; border-radius:12px; cursor:pointer; padding:10px 20px; font-family:inherit; font-size:13.5px; width:100%; box-shadow:0 4px 12px rgba(255,51,102,0.25);">Créer le groupe</button>
                 </div>
             </div>
         `;
@@ -3340,13 +3606,13 @@ function openComposeOptionsModal() {
             const groupNameInput = modal.querySelector('#group-name-input');
             const groupName = groupNameInput ? groupNameInput.value.trim() : '';
             if (!groupName) {
-                showToast("Veuillez saisir un nom pour le groupe ! ÔÜá´©Å");
+                showToast("Veuillez saisir un nom pour le groupe ! ⚠️");
                 return;
             }
 
             const checkedBoxes = modal.querySelectorAll('.group-member-checkbox:checked');
             if (checkedBoxes.length === 0) {
-                showToast("Veuillez s├®lectionner au moins un membre ! ÔÜá´©Å");
+                showToast("Veuillez sélectionner au moins un membre ! ⚠️");
                 return;
             }
 
@@ -3381,7 +3647,7 @@ function openComposeOptionsModal() {
             }
 
             modal.remove();
-            showToast("Groupe cr├®├® avec succ├¿s ! ­ƒÄë");
+            showToast("Groupe créé avec succès ! 🎉");
 
             // Reload chat view and open it!
             loadActiveChats();
@@ -3441,7 +3707,7 @@ async function loadActiveChats() {
     `;
 
     try {
-        // Ï¼┘äÏ¿ Ïº┘äÏ▒Ï│ÏºÏª┘ä Ïº┘äÏ¬┘è ┘èÏ┤ÏºÏ▒┘â ┘ü┘è┘çÏº Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à Ïº┘äÏ¡Ïº┘ä┘è
+        // جلب الرسائل التي يشارك فيها المستخدم الحالي
         const { data: messages, error } = await sb
             .from('messages')
             .select('sender_id, receiver_id, content, created_at')
@@ -3451,7 +3717,7 @@ async function loadActiveChats() {
 
         if (error) throw error;
 
-        // ÏºÏ│Ï¬Ï«Ï▒ÏºÏ¼ ┘éÏºÏª┘àÏ® Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à┘è┘å Ïº┘ä┘üÏ▒┘èÏ»┘è┘å ┘êÏóÏ«Ï▒ Ï▒Ï│Ïº┘äÏ® + ÏÑÏ¡ÏÁÏºÏª┘èÏºÏ¬
+        // استخراج قائمة المستخدمين الفريدين وآخر رسالة + إحصائيات
         const chatPartnersMap = new Map();
         if (messages) {
             messages.forEach(msg => {
@@ -3475,7 +3741,7 @@ async function loadActiveChats() {
             });
         }
 
-        // Ï»┘àÏ¼ ┘àÏ¡ÏºÏ»Ï½ÏºÏ¬ Ïº┘äÏ¿┘êÏ¬Ï│ Ïº┘ä┘àÏ¡┘ä┘èÏ®
+        // دمج محادثات البوتس المحلية
         if (window._botMessages) {
             Object.keys(window._botMessages).forEach(botId => {
                 const botMsgs = window._botMessages[botId] || [];
@@ -3495,7 +3761,7 @@ async function loadActiveChats() {
 
         const partnerIds = Array.from(chatPartnersMap.keys()).filter(id => !blockedUserIds.has(id));
 
-        // Ï¼┘äÏ¿ ┘éÏºÏª┘àÏ® Ïº┘ä┘à┘üÏÂ┘äÏºÏ¬ Ïº┘äÏ¡Ïº┘ä┘èÏ® ┘ä┘ä┘àÏ│Ï¬Ï«Ï»┘à
+        // جلب قائمة المفضلات الحالية للمستخدم
         const { data: favoritesRows } = await sb
             .from('favorites')
             .select('favorite_user_id')
@@ -3503,7 +3769,7 @@ async function loadActiveChats() {
 
         const favoritesSet = new Set(favoritesRows ? favoritesRows.map(r => r.favorite_user_id) : []);
 
-        // Ï¼┘äÏ¿ Ïº┘ä┘à┘ä┘üÏºÏ¬ Ïº┘äÏ┤Ï«ÏÁ┘èÏ® ┘ä┘äÏ┤Ï▒┘âÏºÏí
+        // جلب الملفات الشخصية للشركاء
         let profiles = [];
         const realPartnerIds = partnerIds.filter(id => !id.startsWith('bot_'));
         if (realPartnerIds.length > 0) {
@@ -3515,7 +3781,7 @@ async function loadActiveChats() {
             if (fetchedProfiles) profiles = fetchedProfiles;
         }
 
-        // ÏÑÏÂÏº┘üÏ® Ï¿Ï▒┘ê┘üÏº┘è┘äÏºÏ¬ Ïº┘äÏ¿┘êÏ¬Ï│ Ïº┘ä┘åÏ┤ÏÀÏ® ┘àÏ¡┘ä┘èÏº┘ï ÏÑ┘ä┘ë Ïº┘ä┘éÏºÏª┘àÏ®
+        // إضافة بروفايلات البوتس النشطة محلياً إلى القائمة
         const botPartnerIds = partnerIds.filter(id => id.startsWith('bot_'));
         botPartnerIds.forEach(botId => {
             const botProfile = MOCK_BOTS.find(b => b.user_id === botId);
@@ -3524,7 +3790,7 @@ async function loadActiveChats() {
             }
         });
 
-        // Ï¼┘äÏ¿ Ïº┘ä┘à┘ä┘üÏºÏ¬ Ïº┘äÏ┤Ï«ÏÁ┘èÏ® ┘ä┘ä┘à┘üÏÂ┘äÏºÏ¬ Ïº┘äÏ¬┘è ┘ä┘èÏ│Ï¬ ┘ü┘è ┘éÏºÏª┘àÏ® Ïº┘äÏ»Ï▒Ï»Ï┤Ï® Ïº┘ä┘åÏ┤ÏÀÏ®
+        // جلب الملفات الشخصية للمفضلات التي ليست في قائمة الدردشة النشطة
         const favIdsToFetch = Array.from(favoritesSet).filter(id => !id.startsWith('bot_') && !chatPartnersMap.has(id) && !blockedUserIds.has(id));
         if (favIdsToFetch.length > 0) {
             const { data: fetchedFavProfiles } = await sb
@@ -3536,7 +3802,7 @@ async function loadActiveChats() {
             }
         }
 
-        // ÏÑÏÂÏº┘üÏ® Ï¿Ï▒┘ê┘üÏº┘è┘äÏºÏ¬ Ïº┘äÏ¿┘êÏ¬Ï│ Ïº┘ä┘à┘üÏÂ┘äÏ® ┘èÏ»┘ê┘èÏº┘ï
+        // إضافة بروفايلات البوتس المفضلة يدوياً
         const botFavIds = Array.from(favoritesSet).filter(id => id.startsWith('bot_') && !chatPartnersMap.has(id) && !blockedUserIds.has(id));
         botFavIds.forEach(botId => {
             const botProfile = MOCK_BOTS.find(b => b.user_id === botId);
@@ -3545,7 +3811,7 @@ async function loadActiveChats() {
             }
         });
 
-        // Ï¼┘äÏ¿ Ï╣Ï»Ï» Ïº┘äÏ▒Ï│ÏºÏª┘ä Ï║┘èÏ▒ Ïº┘ä┘à┘éÏ▒┘êÏíÏ®
+        // جلب عدد الرسائل غير المقروءة
         const unreadCountMap = new Map();
         if (partnerIds.length > 0) {
             const { data: unreadData } = await sb
@@ -3667,23 +3933,23 @@ async function loadActiveChats() {
 
             container.appendChild(notesSection);
 
-            // === Ï¬ÏÁ┘å┘è┘ü Ïº┘ä┘àÏ¡ÏºÏ»Ï½ÏºÏ¬ ÏÑ┘ä┘ë Ï▒Ï│ÏºÏª┘ä Ï╣ÏºÏ»┘èÏ® ┘êÏÀ┘äÏ¿ÏºÏ¬ ===
+            // === تصنيف المحادثات إلى رسائل عادية وطلبات ===
             function getProfileChatCategory(profileId) {
                 if (!chatPartnersMap.has(profileId)) return 'hidden';
 
                 if (!window._chatRequestsByPartner) return 'messages';
                 const req = window._chatRequestsByPartner.get(profileId);
-                if (!req) return 'messages'; // Ïº┘ä┘åÏ©Ïº┘à Ïº┘ä┘éÏ»┘è┘à Ïú┘ê Ï¿Ï»┘ê┘å ÏÀ┘äÏ¿
+                if (!req) return 'messages'; // النظام القديم أو بدون طلب
 
                 if (req.status === 'accepted') return 'messages';
                 if (req.status === 'pending') {
                     if (req.sender_id === currentUser.id) {
-                        return 'messages'; // ÏÀ┘äÏ¿ ┘àÏ▒Ï│┘ä ┘à┘å Ïº┘ä┘àÏ│Ï¬Ï«Ï»┘à Ïº┘äÏ¡Ïº┘ä┘è ┘èÏ©┘çÏ▒ ┘ü┘è Ïº┘äÏ▒Ï│ÏºÏª┘ä
+                        return 'messages'; // طلب مرسل من المستخدم الحالي يظهر في الرسائل
                     } else {
-                        return 'requests'; // ÏÀ┘äÏ¿ ┘éÏºÏ»┘à ┘àÏ╣┘ä┘é ┘èÏ©┘çÏ▒ ┘ü┘è Ïº┘äÏÀ┘äÏ¿ÏºÏ¬
+                        return 'requests'; // طلب قادم معلق يظهر في الطلبات
                     }
                 }
-                return 'hidden'; // ┘àÏ▒┘ü┘êÏÂ Ïú┘ê Ï¡Ïº┘äÏ® ÏúÏ«Ï▒┘ë ┘àÏ«┘ü┘èÏ®
+                return 'hidden'; // مرفوض أو حالة أخرى مخفية
             }
 
             const messagesProfiles = uniqueProfiles.filter(p => getProfileChatCategory(p.user_id) === 'messages');
@@ -3727,7 +3993,7 @@ async function loadActiveChats() {
             `;
             container.appendChild(headerRow);
 
-            // ÏúÏ▓Ï▒ÏºÏ▒ Ïº┘äÏ¬Ï¿Ï»┘è┘ä
+            // أزرار التبديل
             headerRow.querySelector('#chats-tab-messages').addEventListener('click', () => {
                 window._activeChatListTab = 'messages';
                 loadActiveChats();
@@ -3774,9 +4040,9 @@ async function loadActiveChats() {
 
             if (activeProfiles.length === 0) {
                 const emptyData = {
-                    messages: { icon: 'fa-comments', title: 'Aucune conversation', subtitle: 'Commencez ├á discuter avec des personnes ├á proximit├® !', cta: 'D├®couvrir' },
-                    requests: { icon: 'fa-inbox', title: 'Aucune demande', subtitle: 'Les demandes de discussion appara├«tront ici.', cta: null },
-                    favorites: { icon: 'fa-star', title: 'Aucun favori', subtitle: 'Ajoutez des personnes ├á vos favoris pour les retrouver ici.', cta: null }
+                    messages: { icon: 'fa-comments', title: 'Aucune conversation', subtitle: 'Commencez à discuter avec des personnes à proximité !', cta: 'Découvrir' },
+                    requests: { icon: 'fa-inbox', title: 'Aucune demande', subtitle: 'Les demandes de discussion apparaîtront ici.', cta: null },
+                    favorites: { icon: 'fa-star', title: 'Aucun favori', subtitle: 'Ajoutez des personnes à vos favoris pour les retrouver ici.', cta: null }
                 };
                 const ed = emptyData[activeTab] || emptyData.messages;
 
@@ -3798,7 +4064,7 @@ async function loadActiveChats() {
                     });
                 }
             } else {
-                // === Ï¿ÏÀÏº┘éÏ® Ï¬Ï¡Ï¬┘ê┘è Ï╣┘ä┘ë ┘â┘ä Ïº┘ä┘Ç items ===
+                // === بطاقة تحتوي على كل الـ items ===
                 const listCard = document.createElement('div');
                 listCard.className = 'chats-list-card';
                 container.appendChild(listCard);
@@ -3840,10 +4106,10 @@ async function loadActiveChats() {
                         const diffMs = Date.now() - lastMsgDate.getTime();
                         const diffMins = Math.floor(diffMs / 60000);
                         const diffHrs = Math.floor(diffMins / 60);
-                        if (diffMins < 1) timeDisplay = "├Ç l'instant";
+                        if (diffMins < 1) timeDisplay = _t('status_just_now');
                         else if (diffMins < 60) timeDisplay = `${diffMins} min`;
                         else if (diffHrs < 24) timeDisplay = `${diffHrs}h`;
-                        else if (diffHrs < 48) timeDisplay = 'Hier';
+                        else if (diffHrs < 48) timeDisplay = _t('status_yesterday');
                         else timeDisplay = `${Math.floor(diffHrs / 24)}j`;
                     } else {
                         const lastSeenTime = profile.last_seen || profile.created_at;
@@ -3886,7 +4152,7 @@ async function loadActiveChats() {
                         : escapeHtml(lastChat.content);
 
                     const maxMsgLen = 38;
-                    const truncatedMsg = isOutgoingPending ? lastMsgContent : (lastMsgContent.length > maxMsgLen ? lastMsgContent.substring(0, maxMsgLen) + 'ÔÇª' : lastMsgContent);
+                    const truncatedMsg = isOutgoingPending ? lastMsgContent : (lastMsgContent.length > maxMsgLen ? lastMsgContent.substring(0, maxMsgLen) + '…' : lastMsgContent);
 
                     let avatarInnerHtml = '';
                     let badgeRowHtml = '';
@@ -4032,7 +4298,7 @@ async function loadActiveChats() {
 })();
 
 function initializeApp() {
-    // ÏºÏ│Ï¬Ï«Ï»Ïº┘à Ï¬┘ü┘ê┘èÏÂ Ïº┘äÏúÏ¡Ï»ÏºÏ½ (Event Delegation) ┘äÏ¬┘üÏºÏ»┘è Ï¬┘ä┘ü ┘àÏ│Ï¬┘àÏ╣┘è Ïº┘ä┘å┘éÏ▒ÏºÏ¬ Ï¿Ï│Ï¿Ï¿ Ï¬Ï▒Ï¼┘àÏ® Ïº┘ä┘àÏ¬ÏÁ┘üÏ¡ (Edge/Google Translate)
+    // استخدام تفويض الأحداث (Event Delegation) لتفادي تلف مستمعي النقرات بسبب ترجمة المتصفح (Edge/Google Translate)
     document.addEventListener('click', async (e) => {
         const targetSearchBtn = e.target.closest('#chats-search-btn-round');
         if (targetSearchBtn) {
@@ -4082,7 +4348,7 @@ function initializeApp() {
 
         const targetTiktokBtn = e.target.closest('#tiktok-btn');
         if (targetTiktokBtn) {
-            alert("La connexion via TikTok n'est pas prise en charge directement par Supabase. Vous devez configurer un fournisseur OAuth personnalis├® dans la console Supabase.");
+            alert("La connexion via TikTok n'est pas prise en charge directement par Supabase. Vous devez configurer un fournisseur OAuth personnalisé dans la console Supabase.");
             return;
         }
     });
@@ -4144,7 +4410,7 @@ function initializeApp() {
                         .delete()
                         .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatUserId}),and(sender_id.eq.${activeChatUserId},receiver_id.eq.${currentUser.id})`);
 
-                    showToast('Demande ignor├®e');
+                    showToast('Demande ignorée');
                     closeChatWindow();
                     await loadActiveChats();
                 } catch (err) {
@@ -4427,8 +4693,8 @@ if (document.readyState === 'loading') {
     initializeApp();
 }
 
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-// === ┘åÏ©Ïº┘à ÏÑÏ▒Ï│Ïº┘ä Ïº┘äÏÁ┘êÏ▒ (Image Upload & Send) ===
+// ═══════════════════════════════════════════════════
+// === نظام إرسال الصور (Image Upload & Send) ===
 // ═══════════════════════════════════════════════════
 
 async function uploadAndSendImage(file) {
@@ -4757,7 +5023,7 @@ async function loadFavoritesCache() {
     }
 }
 
-// === ┘åÏ©Ïº┘à ÏÀ┘äÏ¿ÏºÏ¬ Ïº┘ä┘àÏ¡ÏºÏ»Ï½Ï® (Chat Requests System) ===
+// === نظام طلبات المحادثة (Chat Requests System) ===
 window._chatRequests = [];
 window._chatRequestsByPartner = new Map();
 
@@ -4864,12 +5130,12 @@ async function updateChatRequestStatus(partnerId, newStatus) {
                 window._chatRequests[idx] = updatedReq;
             }
 
-            showToast(newStatus === 'accepted' ? 'Demande accept├®e Ô£à' : 'Demande ignor├®e');
+            showToast(newStatus === 'accepted' ? 'Demande acceptée ✅' : 'Demande ignorée');
             await loadActiveChats();
         }
     } catch (err) {
         console.error("Error in updateChatRequestStatus:", err);
-        showToast("Erreur lors de la mise ├á jour");
+        showToast("Erreur lors de la mise à jour");
     }
 }
 
@@ -5245,7 +5511,7 @@ function showToastNotification(senderInfo, title, message, type) {
             <div class="toast-name">${escapeHtml(title)}</div>
             <div class="toast-message">${escapeHtml(message)}</div>
         </div>
-        <span class="toast-time">À l'instant</span>
+        <span class="toast-time">${_t('status_just_now')}</span>
     `;
 
     // عند النقر على الـ toast
@@ -5688,8 +5954,8 @@ function getLevelProgress(visitsCount, friendsCount) {
 
 function getLevelIcon(visitsCount, friendsCount) {
     const level = calculateUserLevel(visitsCount, friendsCount);
-    const icons = ['­ƒî▒', '­ƒî┐', 'Ô¡É', '­ƒîƒ', '­ƒÆ½', '­ƒöÑ', '­ƒÆÄ', '­ƒææ', '­ƒÅå', '­ƒÜÇ'];
-    return icons[level - 1] || '­ƒî▒';
+    const icons = ['🌱', '🌿', '⭐', '🌟', '💫', '🔥', '💎', '👑', '🏆', '🚀'];
+    return icons[level - 1] || '🌱';
 }
 
 // ═══════════════════════════════════════════════════
@@ -5906,8 +6172,8 @@ function openHashtagEditor(profile, user) {
         <!-- Selected tags preview -->
         <div class="hm-ht-selected-preview" id="hm-ht-sel-preview">
             ${selectedTags.length === 0
-            ? `<span class="hm-ht-sel-empty">Aucun hashtag s├®lectionn├® (max ${MAX_TAGS})</span>`
-            : selectedTags.map(t => `<span class="hm-ht-sel-chip">${escapeHtml(t)} <span class="rm" data-remove="${t.replace(/"/g, '&quot;')}">Ô£ò</span></span>`).join('')
+            ? `<span class="hm-ht-sel-empty">Aucun hashtag sélectionné (max ${MAX_TAGS})</span>`
+            : selectedTags.map(t => `<span class="hm-ht-sel-chip">${escapeHtml(t)} <span class="rm" data-remove="${t.replace(/"/g, '&quot;')}">✕</span></span>`).join('')
         }
         </div>
 
@@ -5937,10 +6203,10 @@ function openHashtagEditor(profile, user) {
     function renderPreview() {
         const preview = modal.querySelector('#hm-ht-sel-preview');
         if (selectedTags.length === 0) {
-            preview.innerHTML = `<span class="hm-ht-sel-empty">Aucun hashtag s├®lectionn├® (max ${MAX_TAGS})</span>`;
+            preview.innerHTML = `<span class="hm-ht-sel-empty">Aucun hashtag sélectionné (max ${MAX_TAGS})</span>`;
         } else {
             preview.innerHTML = selectedTags.map(t =>
-                `<span class="hm-ht-sel-chip">${escapeHtml(t)} <span class="rm" data-remove="${t.replace(/"/g, '&quot;')}">Ô£ò</span></span>`
+                `<span class="hm-ht-sel-chip">${escapeHtml(t)} <span class="rm" data-remove="${t.replace(/"/g, '&quot;')}">✕</span></span>`
             ).join('');
             // remove click
             preview.querySelectorAll('.rm').forEach(rmEl => {
@@ -6072,7 +6338,7 @@ function updateRelativeTimes() {
     // وتحديث ترويسة الشات المفتوح حالياً إذا كان غير متصل
     if (activeChatUserId) {
         const chatStatusEl = document.getElementById('chat-user-status');
-        if (chatStatusEl && chatStatusEl.textContent !== 'En ligne') {
+        if (chatStatusEl && chatStatusEl.textContent !== _t('status_online')) {
             const lastSeen = lastSeenTimeMap.get(activeChatUserId) || (activeChatUserProfile ? activeChatUserProfile.created_at : null);
             if (lastSeen) {
                 chatStatusEl.textContent = `Dernière visite : ${formatRelativeTime(lastSeen)}`;
@@ -6238,7 +6504,7 @@ function openAdvancedFilterModal(profiles, listContainer) {
             font-size: 13px;
             flex-shrink: 0;
         }
-        /* ÔöÇÔöÇ Toggle iOS ÔöÇÔöÇ */
+        /* ── Toggle iOS ── */
         #adv-filter-modal .hm-toggle-wrap {
             position: relative;
             width: 44px;
@@ -6349,7 +6615,7 @@ function openAdvancedFilterModal(profiles, listContainer) {
                     <span class="hm-vip-icon-wrapper">
                         <i class="fas fa-gem"></i>
                     </span>
-                    R├®serv├® aux membres VIP
+                    Réservé aux membres VIP
                 </div>
                 <label class="hm-toggle-wrap">
 
@@ -6701,3 +6967,11 @@ async function openProfileFromPost(userId) {
         }
     }
 }
+
+// ═══════════════════════════════════════════════════
+// === تهيئة نظام الترجمة عند بدء التطبيق ===
+// ═══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('haymoi-lang') || 'fr';
+    translateApp(savedLang);
+});

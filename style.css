@@ -7301,11 +7301,12 @@ body {
 
 .prf-icon-instagram {
     background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    box-shadow: 0 4px 12px rgba(220, 39, 67, 0.4);
 }
 
 .prf-icon-tiktok {
     background: #ffffff;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 .prf-icon-tiktok i {
     color: #000000;
@@ -7314,10 +7315,12 @@ body {
 
 .prf-icon-whatsapp {
     background: #25d366;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
 }
 
 .prf-icon-facebook {
     background: #1877f2;
+    box-shadow: 0 4px 12px rgba(24, 119, 242, 0.4);
 }
 
 /* Platform name + username */
@@ -7583,8 +7586,9 @@ body {
 
 /* Stats */
 [data-theme="light"] .stats-section {
-    background: #f8f9fa;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04) !important;
 }
 [data-theme="light"] .stat-number {
     color: #0f172a !important;
@@ -7598,11 +7602,14 @@ body {
 
 /* Social cards - HIGH specificity to beat dark overrides */
 [data-theme="light"] .profil-card-new-clean .prf-social-card {
-    background: #f8f9fa !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04) !important;
 }
 [data-theme="light"] .profil-card-new-clean .prf-social-card:hover {
-    background: #f0f1f3 !important;
+    background: #f8f9fa !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06) !important;
+    transform: translateY(-2px);
 }
 [data-theme="light"] .profil-card-new-clean .prf-platform-name {
     color: #111827 !important;
@@ -7612,13 +7619,31 @@ body {
 }
 [data-theme="light"] .profil-card-new-clean .prf-btn-round {
     background: #ffffff !important;
-    border-color: #e0e0e0 !important;
+    border: none !important;
     color: #555555 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
 }
 [data-theme="light"] .profil-card-new-clean .prf-btn-round:hover {
-    background: #f0f0f0 !important;
-    border-color: #0066ff !important;
-    color: #0066ff !important;
+    background: #f8f9fa !important;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1) !important;
+}
+
+/* Colored glowing buttons for each platform in light theme */
+[data-theme="light"] #social-instagram-item .prf-btn-round {
+    color: #dc2743 !important;
+    box-shadow: 0 4px 12px rgba(220, 39, 67, 0.15) !important;
+}
+[data-theme="light"] #social-whatsapp-item .prf-btn-round {
+    color: #25d366 !important;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.15) !important;
+}
+[data-theme="light"] #social-facebook-item .prf-btn-round {
+    color: #1877f2 !important;
+    box-shadow: 0 4px 12px rgba(24, 119, 242, 0.15) !important;
+}
+[data-theme="light"] #social-tiktok-item .prf-btn-round {
+    color: #000000 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* About box */

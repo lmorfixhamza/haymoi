@@ -7,12 +7,22 @@
     <title>HayMoi | Explorez votre entourage</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap"></noscript>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="preload"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap"
+        as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap">
+    </noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <link rel="stylesheet" href="style.css?v=3.6">
 </head>
 
@@ -28,7 +38,8 @@
                 <span class="splash-logo-text">HayMoi</span>
             </div>
             <h1 class="splash-brand" data-i18n="splash_title">Bienvenue sur HayMoi</h1>
-            <p class="splash-tagline" data-i18n="splash_tagline">Explorez les personnes proches de vous en toute sérénité</p>
+            <p class="splash-tagline" data-i18n="splash_tagline">Explorez les personnes proches de vous en toute
+                sérénité</p>
             <div class="splash-loader">
                 <div class="loader-dot"></div>
                 <div class="loader-dot"></div>
@@ -67,12 +78,16 @@
             <span class="header-title" id="header-title" translate="no" style="display: none;">Trouver</span>
 
             <!-- زر الإعدادات في أعلى اليمين عند عرض البروفايل -->
-            <button id="header-settings-btn" style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-white); font-size: 22px; cursor: pointer; padding: 8px; z-index: 100;" title="Paramètres">
+            <button id="header-settings-btn"
+                style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-white); font-size: 22px; cursor: pointer; padding: 8px; z-index: 100;"
+                title="Paramètres">
                 <i class="fas fa-cog"></i>
             </button>
 
             <!-- زر الإنشاء في أعلى اليمين عند عرض المحادثات -->
-            <button id="header-compose-btn" style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: linear-gradient(135deg, #ff3366, #db2777); border: none; color: #ffffff; border-radius: 12px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; z-index: 100; box-shadow: 0 4px 10px rgba(255, 51, 102, 0.3);" title="Nouvelle discussion">
+            <button id="header-compose-btn"
+                style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: linear-gradient(135deg, #ff3366, #db2777); border: none; color: #ffffff; border-radius: 12px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; z-index: 100; box-shadow: 0 4px 10px rgba(255, 51, 102, 0.3);"
+                title="Nouvelle discussion">
                 <i class="fas fa-edit"></i>
             </button>
 
@@ -89,7 +104,8 @@
             <section id="view-trouver" class="app-view active">
                 <div class="users-list" id="users-list-container">
                     <div class="loading-spinner">
-                        <i class="fas fa-spinner fa-spin"></i> <span data-i18n="loading_people">Recherche de personnes proches...</span>
+                        <i class="fas fa-spinner fa-spin"></i> <span data-i18n="loading_people">Recherche de personnes
+                            proches...</span>
                     </div>
                 </div>
             </section>
@@ -132,7 +148,8 @@
             <section id="view-profil" class="app-view">
                 <div class="own-profile" id="own-profile-container">
                     <div class="loading-spinner">
-                        <i class="fas fa-spinner fa-spin"></i> <span data-i18n="loading_profile">Chargement du profil...</span>
+                        <i class="fas fa-spinner fa-spin"></i> <span data-i18n="loading_profile">Chargement du
+                            profil...</span>
                     </div>
                 </div>
             </section>
@@ -230,7 +247,8 @@
                     <span class="emoji-item">👀</span>
                 </div>
             </div>
-            <input type="text" id="chat-input" placeholder="Dites quelque chose..." data-i18n-placeholder="chat_input_placeholder" autocomplete="off">
+            <input type="text" id="chat-input" placeholder="Dites quelque chose..."
+                data-i18n-placeholder="chat_input_placeholder" autocomplete="off">
             <button class="chat-send-btn" id="chat-send-btn" title="Envoyer" style="display:none;">
                 <i class="fas fa-paper-plane"></i>
             </button>
@@ -280,10 +298,10 @@
                 <span class="attach-label">envoyer vidéo</span>
             </div>
         </div>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="feed.js?v=4.0"></script>
-    <script src="map.js?v=2.0"></script>
-    <script src="script.js?v=3.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script src="feed.js?v=4.0"></script>
+        <script src="map.js?v=2.0"></script>
+        <script src="script.js?v=3.2"></script>
 </body>
 
 </html>

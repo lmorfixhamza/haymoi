@@ -1,4 +1,5 @@
-/* 1. Ã˜Â§Ã˜Â³Ã˜ÂªÃ™Å Ã˜Â±Ã˜Â§Ã˜Â¯ Ã˜Â§Ã™â€žÃ˜Â®Ã˜Â·Ã™Ë†Ã˜Â· Ã™Ë†Ã˜Â§Ã™â€žÃ˜Â¥Ã˜Â¹Ã˜Â¯Ã˜Â§Ã˜Â¯Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â³Ã˜Â§Ã˜Â³Ã™Å Ã˜Â© */
+﻿@charset "UTF-8";
+/* 1.     */
 /* Google Fonts loaded via HTML <link> tags for better performance */
 
 * {
@@ -11,28 +12,28 @@
     --font-primary: 'Outfit', 'Tajawal', sans-serif;
     --bg-glass: #111726;
 
-    /* === خلفية الواترمارك المشتركة === */
+    /* ===    === */
     --watermark-svg: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50%25' y='50%25' font-family='Arial%2C sans-serif' font-weight='900' font-size='12' fill='%23ff4b4b' fill-opacity='0.13' text-anchor='middle' transform='rotate(-25%2C 60%2C 60)'%3EHay Moi%3C%2Ftext%3E%3C%2Fsvg%3E");
     --watermark-bg:
         var(--watermark-svg),
         radial-gradient(at 0% 0%, rgba(255, 75, 75, 0.04) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(255, 75, 75, 0.025) 0px, transparent 50%);
     --watermark-size: 120px 120px, 100% 100%, 100% 100%;
-    /* ØµÙ„Ø¨ Ø¯Ø§ÙƒÙ† ÙˆØªØ¬Ù†Ø¨ Ø§Ù„Ø²Ø¬Ø§Ø¬ÙŠ Ù„Ù„Ø­ØµÙˆÙ„ Ø¹Ù„Ù‰ Ø§Ù„Ø¯ÙŠØ²Ø§ÙŠÙ† Ø§Ù„Ù…Ø·Ù„ÙˆØ¨ */
+    /*         */
     --bg-glass-hover: #161e30;
     --border-glass: rgba(255, 255, 255, 0.06);
     --shadow-glass: 0 4px 20px rgba(0, 0, 0, 0.5);
 
     --text-white: #ffffff;
     --text-muted: #8e9aa8;
-    /* Ù„ÙˆÙ† Ø±Ù…Ø§Ø¯ÙŠ Ø®ÙÙŠÙ Ù…Ø±ÙŠØ­ Ù„Ù„Ø¹ÙŠÙ† */
+    /*      */
     --text-dark: #090d16;
 
     --color-primary: #3b82f6;
-    /* Ù„ÙˆÙ† Ø£Ø²Ø±Ù‚ Ù†Ù‚ÙŠ Ù„Ù„ØªØ­Ø¯ÙŠØ¯ */
+    /*     */
     --color-secondary: #1d4ed8;
 
-    /* Ø£Ù„ÙˆØ§Ù† Ø§Ù„Ø£Ø²Ø±Ø§Ø± */
+    /*   */
     --btn-google: #e15f41;
     --btn-facebook: #1877f2;
     --btn-tiktok: #010101;
@@ -49,15 +50,15 @@ body {
     align-items: center;
     background: linear-gradient(135deg, #1e112a 0%, #0d0f14 50%, #0c1b33 100%) !important;
     background-size: cover !important;
-    /* Ù„ÙˆÙ† Ø¯Ø§ÙƒÙ† Ø§Ø­ØªØ±Ø§Ù ÙŠ ÙƒØ®Ù„Ù ÙŠØ© Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© */
+    /*        */
     color: var(--text-white);
     padding: 20px;
     position: relative;
     overflow: hidden;
-    /* ÙŠÙ…Ù†Ø¹ Ø¸Ù‡ÙˆØ± Ø£ÙŠ Ø£Ø´Ø±Ø·Ø© ØªÙ…Ø±ÙŠØ± Ø¨Ø³Ø¨Ø¨ Ø§Ù„Ù ÙŠØ¯ÙŠÙˆ */
+    /*         */
 }
 
-/* فيديو الخلفية */
+/*   */
 #bg-video {
     position: fixed;
     top: 0;
@@ -68,12 +69,12 @@ body {
     z-index: -2;
 }
 
-/* طبقة ضبابية وتدرج لوني فوق الفيديو لجعل النصوص مقروءة */
+/*          */
 .video-overlay {
     display: none !important;
 }
 
-/* 2. Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã˜Â¨Ã˜Â¹ Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å  (Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã™â€ Ã˜ÂªÃ™Å Ã™â€ Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â²Ã˜Â¬Ã˜Â§Ã˜Â¬Ã™Å ) */
+/* 2.   ( ) */
 .container {
     width: 450px;
     height: 450px;
@@ -86,9 +87,9 @@ body {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     border: 1.5px solid rgba(255, 75, 130, 0.25);
-    /* Ø­Ø¯ÙˆØ¯ ÙˆØ±Ø¯ÙŠØ©/Ø­Ù…Ø±Ø§Ø¡ Ø®ÙÙŠÙØ© Ù…ØªÙ†Ø§Ø³Ù‚Ø© Ù…Ø¹ Ø§Ù„Ø®Ù„ÙÙŠØ© */
+    /*  /     */
     padding: 40px;
-    /* Ø¸Ù„ Ø¯Ø§ÙƒÙ† Ù…Ø¹ ØªÙˆÙ‡Ø¬ Ø¯Ø§Ø®Ù„ÙŠ ÙˆØ®Ø§Ø±Ø¬ÙŠ Ø¨Ø§Ù„Ù„ÙˆÙ† Ø§Ù„ÙˆØ±Ø¯ÙŠ/Ø§Ù„Ø£Ø­Ù…Ø± Ø¹Ù„Ù‰ Ø§Ù„Ø¬ÙˆØ§Ù†Ø¨ */
+    /*        /   */
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35),
         inset 0 0 20px rgba(255, 75, 130, 0.2),
         0 0 25px rgba(255, 75, 130, 0.3);
@@ -98,7 +99,7 @@ body {
 .container:hover {
     transform: scale(1.02);
     border-color: rgba(255, 75, 130, 0.55);
-    /* Ø²ÙŠØ§Ø¯Ø© Ø§Ù„ØªÙˆÙ‡Ø¬ Ø¹Ù†Ø¯ ØªÙ…Ø±ÙŠØ± Ø§Ù„Ù…Ø§ÙˆØ³ Ù„Ù„ØªÙØ§Ø¹Ù„ Ø§Ù„Ø¨ØµØ±ÙŠ Ø§Ù„Ù…Ù…ØªØ§Ø² */
+    /*         */
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4),
         inset 0 0 25px rgba(255, 75, 130, 0.35),
         0 0 35px rgba(255, 75, 130, 0.45);
@@ -126,8 +127,8 @@ body {
     font-size: 38px;
     font-weight: 900;
     color: #ffffff;
-    /* ÙƒØªØ§Ø¨Ø© Ø¨ÙŠØ¶Ø§Ø¡ Ù…Ø«Ù„ Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø«Ø§Ù†ÙŠØ© */
-    /* ØªÙˆÙ‡Ø¬ Ù†ÙŠÙˆÙ† ÙˆØ±Ø¯ÙŠ/Ø£Ø­Ù…Ø± ÙØ®Ù… ÙŠØ®Ø±Ø¬ Ù…Ù† Ø¬ÙˆØ§Ù†Ø¨ Ø§Ù„ÙƒØªØ§Ø¨Ø© ÙƒÙ…Ø§ ÙÙŠ Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø«Ø§Ù†ÙŠØ© */
+    /*      */
+    /*   /          */
     text-shadow: 0 0 5px #ffffff,
         0 0 10px #ff4b82,
         0 0 20px #ff4b82,
@@ -158,7 +159,7 @@ body {
     margin-top: 20px;
 }
 
-/* Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â²Ã˜Â±Ã˜Â§Ã˜Â± Ã™Ë†Ã˜ÂªÃ˜Â£Ã˜Â«Ã™Å Ã˜Â±Ã˜Â§Ã˜ÂªÃ™â€¡Ã˜Â§ Ã˜Â§Ã™â€žÃ˜Â­Ã˜Â±Ã™Æ’Ã™Å Ã˜Â© */
+/*    */
 .btn {
     display: flex;
     align-items: center;
@@ -207,7 +208,7 @@ body {
     transform: translateY(0);
 }
 
-/* Ã˜Â±Ã™Ë†Ã˜Â§Ã˜Â¨Ã˜Â· Ã˜Â£Ã˜Â³Ã™ÂÃ™â€ž Ã˜Â§Ã™â€žÃ˜Â¯Ã˜Â®Ã™Ë†Ã™â€ž */
+/*    */
 .footer-links {
     margin-top: 18px;
     font-size: 13px;
@@ -228,7 +229,7 @@ body {
     text-decoration: underline;
 }
 
-/* 3. Ã˜ÂªÃ™â€ Ã˜Â³Ã™Å Ã™â€š Ã˜ÂµÃ™ÂÃ˜Â­Ã˜Â© Ã˜Â¥Ã™Æ’Ã™â€¦Ã˜Â§Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â¨Ã™Å Ã˜Â§Ã™â€ Ã˜Â§Ã˜Âª (Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â·Ã™Å Ã™â€ž Ã˜Â°Ã™Ë† Ã˜Â²Ã™Ë†Ã˜Â§Ã™Å Ã˜Â§ Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â¯Ã™Å Ã˜Â±Ã˜Â©) */
+/* 3.     (   ) */
 .setup-box {
     border-radius: 24px;
     height: auto;
@@ -316,7 +317,7 @@ body {
     margin-top: 10px;
 }
 
-/* 4. Ã˜ÂªÃ™â€ Ã˜Â³Ã™Å Ã™â€š Ã˜ÂµÃ™ÂÃ˜Â­Ã˜Â© Ã˜Â¹Ã˜Â±Ã˜Â¶ Ã˜Â§Ã™â€žÃ™â€¦Ã™â€žÃ™Â Ã˜Â§Ã™â€žÃ˜Â´Ã˜Â®Ã˜ÂµÃ™Å  */
+/* 4.      */
 .profile-box {
     border-radius: 24px;
     height: auto;
@@ -421,7 +422,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-/* 5. Ã˜ÂªÃ™â€ Ã˜Â³Ã™Å Ã™â€š Ã˜Â§Ã™â€žÃ˜ÂµÃ™ÂÃ˜Â­Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™â€šÃ˜Â§Ã™â€ Ã™Ë†Ã™â€ Ã™Å Ã˜Â© (Privacy & Terms) */
+/* 5.    (Privacy & Terms) */
 .legal-box {
     border-radius: 24px;
     height: auto;
@@ -465,7 +466,7 @@ body {
     margin-bottom: 0;
 }
 
-/* Ã˜Â´Ã˜Â±Ã™Å Ã˜Â· Ã˜Â§Ã™â€žÃ˜ÂªÃ™â€¦Ã˜Â±Ã™Å Ã˜Â± Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â®Ã˜ÂµÃ˜Âµ Ã™â€žÃ™â€žÃ™â€¦Ã˜Â­Ã˜ÂªÃ™Ë†Ã™â€° Ã˜Â§Ã™â€žÃ™â€šÃ˜Â§Ã™â€ Ã™Ë†Ã™â€ Ã™Å  */
+/*      */
 .legal-content::-webkit-scrollbar {
     width: 6px;
 }
@@ -480,7 +481,7 @@ body {
     border-radius: 10px;
 }
 
-/* 6. Ã˜Â§Ã˜Â³Ã™â€¦ Ã˜Â§Ã™â€žÃ˜Â¹Ã™â€žÃ˜Â§Ã™â€¦Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â¬Ã˜Â§Ã˜Â±Ã™Å Ã˜Â© HayMoi */
+/* 6.    HayMoi */
 .brand-title {
     background: linear-gradient(135deg, #ffffff 0%, #ff4b82 100%);
     -webkit-background-clip: text;
@@ -492,7 +493,7 @@ body {
     text-shadow: 0 0 8px rgba(255, 75, 130, 0.25);
 }
 
-/* 7. Ã˜Â´Ã˜Â§Ã˜Â´Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™â€¡Ã™Ë†Ã˜Â§Ã˜ÂªÃ™Â Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â­Ã™â€¦Ã™Ë†Ã™â€žÃ˜Â© */
+/* 7.    */
 @media (max-width: 480px) {
     body {
         padding: 10px;
@@ -503,7 +504,7 @@ body {
         height: 92vw;
         aspect-ratio: 1 / 1;
         border-radius: 50%;
-        /* الحفاظ على شكل الدائرة المثالي فالشواتف أيضاً */
+        /*        */
         padding: 24px 16px;
         display: flex;
         flex-direction: column;
@@ -523,7 +524,7 @@ body {
 
     .container .login-title .title-middle {
         font-size: 28px;
-        /* تصغير حجم اللوجو قليلاً ليناسب الهواتف ولا يخرج عن الدائرة */
+        /*           */
     }
 
     .container p {
@@ -548,7 +549,7 @@ body {
     }
 }
 
-/* --- 8. Ã˜ÂªÃ™â€ Ã˜Â³Ã™Å Ã™â€š Ã™Ë†Ã˜Â§Ã˜Â¬Ã™â€¡Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â·Ã˜Â¨Ã™Å Ã™â€š Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â© (app.html) --- */
+/* --- 8.     (app.html) --- */
 .app-body {
     background: #0d0f14;
     color: var(--text-white);
@@ -587,7 +588,7 @@ body {
     --bg-glass-hover: #333333;
 }
 
-/* طبقة neon حمراء خفيفة فوق الواترمارك */
+/*  neon     */
 .app-container::before {
     content: "";
     position: absolute;
@@ -616,10 +617,10 @@ body {
     padding: 0 16px;
     z-index: 10;
     direction: ltr;
-    /* Ù„Ø¬Ø¹Ù„ Ø§Ù„ØªØ±ØªÙŠØ¨: Ø§Ù„ØµÙˆØ±Ø© ÙŠØ³Ø§Ø±ØŒ Ø§Ù„Ø¹Ù†ÙˆØ§Ù† ÙˆØ³Ø·ØŒ Ø§Ù„Ø£ÙŠÙ‚ÙˆÙ†Ø§Øª ÙŠÙ…ÙŠÙ† */
+    /*  :       */
 }
 
-/* Ø¹Ù†Ø§ØµØ± Ø§Ù„ØªØ±ÙˆÙŠØ³Ø© Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø© */
+/*    */
 .header-user-avatar {
     width: 34px;
     height: 34px;
@@ -645,7 +646,7 @@ body {
     font-size: 18px;
     font-weight: 700;
     color: var(--text-white);
-    /* Ù…ØªÙˆØ§ÙÙ‚ Ù…Ø¹ Ù…ØªØºÙŠØ±Ø§Øª Ø§Ù„ÙˆØ¶Ø¹ Ø§Ù„ÙØ§ØªØ­ */
+    /*      */
     text-transform: capitalize;
     font-family: var(--font-primary);
 }
@@ -678,24 +679,24 @@ body {
     color: #ffffff;
 }
 
-/* ØªÙ„ÙˆÙŠÙ† Ø§Ù„Ø£Ø²Ø±Ø§Ø± Ø§Ù„Ø¹Ù„ÙˆÙŠØ© Ø­Ø³Ø¨ Ø­Ø§Ù„ØªÙ‡Ø§ Ø§Ù„Ù†Ø´Ø·Ø© */
+/*       */
 #tab-nearby.active {
     color: #3b82f6;
 }
 
 #tab-groups.active {
     color: #ef4444;
-    /* Ù„ÙˆÙ† Ø§Ù„Ù‚Ù„Ø¨ */
+    /*   */
 }
 
 #tab-vip.active {
     color: #fbbf24;
-    /* Ù„ÙˆÙ† Ø§Ù„Ù…Ø§Ø³Ø© */
+    /*   */
 }
 
 #tab-search.active {
     color: #3b82f6;
-    /* Ù„ÙˆÙ† Ø§Ù„Ø¨Ø­Ø« */
+    /*   */
 }
 
 .app-content {
@@ -730,7 +731,7 @@ body {
     }
 }
 
-/* Ã˜Â´Ã˜Â±Ã™Å Ã˜Â· Ã˜Â§Ã™â€žÃ˜ÂªÃ™â€ Ã™â€šÃ™â€ž Ã˜Â§Ã™â€žÃ˜Â³Ã™ÂÃ™â€žÃ™Å  */
+/*    */
 .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -864,7 +865,7 @@ body {
     text-align: center;
 }
 
-/* Ã˜Â§Ã™â€žÃ˜Â¹Ã™â€ Ã˜Â§Ã˜ÂµÃ˜Â± Ã˜Â§Ã™â€žÃ˜Â¹Ã˜Â§Ã™â€¦Ã˜Â© Ã™â€žÃ™â€žÃ™Ë†Ã˜Â§Ã˜Â¬Ã™â€¡Ã˜Â§Ã˜Âª */
+/*    */
 .loading-spinner {
     display: flex;
     justify-content: center;
@@ -891,7 +892,7 @@ body {
     color: rgba(255, 255, 255, 0.15);
 }
 
-/* Ã™â€ Ã˜Â§Ã™Â Ã˜Â°Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¹Ã˜Â±Ã˜Â¶ Ã˜Â§Ã™â€žÃ™â€¦Ã™â€ Ã˜Â¨Ã˜Â«Ã™â€šÃ˜Â© (Modal) */
+/*     (Modal) */
 .modal {
     display: none;
     position: fixed;
@@ -944,7 +945,7 @@ body {
     }
 }
 
-/* --- 9. Ã˜Â¨Ã˜Â·Ã˜Â§Ã™â€šÃ˜Â© Ã˜Â§Ã™â€žÃ™â€¦Ã™â€žÃ™Â  Ã˜Â§Ã™â€žÃ˜Â´Ã˜Â®Ã˜ÂµÃ™Å  (Profil Card) --- */
+/* --- 9.     (Profil Card) --- */
 .profil-card {
     display: flex;
     flex-direction: column;
@@ -1062,13 +1063,13 @@ body {
     display: flex;
     flex-direction: column;
     gap: 3px;
-    /* مسافة قريبة ومريحة بين الكروت */
+    /*      */
     padding: 6px 0px;
-    /* تحسين الأداء - لا يرسم العناصر خارج الشاشة */
+    /*   -      */
     contain: layout style;
 }
 
-/* ===== بطاقة المستخدم - الشكل الجديد ===== */
+/* =====   -   ===== */
 .user-card {
     display: flex;
     justify-content: space-between;
@@ -1082,13 +1083,13 @@ body {
     position: relative;
     direction: ltr;
     transition: opacity 0.2s ease, border-color 0.2s ease;
-    /* أسرع وأخف من all */
+    /*    all */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     will-change: transform;
-    /* GPU compositor لسكرول سلس */
+    /* GPU compositor   */
 }
 
-/* أنيميشن ظهور بطاقات الأعضاء */
+/*     */
 @keyframes fadeSlideUp {
     from {
         opacity: 0;
@@ -1133,7 +1134,7 @@ body {
     background: rgba(255, 255, 255, 0.01) !important;
 }
 
-/* ===== قسم المعلومات الرئيسي (أفاتار + نص) ===== */
+/* =====    ( + ) ===== */
 .card-main {
     display: flex;
     align-items: center;
@@ -1142,7 +1143,7 @@ body {
     min-width: 0;
 }
 
-/* ===== قسم الأفاتار مع المسافة ===== */
+/* =====     ===== */
 .avatar-section {
     position: relative;
     display: flex;
@@ -1211,7 +1212,7 @@ body {
     color: #f472b6;
 }
 
-/* ===== قسم النص (اسم + bio + وقت) ===== */
+/* =====   ( + bio + ) ===== */
 .info-section {
     display: flex;
     flex-direction: column;
@@ -1288,7 +1289,7 @@ body {
     font-weight: 700;
 }
 
-/* ===== شبكة الأزرار 2×2 ===== */
+/* =====   22 ===== */
 .card-actions-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1356,15 +1357,15 @@ body {
     box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
 }
 
-/* ØºÙ„Ø§Ù  Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø´Ø®ØµÙŠØ© Ù…Ø¹ Ø¥Ø·Ø§Ø± Ù…ØªÙˆÙ‡Ø¬ Ø«Ù„Ø§Ø«ÙŠ Ø§Ù„Ø£Ø¨Ø¹Ø§Ø¯ */
+/*          */
 .user-avatar-wrapper {
     width: 60px;
     height: 60px;
     border-radius: 50%;
     padding: 2.5px;
-    /* يحدد سمك الإطار المتوهج */
+    /*     */
     background: rgba(255, 255, 255, 0.1);
-    /* تدرج لوني فخم افتراضي */
+    /*     */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1387,7 +1388,7 @@ body {
 .user-avatar-wrapper.vip-ring {
     background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
     box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
-    /* توهج ذهبي خفيف */
+    /*    */
 }
 
 .user-avatar-inner {
@@ -1395,7 +1396,7 @@ body {
     height: 100%;
     border-radius: 50%;
     background: #1c1c1e;
-    /* ÙŠØ·Ø§Ø¨Ù‚ Ø®Ù„ÙÙŠØ© Ø§Ù„Ø¨Ø·Ø§Ù‚Ø© */
+    /*    */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1412,7 +1413,7 @@ body {
     border-radius: 50%;
 }
 
-/* Ø§Ù„ØµÙˆØ±Ø© Ø§Ù„Ø´Ø®ØµÙŠØ© Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠØ© Ù„Ù„Ù†Ø³Ø® Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠ */
+/*      */
 .user-avatar {
     width: 56px;
     height: 56px;
@@ -1440,7 +1441,7 @@ body {
     border: none !important;
 }
 
-/* Ù†Ù‚Ø·Ø© Ø­Ø§Ù„Ø© Ø§Ù„Ø§ØªØµØ§Ù„ */
+/*    */
 .online-dot {
     position: absolute;
     bottom: 2px;
@@ -1450,16 +1451,16 @@ body {
     border-radius: 50%;
     background: #22c55e;
     border: 2px solid #1c1c1e;
-    /* ÙŠØªÙˆØ§ÙÙ‚ Ù…Ø¹ Ù„ÙˆÙ† Ø§Ù„Ø®Ù„ÙÙŠØ© Ù„Ù„Ø¨Ø·Ø§Ù‚Ø© */
+    /*      */
     box-shadow: 0 0 6px #22c55e;
     z-index: 2;
 }
 
-/* Ø§Ù„ØªØ°ÙŠÙŠÙ„ ÙˆØ§Ù„Ø£Ø²Ø±Ø§Ø± Ø§Ù„Ù…Ø¶Ù…Ù†Ø© Ø¨Ø§Ù„Ø¨Ø·Ø§Ù‚Ø© */
+/*     */
 .user-card-bottom {
     display: flex;
     justify-content: flex-end;
-    /* تحريك الأزرار لجهة اليمين */
+    /*     */
     align-items: center;
     width: 100%;
     margin-top: 3px;
@@ -1527,7 +1528,7 @@ body {
     }
 }
 
-/* أنيميشن القلب الطائر عند الإعجاب */
+/*      */
 .floating-heart-anim {
     position: fixed;
     color: #ef4444;
@@ -1576,7 +1577,7 @@ body {
     color: #60a5fa;
 }
 
-/* Ù…Ø¹Ù„ÙˆÙ…Ø§Øª Ø§Ù„Ø¹Ø¶Ùˆ */
+/*   */
 .user-info {
     flex: 1;
     min-width: 0;
@@ -1584,7 +1585,7 @@ body {
     flex-direction: column;
     gap: 2px;
     text-align: left;
-    /* Ù…Ø­Ø§Ø°Ø§Ø© Ø§Ù„Ù†Øµ Ù„Ù„ÙŠÙ…ÙŠÙ† Ù„ÙŠØªÙˆØ§ÙÙ‚ Ù…Ø¹ Ø§Ù„Ø§ØªØ¬Ø§Ù‡ Ø§Ù„Ø¬Ø¯ÙŠØ¯ */
+    /*        */
 }
 
 .user-meta-row {
@@ -1616,17 +1617,17 @@ body {
     font-size: 22px;
     font-weight: 800;
     letter-spacing: -0.5px;
-    /* تضييق المسافة بين الحروف */
+    /*     */
     color: #ffffff;
     text-transform: capitalize;
-    /* تكبير الحروف الأولى تلقائياً */
+    /*     */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 140px;
 }
 
-/* شارة الجنس والعمر */
+/*    */
 .gender-age-pill {
     display: inline-flex;
     align-items: center;
@@ -1647,10 +1648,10 @@ body {
 
 .gender-age-pill.female {
     background: #ff66a3;
-    /* وردي فاتح */
+    /*   */
 }
 
-/* Ø´Ø§Ø±Ø© Ù…ÙˆÙ‚Ø¹ Ø§Ù„ØªÙˆØ§ØµÙ„ */
+/*    */
 .social-badge {
     display: inline-flex;
     align-items: center;
@@ -1690,7 +1691,7 @@ body {
     margin-top: 0px;
 }
 
-/* Ø§Ù„Ù…Ø³Ø§ÙØ© ÙˆØ­Ø§Ù„Ø© Ø§Ù„Ø§ØªØµØ§Ù„ Ø¹Ù„Ù‰ Ø§Ù„ÙŠØ³Ø§Ø±/Ø§Ù„ÙŠÙ…ÙŠÙ† */
+/*     / */
 .user-meta {
     display: flex;
     flex-direction: column;
@@ -1720,7 +1721,7 @@ body {
     text-overflow: ellipsis;
 }
 
-/* Ã˜Â´Ã˜Â§Ã˜Â±Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¬Ã™â€ Ã˜Â³ Ã™Ë†Ã˜Â§Ã™â€žÃ˜Â¹Ã™â€¦Ã˜Â± */
+/*    */
 .gender-badge {
     display: inline-flex;
     align-items: center;
@@ -1751,7 +1752,7 @@ body {
     max-width: 200px;
 }
 
-/* Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â³Ã˜Â§Ã™ Ã˜Â© Ã™Ë†Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â© Ã˜Â§Ã™â€žÃ˜Â§Ã˜ÂªÃ˜ÂµÃ˜Â§Ã™â€ž Ã˜Â¹Ã™â€žÃ™â€° Ã˜Â§Ã™â€žÃ™Å Ã˜Â³Ã˜Â§Ã˜Â± */
+/*       */
 .user-meta {
     display: flex;
     flex-direction: column;
@@ -1772,7 +1773,7 @@ body {
     font-weight: 600;
 }
 
-/* --- 11. Ã™â€¦Ã˜Â­Ã˜ÂªÃ™Ë†Ã™â€° Ã™â€ Ã˜Â§Ã™ Ã˜Â°Ã˜Â© Ã˜ÂªÃ™ Ã˜Â§Ã˜ÂµÃ™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â¹Ã˜Â¶Ã™Ë† (Modal User Profile) --- */
+/* --- 11.       (Modal User Profile) --- */
 .modal-profile-header {
     display: flex;
     flex-direction: column;
@@ -1942,7 +1943,7 @@ body {
     --border-glass: rgba(0, 0, 0, 0.08);
 }
 
-/* --- 12. Ã™Ë†Ã˜Â§Ã˜Â¬Ã™â€¡Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¯Ã˜Â±Ã˜Â¯Ã˜Â´Ã˜Â© (SayHi Style) --- */
+/* --- 12.   (SayHi Style) --- */
 .chat-window {
     position: fixed;
     bottom: 0;
@@ -1952,7 +1953,7 @@ body {
     max-width: 480px;
     height: 100%;
     background: #ffffff;
-    /* Ø®Ù„ÙÙŠØ© Ø¨ÙŠØ¶Ø§Ø¡ Ù„Ù„Ø´Ø§Øª */
+    /*    */
     z-index: 1100;
     display: flex;
     flex-direction: column;
@@ -1963,7 +1964,7 @@ body {
     transform: translateX(-50%) translateY(0);
 }
 
-/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â Ã˜ÂªÃ˜Â±Ã™Ë†Ã™Å Ã˜Â³Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â´Ã˜Â§Ã˜Âª Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
+/*     */
 .chat-header {
     display: flex;
     align-items: center;
@@ -2033,7 +2034,7 @@ body {
     background: rgba(255, 255, 255, 0.06);
 }
 
-/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â Ã™â€¦Ã™â€ Ã˜Â·Ã™â€šÃ˜Â© Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â³Ã˜Â§Ã˜Â¦Ã™â€ž Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
+/*     */
 .chat-messages {
     flex: 1;
     padding: 12px 14px;
@@ -2042,13 +2043,13 @@ body {
     flex-direction: column;
     gap: 4px;
     background-color: #f8fafc;
-    /* Ø®Ù„ÙÙŠØ© ÙØ§ØªØ­Ø© ÙˆÙ…Ø±ÙŠØ­Ø© Ù„Ù„Ø¯Ø±Ø¯Ø´Ø© */
+    /*     */
     background-image:
         radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.02) 0%, transparent 50%),
         radial-gradient(circle at 85% 75%, rgba(219, 39, 119, 0.02) 0%, transparent 50%);
 }
 
-/* Ø¬Ø¹Ù„ Ø§Ù„Ø±Ø³Ø§Ø¦Ù„ ØªØ¨Ø¯Ø£ Ù…Ù† Ø§Ù„Ø£Ø³ÙÙ„ ÙˆØªØ¯ÙØ¹ Ù„Ù„Ø£Ø¹Ù„Ù‰ */
+/*        */
 .chat-messages> :first-child {
     margin-top: auto !important;
 }
@@ -2066,7 +2067,7 @@ body {
     border-radius: 10px;
 }
 
-/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â Ã˜ÂµÃ™Â Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â³Ã˜Â§Ã™â€žÃ˜Â© (bubble + avatar) Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
+/*    (bubble + avatar)  */
 .msg-row {
     display: flex;
     align-items: flex-end;
@@ -2082,7 +2083,7 @@ body {
     flex-direction: row;
 }
 
-/* Ã˜Â§Ã™â€žÃ˜ÂµÃ™Ë†Ã˜Â±Ã˜Â© Ã˜Â§Ã™â€žÃ™â€¦Ã˜ÂµÃ˜ÂºÃ˜Â±Ã˜Â© Ã˜Â¨Ã˜Â¬Ã˜Â§Ã™â€ Ã˜Â¨ Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â³Ã˜Â§Ã™â€žÃ˜Â© */
+/*     */
 .msg-avatar {
     width: 32px;
     height: 32px;
@@ -2105,7 +2106,7 @@ body {
     background: linear-gradient(135deg, #e11d48, #f472b6);
 }
 
-/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â Ã™ÂÃ™â€šÃ˜Â§Ã˜Â¹Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â³Ã˜Â§Ã˜Â¦Ã™â€ž Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
+/*     */
 .msg-bubble {
     max-width: 72%;
     padding: 9px 13px 5px 13px;
@@ -2143,11 +2144,11 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
-/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â Ã˜ÂªÃ™Ë†Ã™â€šÃ™Å Ã˜Âª + Ã˜Â¹Ã™â€žÃ˜Â§Ã™â€¦Ã˜Â© Ã˜Â§Ã™â€žÃ™â€šÃ˜Â±Ã˜Â§Ã˜Â¡Ã˜Â© Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
+/*   +    */
 .msg-time {
     font-size: 10px;
     color: var(--text-muted);
-    /* Ø±Ù…Ø§Ø¯ÙŠ Ø¯Ø§ÙƒÙ† Ù…Ù†Ø§Ø³Ø¨ Ù„Ù„ÙˆØ¶Ø¹ Ø§Ù„ÙØ§ØªØ­ */
+    /*      */
     margin-top: 3px;
     display: flex;
     align-items: center;
@@ -2173,7 +2174,7 @@ body {
     flex-shrink: 0;
 }
 
-/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â Ã™ÂÃ˜Â§Ã˜ÂµÃ™â€ž Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â§Ã˜Â±Ã™Å Ã˜Â® Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
+/*     */
 .chat-date-divider {
     display: flex;
     align-items: center;
@@ -2196,14 +2197,14 @@ body {
     white-space: nowrap;
 }
 
-/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â Ã˜Â­Ã™â€šÃ™â€ž Ã˜Â§Ã™â€žÃ˜Â¥Ã˜Â¯Ã˜Â®Ã˜Â§Ã™â€ž (SayHi Style) Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
+/*    (SayHi Style)  */
 .chat-input-area {
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 10px 12px 14px 12px;
     background: #ffffff;
-    /* Ù…Ø³Ø§Ø­Ø© ÙƒØªØ§Ø¨Ø© Ø¨ÙŠØ¶Ø§Ø¡ Ù…ØªÙ†Ø§Ø³Ù‚Ø© */
+    /*     */
     border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
@@ -2314,7 +2315,7 @@ body {
     border: none;
     padding: 10px 4px;
     color: var(--text-white);
-    /* ÙŠØªØ¨Ø¹ Ø§Ù„Ù…ØªØºÙŠØ± Ø§Ù„Ø¯Ø§ÙƒÙ† Ù„Ù„ÙˆØ¶Ø¹ Ø§Ù„ÙØ§ØªØ­ */
+    /*      */
     font-size: 15px;
     font-family: inherit;
     outline: none;
@@ -2325,7 +2326,7 @@ body {
 
 .chat-input-area input::placeholder {
     color: #94a3b8;
-    /* Ø±Ù…Ø§Ø¯ÙŠ Ù…Ù‚Ø±ÙˆØ¡ Ù„Ù„ÙˆØ¶Ø¹ Ø§Ù„ÙØ§ØªØ­ */
+    /*     */
 }
 
 .chat-mic-btn {
@@ -2400,7 +2401,7 @@ body {
     }
 }
 
-/* Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø§Øª (Chats List Item) */
+/*   (Chats List Item) */
 .chat-item {
     display: flex;
     align-items: center;
@@ -2414,13 +2415,13 @@ body {
     direction: rtl;
 }
 
-/* iOS-style separator — يبدأ بعد الأفاتار وليس من الحافة */
+/* iOS-style separator        */
 .chat-item::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 16px;
-    /* مسافة من اليسار بعد الأفاتار */
+    /*      */
     right: 16px;
     height: 0.5px;
     background: rgba(255, 255, 255, 0.1);
@@ -2431,7 +2432,7 @@ body {
     display: none;
 }
 
-/* خلفيات ملونة للمحادثات حسب الجنس */
+/*      */
 .chat-item.female {
     background: linear-gradient(to left, rgba(255, 51, 153, 0.08), transparent 70%);
 }
@@ -2487,7 +2488,7 @@ body {
     flex-direction: column;
     gap: 4px;
     text-align: right;
-    /* Ù…Ø­Ø§Ø°Ø§Ø© Ø§Ù„Ù†Øµ Ù„Ù„ÙŠÙ…ÙŠÙ† Ù„ÙŠØªÙˆØ§ÙÙ‚ Ù…Ø¹ Ø§Ù„Ø§ØªØ¬Ø§Ù‡ Ø§Ù„Ø¬Ø¯ÙŠØ¯ */
+    /*        */
 }
 
 .chat-item-name-row {
@@ -2495,7 +2496,7 @@ body {
     justify-content: space-between;
     align-items: center;
     direction: rtl;
-    /* Ø§Ù„Ø§ØªØ¬Ø§Ù‡ Ù…Ù† Ø§Ù„ÙŠÙ…ÙŠÙ† Ù„Ù„ÙŠØ³Ø§Ø± */
+    /*     */
 }
 
 .chat-item-name {
@@ -2525,7 +2526,7 @@ body {
     box-shadow: 0 0 6px var(--color-primary);
 }
 
-/* --- 13. Ã˜Â£Ã˜Â²Ã˜Â±Ã˜Â§Ã˜Â± Ã˜Â§Ã™â€žÃ™â€¦Ã™Å Ã˜Â¯Ã™Å Ã˜Â§ Ã™ÂÃ™Å  Ã˜Â§Ã™â€žÃ˜Â´Ã˜Â§Ã˜Âª (Ã˜ÂµÃ™Ë†Ã˜Â± + Ã˜Â£Ã™Ë†Ã˜Â¯Ã™Å Ã™Ë†) --- */
+/* --- 13.     ( + ) --- */
 .chat-media-btns {
     display: flex;
     align-items: center;
@@ -2558,7 +2559,7 @@ body {
     transform: scale(0.92);
 }
 
-/* Ã™â€¦Ã˜Â¤Ã˜Â´Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â³Ã˜Â¬Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜ÂµÃ™Ë†Ã˜ÂªÃ™Å  */
+/*    */
 .recording-indicator {
     display: flex;
     align-items: center;
@@ -2660,7 +2661,7 @@ body {
     transform: scale(1.08);
 }
 
-/* --- 14. Ã™ÂÃ™â€šÃ˜Â§Ã˜Â¹Ã˜Â© Ã˜Â±Ã˜Â³Ã˜Â§Ã™â€žÃ˜Â© Ã˜Â§Ã™â€žÃ˜ÂµÃ™Ë†Ã˜Â±Ã˜Â© (Image Message Bubble) --- */
+/* --- 14.    (Image Message Bubble) --- */
 .msg-bubble.image-msg {
     padding: 4px;
     max-width: 260px;
@@ -2686,7 +2687,7 @@ body {
     padding: 4px 8px 2px;
 }
 
-/* Ã˜Â¹Ã˜Â±Ã˜Â¶ Ã˜Â§Ã™â€žÃ˜ÂµÃ™Ë†Ã˜Â±Ã˜Â© Ã˜Â¨Ã˜Â§Ã™â€žÃ˜Â­Ã˜Â¬Ã™â€¦ Ã˜Â§Ã™â€žÃ™Æ’Ã˜Â§Ã™â€¦Ã™â€ž (Lightbox) */
+/*     (Lightbox) */
 .image-lightbox {
     position: fixed;
     inset: 0;
@@ -2730,7 +2731,7 @@ body {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* --- 15. Ã™ÂÃ™â€šÃ˜Â§Ã˜Â¹Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â³Ã˜Â§Ã™â€žÃ˜Â© Ã˜Â§Ã™â€žÃ˜ÂµÃ™Ë†Ã˜ÂªÃ™Å Ã˜Â© (Audio Message Bubble) --- */
+/* --- 15.    (Audio Message Bubble) --- */
 .msg-bubble.audio-msg {
     min-width: 220px;
     padding: 10px 14px;
@@ -2790,7 +2791,7 @@ body {
     flex-shrink: 0;
 }
 
-/* Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜ÂµÃ™Ë†Ã˜Â±Ã˜Â© (Ã™â€¦Ã˜Â¤Ã˜Â´Ã˜Â±) */
+/*   () */
 .msg-bubble .upload-progress {
     position: absolute;
     inset: 0;
@@ -2817,9 +2818,9 @@ body {
     }
 }
 
-/* --- 14. ØªÙ†Ø³ÙŠÙ‚ ØªØ¨ÙˆÙŠØ¨Ø§Øª Ø§Ù„Ø¨Ø­Ø« Ùˆ VIP Ø§Ù„Ù…ØªÙ‚Ø¯Ù…Ø© (Trouver Filters) --- */
+/* --- 14.     VIP  (Trouver Filters) --- */
 
-/* Ø­Ù‚Ù„ Ø§Ù„Ø¨Ø­Ø« Ø§Ù„Ø²Ø¬Ø§Ø¬ÙŠ */
+/*    */
 .search-filter-container {
     padding: 10px 4px 16px 4px;
     animation: fadeInView 0.35s ease;
@@ -2868,10 +2869,10 @@ body {
 
 .search-input-wrapper input::placeholder {
     color: rgba(255, 255, 255, 0.45);
-    /* Ù„ÙˆÙ† Ø±Ù…Ø§Ø¯ÙŠ Ù…Ù‚Ø±ÙˆØ¡ Ù„Ù„ÙˆØ¶Ø¹ Ø§Ù„Ø¯Ø§ÙƒÙ† */
+    /*      */
 }
 
-/* أزرار الفلترة */
+/*   */
 .gender-filter-pills::-webkit-scrollbar {
     display: none;
 }
@@ -2912,7 +2913,7 @@ body {
     box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
 }
 
-/* Ø¨Ø·Ø§Ù‚Ø© ØªØ±Ù‚ÙŠØ© VIP Ø§Ù„Ù…Ù…ØªØ§Ø²Ø© */
+/*   VIP  */
 .vip-premium-card {
     background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -3023,12 +3024,12 @@ body {
     filter: brightness(1.15);
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-/* 15. Ù†Ø¸Ø§Ù… Ø§Ù„Ø­Ø¸Ø± ÙˆØ§Ù„Ø¥Ø¨Ù„Ø§Øº (Block & Report) */
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/*  */
+/* 15.    (Block & Report) */
+/*  */
 
-/* Ø§Ù„Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ù…Ù†Ø³Ø¯Ù„Ø© ÙÙŠ Ø§Ù„Ø´Ø§Øª */
-/* ===== Chat Dropdown Menu — iOS Style ===== */
+/*     */
+/* ===== Chat Dropdown Menu  iOS Style ===== */
 .chat-dropdown-menu {
     position: absolute;
     top: calc(100% + 8px);
@@ -3086,7 +3087,7 @@ body {
     background: rgba(255, 255, 255, 0.08);
 }
 
-/* أيقونة مصغرة iOS-style */
+/*   iOS-style */
 .dd-icon {
     width: 28px;
     height: 28px;
@@ -3133,7 +3134,7 @@ body {
     margin: 0;
 }
 
-/* Light mode للـ dropdown */
+/* Light mode  dropdown */
 [data-theme="light"] .chat-dropdown-menu {
     background: rgba(255, 255, 255, 0.97);
     border-color: rgba(0, 0, 0, 0.1);
@@ -3168,7 +3169,7 @@ body {
     }
 }
 
-/* Ù†Ø§ÙØ°Ø© Ø§Ù„Ø¥Ø¨Ù„Ø§Øº */
+/*   */
 .report-modal-overlay {
     position: fixed;
     inset: 0;
@@ -3286,7 +3287,7 @@ body {
     background: rgba(255, 255, 255, 0.12);
 }
 
-/* Ø£Ø²Ø±Ø§Ø± Ø§Ù„Ø­Ø¸Ø± ÙˆØ§Ù„Ø¥Ø¨Ù„Ø§Øº ÙÙŠ Ù†Ø§ÙØ°Ø© Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… */
+/*       */
 .modal-action-row {
     display: flex;
     gap: 10px;
@@ -3321,11 +3322,11 @@ body {
     border-color: rgba(239, 68, 68, 0.3);
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-/* 16. Ù†Ø¸Ø§Ù… Ø§Ù„Ø¥Ø´Ø¹Ø§Ø±Ø§Øª (Notifications) */
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/*  */
+/* 16.   (Notifications) */
+/*  */
 
-/* Ø£ÙŠÙ‚ÙˆÙ†Ø© Ø§Ù„Ø¬Ø±Ø³ */
+/*   */
 .notification-bell {
     position: relative;
     background: none;
@@ -3467,7 +3468,7 @@ body {
     flex-shrink: 0;
 }
 
-/* Ø´Ø§Ø±Ø© Ø§Ù„Ø±Ø³Ø§Ø¦Ù„ ØºÙŠØ± Ø§Ù„Ù…Ù‚Ø±ÙˆØ¡Ø© ÙÙŠ Ø¨Ø·Ø§Ù‚Ø© Ø§Ù„Ø´Ø§Øª */
+/*        */
 .chat-item-unread-badge {
     background: var(--color-primary);
     color: white;
@@ -3482,9 +3483,9 @@ body {
     margin-top: 4px;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-/* 17. ØªØ­Ø³ÙŠÙ† Ø§Ù„Ø£ÙØ§ØªØ§Ø± Ø¨Ø§Ù„ØµÙˆØ± (Avatar Images) */
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/*  */
+/* 17.    (Avatar Images) */
+/*  */
 
 .user-avatar img,
 .chat-item-avatar img,
@@ -3545,7 +3546,7 @@ body {
     transform: scale(1.1);
 }
 
-/* Ù…Ø¤Ø´Ø± Ø±ÙØ¹ Ø§Ù„ØµÙˆØ±Ø© */
+/*    */
 .avatar-upload-overlay {
     position: absolute;
     inset: 0;
@@ -3563,11 +3564,11 @@ body {
     animation: spin 1s linear infinite;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-/* 18. Ø¥Ø¶Ø§ÙØ§Øª Ø§Ù„Ø¹Ø¶ÙˆÙŠØ© Ø§Ù„Ù…Ù…ÙŠØ²Ø© (VIP Member Highlights) */
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/*  */
+/* 18.    (VIP Member Highlights) */
+/*  */
 
-/* Ø¨Ø·Ø§Ù‚Ø© Ø§Ù„Ø¹Ø¶Ùˆ VIP ÙÙŠ Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø§Ø³ØªÙƒØ´Ø§Ù */
+/*   VIP    */
 .user-card.vip-member-card {
     border: 1px solid rgba(251, 191, 36, 0.35) !important;
     background: linear-gradient(135deg, rgba(26, 34, 53, 0.8) 0%, rgba(251, 191, 36, 0.04) 100%) !important;
@@ -3575,14 +3576,14 @@ body {
     position: relative;
 }
 
-/* Ø´Ø§Ø±Ø© Ø°Ù‡Ø¨ÙŠØ© Ù…ØªÙˆÙ‡Ø¬Ø© Ù„Ù„Ø£ÙØ§ØªØ§Ø± Ø§Ù„Ø¹Ù„ÙˆÙŠØ© Ù„Ù„Ù…Ø´ØªØ±Ùƒ VIP */
+/*       VIP */
 .header-user-avatar.vip-avatar {
     border: 2px solid #fbbf24 !important;
     box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
 }
 
 .header-user-avatar.vip-avatar::after {
-    content: 'ðŸ’Ž';
+    content: '';
     position: absolute;
     bottom: -4px;
     right: -4px;
@@ -3597,9 +3598,9 @@ body {
     border: 1px solid #fbbf24;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-/* 19. Ø´Ø§Ø´Ø© Ø§Ù„ØªØ±Ø­ÙŠØ¨ ÙˆØ§Ù„ØªØ­Ù…ÙŠÙ„ (Splash Screen) */
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/*  */
+/* 19.    (Splash Screen) */
+/*  */
 .splash-screen {
     position: fixed;
     inset: 0;
@@ -3641,9 +3642,9 @@ body {
     height: 64px;
     padding: 0 22px;
     background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    /* Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ø®Ù„ÙÙŠØ© Ø§Ù„Ø¯Ø§ÙƒÙ†Ø© Ø§Ù„ÙØ®Ù…Ø© ÙƒÙ…Ø§ ÙƒØ§Ù†Øª Ø¨Ø·Ù„Ø¨ Ù…Ù† Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… */
+    /*          */
     border: 1.5px solid rgba(255, 75, 130, 0.35);
-    /* Ø­Ø¯ÙˆØ¯ ÙˆØ±Ø¯ÙŠØ© ÙØ§Ø®Ø±Ø© Ø®ÙÙŠÙØ© */
+    /*     */
     border-radius: 20px;
     display: flex;
     align-items: center;
@@ -3671,7 +3672,7 @@ body {
     font-size: 24px;
     font-weight: 900;
     color: #ff4b82;
-    /* Ù„ÙˆÙ† ÙˆØ±Ø¯ÙŠ ÙØ§Ø®Ø± ÙˆØ§Ø­ØªØ±Ø§ÙÙŠ Ù…ØªÙˆÙ‡Ø¬ */
+    /*      */
     letter-spacing: 0.5px;
     font-family: 'Outfit', sans-serif;
     text-shadow: 0 0 12px rgba(255, 75, 130, 0.6);
@@ -3706,7 +3707,7 @@ body {
     width: 8px;
     height: 8px;
     background-color: #ff4b82;
-    /* Ù†Ù‚Ø§Ø· Ø§Ù„ØªØ­Ù…ÙŠÙ„ Ø¨Ø§Ù„Ù„ÙˆÙ† Ø§Ù„ÙˆØ±Ø¯ÙŠ Ø§Ù„Ù…ØªÙ†Ø§Ø³Ù‚ */
+    /*      */
     border-radius: 50%;
     animation: dotBounce 1.4s infinite ease-in-out both;
 }
@@ -3732,7 +3733,7 @@ body {
     }
 }
 
-/* ØªÙ†Ø³ÙŠÙ‚ Ø­Ø§Ù„Ø© Ø§Ù„Ø§ØªØµØ§Ù„/Ø¢Ø®Ø± Ø¸Ù‡ÙˆØ± ÙÙŠ ÙƒØ±ÙˆØª Ø§Ù„Ø§Ø³ØªÙƒØ´Ø§Ù */
+/*   /     */
 .card-status-text {
     font-size: 12px;
     color: var(--text-muted);
@@ -4257,27 +4258,27 @@ body {
 /* ===== MOBILE PERFORMANCE OPTIMIZATIONS ===== */
 @media (max-width: 600px) {
 
-    /* شيل كل backdrop-filter على الموبايل - أثقل شي على GPU */
+    /*   backdrop-filter   -    GPU */
     * {
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
     }
 
-    /* أوقف الأنيميشنات اللي تدور بلا توقف */
+    /*       */
     .splash-logo-text,
     .loader-dot,
     .profile-avatar {
         animation: none !important;
     }
 
-    /* contain باش يحسب الـ layout مرة واحدة */
+    /* contain    layout   */
     .users-list,
     .chats-list,
     .contacts-list {
         contain: layout style;
     }
 
-    /* حذف pseudo-elements غير ضرورية */
+    /*  pseudo-elements   */
     .app-container::before,
     .app-container::after,
     .chat-window::before,
@@ -4286,12 +4287,12 @@ body {
         content: none !important;
     }
 
-    /* تبسيط الـ transition لبطاقات المستخدمين */
+    /*   transition   */
     .user-card {
         transition: none !important;
     }
 
-    /* overscroll باش يكون scroll سلس */
+    /* overscroll   scroll  */
     .users-list,
     .app-content {
         -webkit-overflow-scrolling: touch;
@@ -4437,7 +4438,7 @@ body {
 }
 
 /* ============================================================
-   LIGHT MODE EXTENDED - كل العناصر المفقودة
+   LIGHT MODE EXTENDED -   
    ============================================================ */
 
 /* [REMOVED-DUPLICATE-user-card-2] */
@@ -4478,7 +4479,7 @@ body {
     color: #db2777 !important;
 }
 
-/* --- بطاقة الأكشن (like/message buttons) --- */
+/* ---   (like/message buttons) --- */
 [data-theme="light"] .card-action-btn {
     background: rgba(0, 0, 0, 0.07) !important;
     border-color: rgba(0, 0, 0, 0.14) !important;
@@ -4536,7 +4537,7 @@ body {
 /* --- VIP card --- */
 /* [REMOVED-DUPLICATE-vip2] */
 
-/* --- البروفايل الخاص --- */
+/* ---   --- */
 [data-theme="light"] .profil-name {
     color: #111827 !important;
 }
@@ -4563,7 +4564,7 @@ body {
     color: #6b7280 !important;
 }
 
-/* --- أزرار البروفايل (Edit / Paramètres) --- */
+/* ---   (Edit / Paramtres) --- */
 [data-theme="light"] #edit-profile-btn,
 [data-theme="light"] .prf-edit-btn {
     background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%) !important;
@@ -4600,34 +4601,34 @@ body {
     background: rgba(0, 0, 0, 0.12) !important;
 }
 
-/* صف Apparence */
+/*  Apparence */
 [data-theme="light"] #settings-sheet>div[style*="rgba(255,255,255,0.05)"] {
     background: rgba(0, 0, 0, 0.04) !important;
     border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
-/* نص Apparence */
+/*  Apparence */
 [data-theme="light"] #theme-icon {
-    /* يبقى بلونه (moon/sun) */
+    /*   (moon/sun) */
 }
 
 [data-theme="light"] #settings-sheet div[style*="font-size:15px"][style*="font-weight:600"] {
     color: #111827 !important;
 }
 
-/* زر Annuler */
+/*  Annuler */
 [data-theme="light"] #close-settings-btn {
     background: rgba(0, 0, 0, 0.05) !important;
     border-color: rgba(0, 0, 0, 0.08) !important;
     color: #6b7280 !important;
 }
 
-/* icon box داخل صف Apparence */
+/* icon box   Apparence */
 [data-theme="light"] #settings-sheet div[style*="width:38px"] {
     background: rgba(0, 0, 0, 0.06) !important;
 }
 
-/* --- Chat items (قائمة الشاتات) --- */
+/* --- Chat items ( ) --- */
 [data-theme="light"] .chat-item {
     background: rgba(255, 255, 255, 0.9) !important;
     border-color: rgba(0, 0, 0, 0.06) !important;
@@ -4914,7 +4915,7 @@ body {
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* Light mode overrides للـ settings sheet */
+/* Light mode overrides  settings sheet */
 [data-theme="light"] .settings-sheet-panel {
     background: #ffffff !important;
     border-top-color: rgba(0, 0, 0, 0.08) !important;
@@ -5010,14 +5011,14 @@ body {
 
 /* [REMOVED-DUPLICATE-user-card-3] */
 
-/* إصلاح أيقونات الأكشن — drop-shadow filter كان يمحيهم */
+/*     drop-shadow filter   */
 [data-theme="light"] .card-action-btn i,
 [data-theme="light"] .action-btn i {
     filter: none !important;
     color: inherit !important;
 }
 
-/* chat-btn خاص */
+/* chat-btn  */
 [data-theme="light"] .card-action-btn.chat-btn {
     background: rgba(59, 130, 246, 0.1) !important;
     border-color: rgba(59, 130, 246, 0.25) !important;
@@ -5062,7 +5063,7 @@ body {
     color: #374151 !important;
 }
 
-/* bio text في الكروت */
+/* bio text   */
 [data-theme="light"] .bio-text,
 [data-theme="light"] .bio-preview {
     color: #6b7280 !important;
@@ -5078,14 +5079,14 @@ body {
    LIGHT MODE - BOTTOM NAV FULL FIX
    ============================================================ */
 
-/* الحاوية */
+/*  */
 [data-theme="light"] .bottom-nav {
     background: #ffffff !important;
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
 }
 
-/* الأيقونات غير النشطة */
+/*    */
 [data-theme="light"] .nav-item .icon {
     color: #9ca3af !important;
     filter: none !important;
@@ -5095,7 +5096,7 @@ body {
     color: #9ca3af !important;
 }
 
-/* الأيقونة النشطة — ترتفع فوق الـ indicator */
+/*       indicator */
 [data-theme="light"] .nav-item.active .icon {
     color: #ffffff !important;
     filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.6)) !important;
@@ -5105,13 +5106,13 @@ body {
     color: #3b82f6 !important;
 }
 
-/* Indicator circle — border يتطابق مع الـ nav background */
+/* Indicator circle  border    nav background */
 [data-theme="light"] .bottom-nav .indicator-circle {
     border-color: #ffffff !important;
     background: #3b82f6 !important;
 }
 
-/* الزوايا المقوسة للـ indicator — تتطابق مع خلفية الـ nav */
+/*    indicator      nav */
 [data-theme="light"] .bottom-nav .indicator-circle::before {
     box-shadow: 2px -10px 0 0 #ffffff !important;
 }
@@ -5120,13 +5121,13 @@ body {
     box-shadow: -2px -10px 0 0 #ffffff !important;
 }
 
-/* badge ديال الشات */
+/* badge   */
 [data-theme="light"] .badge {
     border-color: #ffffff !important;
 }
 
 /* ============================================================
-   LIGHT MODE — USER CARDS FINAL (clean, elegant borders)
+   LIGHT MODE  USER CARDS FINAL (clean, elegant borders)
    ============================================================ */
 
 /* Base card */
@@ -5140,7 +5141,7 @@ body {
     color: #111827 !important;
 }
 
-/* Female card — border وردي واضح + shadow خفيف */
+/* Female card  border   + shadow  */
 [data-theme="light"] .user-card.female {
     background: linear-gradient(145deg, #fff5f9, #ffffff) !important;
     border: 1.5px solid rgba(219, 39, 119, 0.75) !important;
@@ -5151,7 +5152,7 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 1) !important;
 }
 
-/* Male card — border أزرق واضح + shadow خفيف */
+/* Male card  border   + shadow  */
 [data-theme="light"] .user-card.male {
     background: linear-gradient(145deg, #f5f8ff, #ffffff) !important;
     border: 1.5px solid rgba(37, 99, 235, 0.7) !important;
@@ -5162,7 +5163,7 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 1) !important;
 }
 
-/* VIP card — ذهبي */
+/* VIP card   */
 [data-theme="light"] .user-card.vip-member-card {
     background: linear-gradient(145deg, #fffbeb, #ffffff) !important;
     border: 1.5px solid rgba(245, 158, 11, 0.4) !important;
@@ -5195,7 +5196,7 @@ body {
         0 4px 20px rgba(37, 99, 235, 0.14) !important;
 }
 
-/* Text داخل الكرت */
+/* Text   */
 [data-theme="light"] .name-row h3 {
     color: #111827 !important;
 }
@@ -5219,11 +5220,11 @@ body {
 }
 
 /* ============================================================
-   LIGHT MODE — ACTION BUTTONS (chat/heart/star/close) FIX
+   LIGHT MODE  ACTION BUTTONS (chat/heart/star/close) FIX
    ============================================================ */
 
 /* ============================================================
-   LIGHT MODE — ACTION BUTTONS: couleur selon le genre du card
+   LIGHT MODE  ACTION BUTTONS: couleur selon le genre du card
    ============================================================ */
 
 [data-theme="light"] .action-btn {
@@ -5235,7 +5236,7 @@ body {
     color: inherit !important;
 }
 
-/* === CARTE MALE — tous les boutons en BLEU === */
+/* === CARTE MALE  tous les boutons en BLEU === */
 [data-theme="light"] .user-card.male .action-btn {
     background: #dbeafe !important;
     border: 1.5px solid rgba(26, 117, 255, 0.6) !important;
@@ -5252,7 +5253,7 @@ body {
     border-color: rgba(26, 117, 255, 0.9) !important;
 }
 
-/* === CARTE FEMALE — tous les boutons en ROSE === */
+/* === CARTE FEMALE  tous les boutons en ROSE === */
 [data-theme="light"] .user-card.female .action-btn {
     background: #fce7f3 !important;
     border: 1.5px solid rgba(255, 51, 153, 0.6) !important;
@@ -5269,7 +5270,7 @@ body {
     border-color: rgba(255, 51, 153, 0.9) !important;
 }
 
-/* États actifs (liked / favorited) — restent colorés */
+/* tats actifs (liked / favorited)  restent colors */
 [data-theme="light"] .action-btn.heart.liked {
     background: #ef4444 !important;
     border-color: rgba(0, 0, 0, 0.4) !important;
@@ -5290,7 +5291,7 @@ body {
     color: #fff !important;
 }
 
-/* Séparateur */
+/* Sparateur */
 [data-theme="light"] .card-actions-grid {
     border-left-color: rgba(0, 0, 0, 0.1) !important;
 }
@@ -5304,23 +5305,23 @@ body {
 }
 
 /* ============================================================
-   LIGHT MODE — USER DETAIL MODAL (openUserModal)
-   يغلب على الألوان hardcoded داخل script.js
+   LIGHT MODE  USER DETAIL MODAL (openUserModal)
+      hardcoded  script.js
    ============================================================ */
 
-/* الخلفية الرئيسية للكارت */
+/*    */
 [data-theme="light"] .user-modal-card {
     background: #ffffff !important;
     color: #111827 !important;
     box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.18) !important;
 }
 
-/* طبقة التدرج السفلية (اسم المستخدم) — من أبيض لشفاف */
+/*    ( )     */
 [data-theme="light"] .user-modal-card>div:first-child>div:last-child {
     background: linear-gradient(to top, #ffffff, transparent) !important;
 }
 
-/* صندوق التفاصيل (Genre / Âge / etc.) */
+/*   (Genre / ge / etc.) */
 [data-theme="light"] .modal-detail-box {
     background: #f3f4f6 !important;
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
@@ -5336,7 +5337,7 @@ body {
     font-weight: 700 !important;
 }
 
-/* صندوق الـ Bio */
+/*   Bio */
 [data-theme="light"] .modal-bio-box {
     background: #f9fafb !important;
     border: 1px solid rgba(0, 0, 0, 0.09) !important;
@@ -5351,7 +5352,7 @@ body {
     color: #4b5563 !important;
 }
 
-/* الأزرار السفلية — Bloquer / Signaler */
+/*    Bloquer / Signaler */
 [data-theme="light"] .btn-modal-action {
     background: #f3f4f6 !important;
     border: 1px solid rgba(0, 0, 0, 0.12) !important;
@@ -5364,14 +5365,14 @@ body {
     color: #dc2626 !important;
 }
 
-/* دائرة الأفاتار في الـ modal */
+/*     modal */
 [data-theme="light"] .user-modal-card [style*="background:#1c1c1e"] {
     background: #f3f4f6 !important;
 }
 
 /* ============================================================
-   LIGHT MODE — ADVANCED FILTER MODAL (#adv-filter-modal)
-   يغلب على الألوان hardcoded داخل script.js
+   LIGHT MODE  ADVANCED FILTER MODAL (#adv-filter-modal)
+      hardcoded  script.js
    ============================================================ */
 
 [data-theme="light"] #adv-filter-modal .hm-card {
@@ -5381,7 +5382,7 @@ body {
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18) !important;
 }
 
-/* التبويبات */
+/*  */
 [data-theme="light"] #adv-filter-modal .hm-tabs {
     border-bottom-color: rgba(0, 0, 0, 0.08) !important;
     background: #f9fafb !important;
@@ -5396,7 +5397,7 @@ body {
     background: none !important;
 }
 
-/* Pills الجنس */
+/* Pills  */
 [data-theme="light"] #adv-filter-modal .hm-pill {
     background: #f3f4f6 !important;
     border-color: rgba(0, 0, 0, 0.12) !important;
@@ -5414,7 +5415,7 @@ body {
     color: rgba(0, 0, 0, 0.45) !important;
 }
 
-/* Select المسافة */
+/* Select  */
 [data-theme="light"] #adv-filter-modal .hm-select {
     background: #f3f4f6 !important;
     border-color: rgba(0, 0, 0, 0.12) !important;
@@ -5426,7 +5427,7 @@ body {
     color: #111827 !important;
 }
 
-/* بطاقة VIP */
+/*  VIP */
 [data-theme="light"] #adv-filter-modal .hm-vip {
     background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(255, 248, 220, 0.9)) !important;
     border-color: rgba(251, 191, 36, 0.4) !important;
@@ -5437,7 +5438,7 @@ body {
     background: rgba(0, 0, 0, 0.15) !important;
 }
 
-/* زر Annuler */
+/*  Annuler */
 [data-theme="light"] #adv-filter-modal .hm-btn-cancel {
     background: #f3f4f6 !important;
     border-color: rgba(0, 0, 0, 0.12) !important;
@@ -5449,7 +5450,7 @@ body {
 }
 
 /* ============================================================
-   SIMPLE TOAST — إشعار سريع خفيف (للأكشن في الـ dropdown)
+   SIMPLE TOAST     (   dropdown)
    ============================================================ */
 .simple-toast {
     position: fixed;
@@ -5487,7 +5488,7 @@ body {
 }
 
 /* ============================================================
-   LIGHT MODE — CHAT ITEMS iOS-style separator
+   LIGHT MODE  CHAT ITEMS iOS-style separator
    ============================================================ */
 [data-theme="light"] .chat-item::after {
     background: rgba(0, 0, 0, 0.08);
@@ -5507,7 +5508,7 @@ body {
 }
 
 /* ============================================================
-   LIGHT MODE — CHAT WINDOW full fix
+   LIGHT MODE  CHAT WINDOW full fix
    ============================================================ */
 [data-theme="light"] .chat-window {
     background: #f0f2f5 !important;
@@ -5537,7 +5538,7 @@ body {
     background: rgba(0, 0, 0, 0.1) !important;
 }
 
-/* منطقة الإدخال */
+/*   */
 [data-theme="light"] .chat-input-area {
     background: #ffffff !important;
     border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
@@ -5559,7 +5560,7 @@ body {
     color: #6b7280 !important;
 }
 
-/* فقاعات الرسائل في light mode */
+/*    light mode */
 [data-theme="light"] .msg-bubble.received {
     background: #ffffff !important;
     color: #111827 !important;
@@ -5579,7 +5580,7 @@ body {
     color: rgba(255, 255, 255, 0.65) !important;
 }
 
-/* فاصل التاريخ */
+/*   */
 [data-theme="light"] .chat-date-divider span {
     background: #e5e7eb !important;
     color: #6b7280 !important;
@@ -5591,9 +5592,9 @@ body {
     border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   CHATS LIST — NEW DESIGN (matching screenshot)
-   ══════════════════════════════════════════════════════════════ */
+/* 
+   CHATS LIST  NEW DESIGN (matching screenshot)
+    */
 
 /* --- chats-list container reset --- */
 .chats-list {
@@ -5678,13 +5679,13 @@ body {
     flex-shrink: 0;
 }
 
-/* Male border — blue */
+/* Male border  blue */
 .chat-item-left-border.male {
     background: linear-gradient(90deg, #3b82f6, #1d4ed8);
     box-shadow: 0 2px 10px rgba(59, 130, 246, 0.45);
 }
 
-/* Female border — magenta-purple matching avatar */
+/* Female border  magenta-purple matching avatar */
 .chat-item-left-border.female {
     background: linear-gradient(90deg, #db2777, #c026d3);
     box-shadow: 0 2px 10px rgba(192, 38, 211, 0.5);
@@ -5754,7 +5755,7 @@ body {
     font-size: 9px;
 }
 
-/* Gender + age badge — male = blue */
+/* Gender + age badge  male = blue */
 .chat-stat-badge.chat-stat-gender.male {
     background: #3b82f6;
     color: #ffffff;
@@ -5762,7 +5763,7 @@ body {
     padding: 3px 8px;
 }
 
-/* Gender + age badge — female = solid pink */
+/* Gender + age badge  female = solid pink */
 .chat-stat-badge.chat-stat-gender.female {
     background: #ec4899;
     color: #ffffff;
@@ -5770,21 +5771,21 @@ body {
     padding: 3px 8px;
 }
 
-/* Time badge — grey */
+/* Time badge  grey */
 .chat-stat-badge.chat-stat-time {
     background: rgba(255, 255, 255, 0.08);
     color: var(--text-muted);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Distance (km) badge — default/male (teal) */
+/* Distance (km) badge  default/male (teal) */
 .chat-stat-badge.chat-stat-km {
     background: rgba(20, 184, 166, 0.14);
     color: #2dd4bf;
     border: 1px solid rgba(20, 184, 166, 0.25);
 }
 
-/* Distance (km) badge — female (pink background, pink text, blue icon) */
+/* Distance (km) badge  female (pink background, pink text, blue icon) */
 .chat-stat-badge.chat-stat-km.female {
     background: rgba(236, 72, 153, 0.12); /* light pink */
     color: #ec4899; /* pink text */
@@ -5855,7 +5856,7 @@ body {
 
 
 
-/* ── Light theme overrides ── */
+/*  Light theme overrides  */
 [data-theme="light"] .chats-section-title {
     color: #111827 !important;
 }
@@ -5918,7 +5919,7 @@ body {
 
 /* Light theme overrides for gender badges removed so they stay solid */
 
-/* Light theme — km badge */
+/* Light theme  km badge */
 [data-theme="light"] .chat-stat-badge.chat-stat-km {
     background: rgba(20, 184, 166, 0.1) !important;
     border-color: rgba(20, 184, 166, 0.2) !important;
@@ -6356,9 +6357,9 @@ body {
 [data-theme="light"] .profile-stat-divider {
     background: rgba(0, 0, 0, 0.08);
 }
-/* ═══════════════════════════════════════════════════ */
+/*  */
 /* === Bio Card with Hashtags (HayMoi) ===            */
-/* ═══════════════════════════════════════════════════ */
+/*  */
 
 .hm-bio-card {
     background: rgba(255, 255, 255, 0.03);
@@ -6492,9 +6493,9 @@ body {
     color: #4f46e5;
 }
 
-/* ═══════════════════════════════════════════════════ */
-/* === ID + Level Bar — clean minimal style ===       */
-/* ═══════════════════════════════════════════════════ */
+/*  */
+/* === ID + Level Bar  clean minimal style ===       */
+/*  */
 
 .hm-id-level-bar {
     position: absolute;
@@ -6511,7 +6512,7 @@ body {
     padding: 4px 6px;
 }
 
-/* ── shared pill base ── */
+/*  shared pill base  */
 .hm-id-badge,
 .hm-level-badge {
     display: inline-flex;
@@ -6523,7 +6524,7 @@ body {
     transition: opacity 0.2s, transform 0.15s;
 }
 
-/* ── ID pill ── */
+/*  ID pill  */
 .hm-id-badge {
     background: transparent;
     cursor: pointer;
@@ -6556,7 +6557,7 @@ body {
     color: rgba(255,255,255,0.2);
 }
 
-/* ── Level pill ── */
+/*  Level pill  */
 .hm-level-badge {
     background: transparent;
     border-left: 1px solid rgba(255,255,255,0.2);
@@ -6609,9 +6610,9 @@ body {
     color: #94a3b8;
 }
 
-/* ═══════════════════════════════════════════════════════════════ */
-/* === PROFILE REDESIGN — Mockup Clean Style ===                  */
-/* ═══════════════════════════════════════════════════════════════ */
+/*  */
+/* === PROFILE REDESIGN  Mockup Clean Style ===                  */
+/*  */
 
 /* Overall container override */
 .profil-card-new-clean {
@@ -7114,9 +7115,9 @@ body {
     pointer-events: none;
 }
 
-/* ═══════════════════════════════════════════════════════════════ */
+/*  */
 /* === LIGHT MODE overrides for clean profile ===                 */
-/* ═══════════════════════════════════════════════════════════════ */
+/*  */
 
 [data-theme="light"] .profil-card-new-clean {
     background: transparent !important;
@@ -7461,7 +7462,7 @@ body {
     box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4) !important;
 }
 
-/* ── Dark Mode overrides ── */
+/*  Dark Mode overrides  */
 .profil-card-new-clean .prf-social-card {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.07);
@@ -7503,7 +7504,7 @@ body {
     color: #0066ff;
 }
 
-/* ── Light Mode overrides (when data-theme=light) ── */
+/*  Light Mode overrides (when data-theme=light)  */
 [data-theme="light"] .prf-social-card {
     background: #f8f9fa;
     border: none;
@@ -7849,9 +7850,9 @@ body {
     color: #0052cc !important;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   RESTORED CHATS VIEW DESIGN — NOTES, TABS, SEARCH, BACKGROUNDS
-   ══════════════════════════════════════════════════════════════ */
+/* 
+   RESTORED CHATS VIEW DESIGN  NOTES, TABS, SEARCH, BACKGROUNDS
+    */
 
 /* --- 1. Pastel Glowing Background (Light Mode Override) --- */
 [data-theme="light"] body,
@@ -8619,6 +8620,7 @@ body {
     margin-left: auto !important;
     margin-right: auto !important;
 }
+
 
 
 

@@ -123,6 +123,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (document.getElementById('instagram')) document.getElementById('instagram').value = profile.instagram || '';
                 if (document.getElementById('tiktok')) document.getElementById('tiktok').value = profile.tiktok || '';
 
+                // تعبئة قسم عرض About Me الجديد
+                const profilBioText = document.getElementById('profil-bio-text');
+                if (profilBioText) {
+                    profilBioText.innerHTML = profile.bio 
+                        ? escapeHtml(profile.bio) 
+                        : `Add a bio or hashtags to describe <span style="color:#ffa500;">✨</span> yourself`;
+                }
+                const hashtagsRow = document.getElementById('hm-hashtags-row');
+                if (hashtagsRow) {
+                    hashtagsRow.innerHTML = (profile.hashtags && profile.hashtags.length > 0)
+                        ? profile.hashtags.map((h, i) => `<span class="tag tag-${(i % 3) + 1}">${escapeHtml(h)}</span>`).join('')
+                        : '';
+                }
+
+                // ربط زر تعديل الهاشتاغات
+                const bioEditHashtagBtn = document.getElementById('bio-edit-hashtag-btn');
+                if (bioEditHashtagBtn) {
+                    bioEditHashtagBtn.addEventListener('click', () => {
+                        if (typeof openHashtagEditor === 'function') {
+                            openHashtagEditor(profile, user);
+                        }
+                    });
+                }
+
                 // تحميل الصور الموجودة في المعرض
                 if (profile.gallery && Array.isArray(profile.gallery)) {
                     profile.gallery.forEach((url, i) => {

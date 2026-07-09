@@ -38,7 +38,25 @@
                 <input type="date" id="dob" required>
             </div>
 
-            <div class="input-group">
+            <!-- About Me Section (Moved from Settings) -->
+            <div class="prf-section-title prf-section-title-center" style="margin-top: 25px; margin-bottom: 10px; color: var(--text-white);">
+                <i class="fas fa-comment"></i>
+                About me
+            </div>
+            <div class="prf-about-box" style="margin-bottom: 25px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                    <div class="prf-about-text" id="profil-bio-text">
+                        Add a bio or hashtags to describe <span style="color:#ffa500;">✨</span> yourself
+                    </div>
+                    <button type="button" class="prf-btn-round" id="bio-edit-hashtag-btn" title="Modifier" style="flex-shrink:0;">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+                <div class="tags-container" id="hm-hashtags-row">
+                </div>
+            </div>
+
+            <div class="input-group" style="display: none;">
                 <label for="bio">À propos de moi (Bio) :</label>
                 <textarea id="bio" rows="3" placeholder="Écrivez quelque chose pour attirer l'attention..."></textarea>
             </div>

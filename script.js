@@ -1514,140 +1514,151 @@ async function loadOwnProfile(user) {
                     </div>
                     ${socialLinksSection}
 
-                    <!-- About Me Section -->
-                    <div class="prf-section-title prf-section-title-center" style="margin-top: 25px;">
-                        <i class="fas fa-comment"></i>
-                        About me
-                    </div>
-
-                    <div class="prf-about-box">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
-                            <div class="prf-about-text" id="profil-bio-text">
-                                ${profile.bio
-                    ? escapeHtml(profile.bio)
-                    : `Add a bio or hashtags to describe <span style="color:#ffa500;">✨</span> yourself`
-                }
-                            </div>
-                            <button class="prf-btn-round" id="bio-edit-hashtag-btn" title="Modifier" style="flex-shrink:0;">
-                                <i class="fas fa-pen"></i>
-                            </button>
-                        </div>
-                        <div class="tags-container" id="hm-hashtags-row">
-                            ${(profile.hashtags && profile.hashtags.length > 0)
-                    ? profile.hashtags.map((h, i) => `<span class="tag tag-${(i % 3) + 1}">${escapeHtml(h)}</span>`).join('')
-                    : ''
-                }
-                        </div>
-                    </div>
-
                     <!-- VIP Cards Section -->
+                    <div class="prf-section-title prf-section-title-center" style="margin-top: 25px; margin-bottom: 5px; color: #007bff; font-weight: bold; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+                        <i class="fas fa-crown" style="color: #007bff; margin-right: 5px;"></i>
+                        باقات البريميوم
+                    </div>
                     <div class="profil-vip-section" id="profil-vip-slider" style="display: flex; gap: 15px; margin: 15px auto 10px auto; padding: 0; width: 98%; max-width: 500px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;">
                         <!-- VIP Normal -->
-                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 20px; padding: 20px; color: white; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25); user-select: none;">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                                <div style="background: rgba(255,255,255,0.25); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                                    <i class="fas fa-gem" style="font-size: 22px;"></i>
-                                </div>
-                                <div style="text-align: left; flex-grow: 1;">
-                                    <div style="font-weight: 800; font-size: 20px; line-height: 1;">VIP</div>
-                                    <div style="font-size: 12px; opacity: 0.9; margin-top: 4px; font-weight: 500;">باقة مميزة</div>
+                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: radial-gradient(circle at top, #1a3a6d, #050a14); border-radius: 20px; padding: 16px; color: white; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0, 100, 255, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); user-select: none;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; direction: ltr;">
+                                <!-- Diamond -->
+                                <i class="fas fa-gem" style="font-size: 40px; color: #ffffff; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.8));"></i>
+                                
+                                <!-- VIP Text -->
+                                <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                                    <div style="background: linear-gradient(to bottom, #ffffff 0%, #d1d5db 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; font-size: 34px; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); letter-spacing: 1px;">VIP</div>
+                                    <div style="font-size: 14px; color: #fff; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin-top: 4px;">باقة مميزة</div>
                                 </div>
                             </div>
                             
-                            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 16px; padding: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
-                                <div style="display: flex; flex-direction: column; gap: 14px; font-size: 14px; font-weight: 600;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">إزالة الإعلانات</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                            <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 12px; padding: 12px; margin-bottom: 16px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px; font-weight: 600;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-shield" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">إزالة الإعلانات</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">رسائل مميزة</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-comment-dots" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">رسائل مميزة</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">إطار ذهبي</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-address-card" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">إطار ذهبي</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">معرفة الزوار</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-eye" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">معرفة الزوار</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <button style="width: 90%; margin: auto auto 0 auto; background: #ffffff; color: #6b21a8; border: none; padding: 14px 0; border-radius: 24px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.2s; display: block;">تفعيل الباقة</button>
+                            <button style="width: 100%; margin: auto auto 0 auto; background: linear-gradient(180deg, #0088ff 0%, #0044ff 100%); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); padding: 10px 0; border-radius: 50px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 0 15px #0066ff, inset 0 0 5px #ffffff; text-align: center; transition: all 0.2s; display: block; letter-spacing: 0.5px;">تفعيل الباقة</button>
                         </div>
 
                         <!-- SVIP -->
-                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 20px; padding: 20px; color: white; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); user-select: none;">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                                <div style="background: rgba(255,255,255,0.25); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                                    <i class="fas fa-crown" style="font-size: 22px;"></i>
-                                </div>
-                                <div style="text-align: left; flex-grow: 1;">
-                                    <div style="font-weight: 800; font-size: 20px; line-height: 1;">SVIP</div>
-                                    <div style="font-size: 12px; opacity: 0.9; margin-top: 4px; font-weight: 500;">باقة احترافية</div>
+                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: radial-gradient(circle at top, #b45309, #450a0a); border-radius: 20px; padding: 16px; color: white; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); user-select: none;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; direction: ltr;">
+                                <i class="fas fa-crown" style="font-size: 40px; color: #fbbf24; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.8));"></i>
+                                <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                                    <div style="background: linear-gradient(to bottom, #ffffff 0%, #fbbf24 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; font-size: 34px; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); letter-spacing: 1px;">SVIP</div>
+                                    <div style="font-size: 14px; color: #fff; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin-top: 4px;">باقة احترافية</div>
                                 </div>
                             </div>
                             
-                            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 16px; padding: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
-                                <div style="display: flex; flex-direction: column; gap: 14px; font-size: 14px; font-weight: 600;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">خصائص VIP</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                            <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 12px; padding: 12px; margin-bottom: 16px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px; font-weight: 600;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-crown" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">خصائص VIP</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">إزالة الإعلانات كلياً</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-ban" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">إزالة الإعلانات كلياً</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">زوار الحساب</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-users" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">زوار الحساب</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">أولوية الظهور</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-arrow-trend-up" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">أولوية الظهور</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <button style="width: 90%; margin: auto auto 0 auto; background: #ffffff; color: #ef4444; border: none; padding: 14px 0; border-radius: 24px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.2s; display: block;">تفعيل الباقة</button>
+                            <button style="width: 100%; margin: auto auto 0 auto; background: linear-gradient(180deg, #0088ff 0%, #0044ff 100%); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); padding: 10px 0; border-radius: 50px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 0 15px #0066ff, inset 0 0 5px #ffffff; text-align: center; transition: all 0.2s; display: block; letter-spacing: 0.5px;">تفعيل الباقة</button>
                         </div>
 
                         <!-- Ultimate VIP -->
-                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #fbbf24, #d97706); border-radius: 20px; padding: 20px; color: white; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25); user-select: none;">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                                <div style="background: rgba(255,255,255,0.25); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                                    <i class="fas fa-star" style="font-size: 22px;"></i>
-                                </div>
-                                <div style="text-align: left; flex-grow: 1;">
-                                    <div style="font-weight: 800; font-size: 20px; line-height: 1;">Ultimate VIP</div>
-                                    <div style="font-size: 12px; opacity: 0.9; margin-top: 4px; font-weight: 500;">باقة كاملة</div>
+                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: radial-gradient(circle at top, #854d0e, #3f2c00); border-radius: 20px; padding: 16px; color: white; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); user-select: none;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; direction: ltr;">
+                                <i class="fas fa-star" style="font-size: 40px; color: #fde047; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.8));"></i>
+                                <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                                    <div style="background: linear-gradient(to bottom, #ffffff 0%, #fef08a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; font-size: 34px; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); letter-spacing: 1px;">Ultimate VIP</div>
+                                    <div style="font-size: 14px; color: #fff; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin-top: 4px;">باقة كاملة</div>
                                 </div>
                             </div>
                             
-                            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 16px; padding: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
-                                <div style="display: flex; flex-direction: column; gap: 14px; font-size: 14px; font-weight: 600;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">جميع الخصائص</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                            <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 12px; padding: 12px; margin-bottom: 16px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px; font-weight: 600;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-layer-group" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">جميع الخصائص</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">دعم خاص ومباشر</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-headset" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">دعم خاص ومباشر</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">هدايا حصرية</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-gift" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">هدايا حصرية</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span style="opacity: 0.95;">تخصيص كامل للحساب</span>
-                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; direction: ltr;">
+                                        <i class="fa-solid fa-sliders" style="color: #ffffff; font-size: 14px; width: 20px; text-align: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));"></i>
+                                        <span style="flex-grow: 1; text-align: right; padding: 0 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); letter-spacing: 0.5px;">تخصيص كامل للحساب</span>
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #00aaff;">
+                                            <i class="fas fa-check" style="color: #ffffff; font-size: 10px;"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <button style="width: 90%; margin: auto auto 0 auto; background: #ffffff; color: #d97706; border: none; padding: 14px 0; border-radius: 24px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.2s; display: block;">تفعيل الباقة</button>
+                            <button style="width: 100%; margin: auto auto 0 auto; background: linear-gradient(180deg, #0088ff 0%, #0044ff 100%); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); padding: 10px 0; border-radius: 50px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 0 15px #0066ff, inset 0 0 5px #ffffff; text-align: center; transition: all 0.2s; display: block; letter-spacing: 0.5px;">تفعيل الباقة</button>
                         </div>
                     </div>
                     
@@ -2057,7 +2068,7 @@ async function loadOwnProfile(user) {
             }
             function closeSettingsSheet() {
                 if (!settingsSheet || !settingsOverlay) return;
-                settingsSheet.style.bottom = '-400px';
+                settingsSheet.style.bottom = '-150%';
                 setTimeout(() => {
                     settingsOverlay.style.display = 'none';
                     const bottomNav = document.querySelector('.bottom-nav');

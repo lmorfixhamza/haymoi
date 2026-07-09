@@ -894,6 +894,37 @@ function initAppTabs() {
             const showHeader = viewId === 'trouver' || viewId === 'chats' || viewId === 'contacts' || viewId === 'profil';
             appHeader.style.display = showHeader ? 'flex' : 'none';
 
+            // Neumorphism Card for Profil Header
+            if (viewId === 'profil') {
+                appHeader.style.setProperty('background', 'rgba(255, 255, 255, 0.4)', 'important');
+                appHeader.style.setProperty('backdrop-filter', 'blur(10px)', 'important');
+                appHeader.style.setProperty('margin-top', '0', 'important');
+                appHeader.style.setProperty('margin-left', '0', 'important');
+                appHeader.style.setProperty('margin-right', '0', 'important');
+                appHeader.style.setProperty('margin-bottom', '0', 'important');
+                appHeader.style.setProperty('width', '100%', 'important');
+                appHeader.style.setProperty('min-height', '70px', 'important');
+                appHeader.style.setProperty('display', 'flex', 'important');
+                appHeader.style.setProperty('align-items', 'center', 'important');
+                appHeader.style.setProperty('border-radius', '0', 'important'); // Rectangular corners
+                appHeader.style.setProperty('box-shadow', '5px 5px 15px rgba(0,0,0,0.05), -5px -5px 15px rgba(255,255,255,0.8)', 'important');
+                appHeader.style.setProperty('padding', '18px 16px 15px 16px', 'important'); // Slightly reduced padding and height
+            } else {
+                appHeader.style.removeProperty('background');
+                appHeader.style.removeProperty('backdrop-filter');
+                appHeader.style.removeProperty('margin-top');
+                appHeader.style.removeProperty('margin-left');
+                appHeader.style.removeProperty('margin-right');
+                appHeader.style.removeProperty('margin-bottom');
+                appHeader.style.removeProperty('width');
+                appHeader.style.removeProperty('min-height');
+                appHeader.style.removeProperty('display');
+                appHeader.style.removeProperty('align-items');
+                appHeader.style.removeProperty('border-radius');
+                appHeader.style.removeProperty('box-shadow');
+                appHeader.style.removeProperty('padding');
+            }
+
             const headerTitle = document.getElementById('header-title');
             const headerSearch = document.getElementById('header-search-container');
             if (headerTitle) {
@@ -924,23 +955,27 @@ function initAppTabs() {
                         const _hmLvl = currentUserProfile ? calculateUserLevel(currentUserProfile.visits_count || 0, currentUserProfile.friends_count || 0) : 1;
                         headerTitle.innerHTML = `
                             <div style="display: flex; align-items: center; width: 100%; position: relative;">
-                                <!-- ID + Level à gauche, simple sans fond -->
-                                <div id="hm-header-id-badge" title="Copier l'ID" style="display:flex; flex-direction:column; gap:3px; cursor:pointer; padding:4px 2px; flex-shrink:0;">
-                                    <span style="display:flex; align-items:center; gap:5px; font-size:13.5px; font-weight:800; letter-spacing:0.02em; line-height:1.3; color:${labelColor};">
-                                        <span style="color:${labelColor}; font-weight:700;">ID</span>
-                                        <span style="color:${labelColor}; font-size:14px;">:</span>
-                                        <span id="hm-header-id-val" style="font-variant-numeric:tabular-nums; letter-spacing:1px; color:${valColor}; font-size:14.5px; font-weight:800;">${_hmId}</span>
-                                    </span>
-                                    <span style="display:flex; align-items:center; gap:5px; font-size:13.5px; font-weight:800; letter-spacing:0.02em; line-height:1.3; color:${labelColor};">
-                                        <span style="color:${labelColor}; font-weight:700;">NV</span>
-                                        <span style="color:${labelColor}; font-size:14px;">:</span>
-                                        <span style="color:${valColor}; font-size:14.5px; font-weight:800;">${_hmLvl}</span>
-                                    </span>
+                                <!-- ID + NV à gauche, Neumorphism Icons -->
+                                <div id="hm-header-id-badge" title="Copier l'ID" style="display:flex; flex-direction:column; gap:6px; cursor:pointer; flex-shrink:0;">
+                                    <div style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800; letter-spacing:0.02em; line-height:1; color:${valColor};">
+                                        <div style="width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(255, 255, 255, 0.6); box-shadow: 2px 2px 5px rgba(0,0,0,0.05), -2px -2px 5px rgba(255,255,255,0.8);"><i class="far fa-user" style="color: ${valColor}; font-size: 12px;"></i></div>
+                                        <div style="display:flex; align-items:center; gap:3px;">
+                                            <span style="color:${labelColor}; font-weight:700;">ID :</span>
+                                            <span id="hm-header-id-val" style="font-variant-numeric:tabular-nums; letter-spacing:0.5px;">${_hmId}</span>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800; letter-spacing:0.02em; line-height:1; color:${valColor};">
+                                        <div style="width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(255, 255, 255, 0.6); box-shadow: 2px 2px 5px rgba(0,0,0,0.05), -2px -2px 5px rgba(255,255,255,0.8);"><i class="far fa-star" style="color: ${valColor}; font-size: 12px;"></i></div>
+                                        <div style="display:flex; align-items:center; gap:3px;">
+                                            <span style="color:${labelColor}; font-weight:700;">Level :</span>
+                                            <span>${_hmLvl}</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- Titre centré -->
                                 <div class="chats-section-title-block" style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2px; position:absolute; left:50%; transform:translateX(-50%);">
-                                    <h2 class="chats-section-title" translate="no" style="color: ${titleColor}; font-size: 26px; font-weight: 800; margin: 0; line-height: 1.1;">Hay Moi</h2>
-                                    <span class="chats-section-count" translate="no" style="font-size: 13px; font-weight: 600; color: var(--text-muted); opacity: 0.8;">My Profile</span>
+                                    <h2 class="chats-section-title" translate="no" style="color: ${titleColor}; font-size: 24px; font-weight: 800; margin: 0; line-height: 1.1;">Hay Moi</h2>
+                                    <span class="chats-section-count" translate="no" style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); opacity: 0.8;">My Profile</span>
                                 </div>
                             </div>
                         `;
@@ -978,7 +1013,21 @@ function initAppTabs() {
                 if (headerComposeBtn) headerComposeBtn.style.display = viewId === 'chats' ? 'block' : 'none';
             } else if (viewId === 'profil') {
                 if (headerAvatar) headerAvatar.style.display = 'none';
-                if (headerSettingsBtn) headerSettingsBtn.style.display = 'block';
+                if (headerSettingsBtn) {
+                    headerSettingsBtn.style.display = 'flex';
+                    // Neumorphism settings button
+                    headerSettingsBtn.style.background = 'rgba(255, 255, 255, 0.6)';
+                    headerSettingsBtn.style.borderRadius = '12px'; // slightly more rounded to match the larger size
+                    headerSettingsBtn.style.boxShadow = '2px 2px 5px rgba(0,0,0,0.05), -2px -2px 5px rgba(255,255,255,0.8)';
+                    headerSettingsBtn.style.width = '42px'; // larger width
+                    headerSettingsBtn.style.height = '42px'; // larger height
+                    headerSettingsBtn.style.padding = '0';
+                    headerSettingsBtn.style.justifyContent = 'center';
+                    headerSettingsBtn.style.alignItems = 'center';
+                    headerSettingsBtn.style.color = '#111827';
+                    headerSettingsBtn.style.fontSize = '20px'; // larger icon
+                    headerSettingsBtn.style.right = '12px';
+                }
                 if (headerComposeBtn) headerComposeBtn.style.display = 'none';
 
                 // Click to copy ID from header badge
@@ -1398,7 +1447,7 @@ async function loadOwnProfile(user) {
             }
 
             container.innerHTML = `
-                <div class="profil-card-new-clean" style="position: relative; overflow: visible; padding-top: 0;">
+                <div class="profil-card-new-clean" style="position: relative; overflow: visible; padding-top: 0; margin-top: 0;">
                     <!-- Profile Banner -->
                     <div class="profile-banner ${profile.gender === 'female' ? 'female-banner' : ''}">
                         ${bannerHtml}
@@ -1492,25 +1541,121 @@ async function loadOwnProfile(user) {
                     </div>
 
                     <!-- VIP Cards Section -->
-                    <div class="profil-vip-section" style="display: flex; gap: 15px; margin: 15px auto 10px auto; padding: 0; width: 98%; max-width: 500px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;">
+                    <div class="profil-vip-section" id="profil-vip-slider" style="display: flex; gap: 15px; margin: 15px auto 10px auto; padding: 0; width: 98%; max-width: 500px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;">
                         <!-- VIP Normal -->
-                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 20px; padding: 12px 10px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25); cursor: pointer; transition: transform 0.2s;">
-                            <i class="fas fa-gem" style="font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"></i>
-                            <span style="font-weight: 700; font-size: 14px; letter-spacing: 0.5px;">VIP</span>
-                            <span style="font-size: 11px; opacity: 0.8; margin-top: 2px;">Avantages exclusifs</span>
+                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 20px; padding: 20px; color: white; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25); user-select: none;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                <div style="background: rgba(255,255,255,0.25); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <i class="fas fa-gem" style="font-size: 22px;"></i>
+                                </div>
+                                <div style="text-align: left; flex-grow: 1;">
+                                    <div style="font-weight: 800; font-size: 20px; line-height: 1;">VIP</div>
+                                    <div style="font-size: 12px; opacity: 0.9; margin-top: 4px; font-weight: 500;">باقة مميزة</div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 16px; padding: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="display: flex; flex-direction: column; gap: 14px; font-size: 14px; font-weight: 600;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">إزالة الإعلانات</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">رسائل مميزة</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">إطار ذهبي</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">معرفة الزوار</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button style="width: 90%; margin: auto auto 0 auto; background: #ffffff; color: #6b21a8; border: none; padding: 14px 0; border-radius: 24px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.2s; display: block;">تفعيل الباقة</button>
                         </div>
-                        <!-- SVIP المميز -->
-                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 20px; padding: 12px 10px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); cursor: pointer; transition: transform 0.2s;">
-                            <i class="fas fa-crown" style="font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"></i>
-                            <span style="font-weight: 800; font-size: 14px; letter-spacing: 0.5px;">SVIP</span>
-                            <span style="font-size: 11px; opacity: 0.8; margin-top: 2px;">Premium +</span>
+
+                        <!-- SVIP -->
+                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 20px; padding: 20px; color: white; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); user-select: none;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                <div style="background: rgba(255,255,255,0.25); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <i class="fas fa-crown" style="font-size: 22px;"></i>
+                                </div>
+                                <div style="text-align: left; flex-grow: 1;">
+                                    <div style="font-weight: 800; font-size: 20px; line-height: 1;">SVIP</div>
+                                    <div style="font-size: 12px; opacity: 0.9; margin-top: 4px; font-weight: 500;">باقة احترافية</div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 16px; padding: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="display: flex; flex-direction: column; gap: 14px; font-size: 14px; font-weight: 600;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">خصائص VIP</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">إزالة الإعلانات كلياً</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">زوار الحساب</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">أولوية الظهور</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button style="width: 90%; margin: auto auto 0 auto; background: #ffffff; color: #ef4444; border: none; padding: 14px 0; border-radius: 24px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.2s; display: block;">تفعيل الباقة</button>
                         </div>
+
                         <!-- Ultimate VIP -->
-                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #fbbf24, #d97706); border-radius: 20px; padding: 12px 10px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25); cursor: pointer; transition: transform 0.2s;">
-                            <i class="fas fa-star" style="font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"></i>
-                            <span style="font-weight: 800; font-size: 14px; letter-spacing: 0.5px;">Ultimate VIP</span>
-                            <span style="font-size: 11px; opacity: 0.8; margin-top: 2px;">All Access</span>
+                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #fbbf24, #d97706); border-radius: 20px; padding: 20px; color: white; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25); user-select: none;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                <div style="background: rgba(255,255,255,0.25); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <i class="fas fa-star" style="font-size: 22px;"></i>
+                                </div>
+                                <div style="text-align: left; flex-grow: 1;">
+                                    <div style="font-weight: 800; font-size: 20px; line-height: 1;">Ultimate VIP</div>
+                                    <div style="font-size: 12px; opacity: 0.9; margin-top: 4px; font-weight: 500;">باقة كاملة</div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 16px; padding: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="display: flex; flex-direction: column; gap: 14px; font-size: 14px; font-weight: 600;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">جميع الخصائص</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">دعم خاص ومباشر</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">هدايا حصرية</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="opacity: 0.95;">تخصيص كامل للحساب</span>
+                                        <i class="fas fa-check-circle" style="color: #fff; font-size: 16px; text-shadow: 0 0 4px rgba(255,255,255,0.5);"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button style="width: 90%; margin: auto auto 0 auto; background: #ffffff; color: #d97706; border: none; padding: 14px 0; border-radius: 24px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.2s; display: block;">تفعيل الباقة</button>
                         </div>
+                    </div>
+                    
+                    <!-- VIP Pagination Dots -->
+                    <div id="vip-pagination-dots" style="display: flex; justify-content: center; gap: 6px; margin-bottom: 24px;">
+                        <div class="vip-dot active" style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; transition: all 0.3s;"></div>
+                        <div class="vip-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; transition: all 0.3s;"></div>
+                        <div class="vip-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; transition: all 0.3s;"></div>
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 5px; width: 100%; max-width: 500px; margin: 0 auto; align-items: center;">
@@ -1632,6 +1777,30 @@ async function loadOwnProfile(user) {
                     const walk = (x - startX) * 2; // سرعة السحب
                     vipSection.scrollLeft = scrollLeft - walk;
                 });
+
+                // Update pagination dots on scroll
+                const dots = container.querySelectorAll('#vip-pagination-dots .vip-dot');
+                if (dots.length > 0) {
+                    const updateDots = () => {
+                        const sLeft = vipSection.scrollLeft;
+                        const cardWidth = vipSection.offsetWidth * 0.85; 
+                        const index = Math.round(sLeft / cardWidth);
+                        
+                        dots.forEach((dot, i) => {
+                            if (i === index) {
+                                dot.classList.add('active');
+                                if (i === 0) dot.style.background = '#3b82f6';
+                                else if (i === 1) dot.style.background = '#f59e0b';
+                                else if (i === 2) dot.style.background = '#fbbf24';
+                            } else {
+                                dot.classList.remove('active');
+                                dot.style.background = '#d1d5db';
+                            }
+                        });
+                    };
+                    vipSection.addEventListener('scroll', updateDots);
+                    updateDots();
+                }
             }
 
             // إعداد معرض الصور المعروض في الـ Lightbox للمستخدم الحالي

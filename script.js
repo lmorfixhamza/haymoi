@@ -1307,7 +1307,7 @@ async function loadOwnProfile(user) {
             const socialLinksSection = `
                 <div class="prf-social-list">
                     <!-- Instagram -->
-                    <div class="prf-social-card" id="social-instagram-item">
+                    <div class="prf-social-card ${!profile.instagram ? 'social-inactive' : ''}" id="social-instagram-item">
                         <div class="prf-social-left">
                             <div class="prf-social-icon prf-icon-instagram"><i class="fab fa-instagram"></i></div>
                             <div class="prf-social-text">
@@ -1321,7 +1321,7 @@ async function loadOwnProfile(user) {
                         </div>
                     </div>
                     <!-- WhatsApp -->
-                    <div class="prf-social-card" id="social-whatsapp-item">
+                    <div class="prf-social-card ${!profile.whatsapp ? 'social-inactive' : ''}" id="social-whatsapp-item">
                         <div class="prf-social-left">
                             <div class="prf-social-icon prf-icon-whatsapp"><i class="fab fa-whatsapp"></i></div>
                             <div class="prf-social-text">
@@ -1335,7 +1335,7 @@ async function loadOwnProfile(user) {
                         </div>
                     </div>
                     <!-- TikTok -->
-                    <div class="prf-social-card" id="social-tiktok-item">
+                    <div class="prf-social-card ${!profile.tiktok ? 'social-inactive' : ''}" id="social-tiktok-item">
                         <div class="prf-social-left">
                             <div class="prf-social-icon prf-icon-tiktok"><i class="fab fa-tiktok"></i></div>
                             <div class="prf-social-text">
@@ -1349,7 +1349,7 @@ async function loadOwnProfile(user) {
                         </div>
                     </div>
                     <!-- Facebook -->
-                    <div class="prf-social-card" id="social-facebook-item">
+                    <div class="prf-social-card ${!profile.facebook ? 'social-inactive' : ''}" id="social-facebook-item">
                         <div class="prf-social-left">
                             <div class="prf-social-icon prf-icon-facebook"><i class="fab fa-facebook-f"></i></div>
                             <div class="prf-social-text">
@@ -1492,30 +1492,36 @@ async function loadOwnProfile(user) {
                     </div>
 
                     <!-- VIP Cards Section -->
-                    <div class="profil-vip-section" style="display: flex; gap: 12px; margin: 20px auto 16px auto; padding: 0; width: 90%; max-width: 350px;">
+                    <div class="profil-vip-section" style="display: flex; gap: 15px; margin: 15px auto 10px auto; padding: 0; width: 98%; max-width: 500px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;">
                         <!-- VIP Normal -->
-                        <div class="hm-vip-card" style="flex: 1; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 20px; padding: 20px 10px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25); cursor: pointer; transition: transform 0.2s;">
+                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 20px; padding: 12px 10px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25); cursor: pointer; transition: transform 0.2s;">
                             <i class="fas fa-gem" style="font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"></i>
                             <span style="font-weight: 700; font-size: 14px; letter-spacing: 0.5px;">VIP</span>
                             <span style="font-size: 11px; opacity: 0.8; margin-top: 2px;">Avantages exclusifs</span>
                         </div>
                         <!-- SVIP المميز -->
-                        <div class="hm-vip-card" style="flex: 1; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 20px; padding: 20px 10px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); cursor: pointer; transition: transform 0.2s;">
+                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 20px; padding: 12px 10px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); cursor: pointer; transition: transform 0.2s;">
                             <i class="fas fa-crown" style="font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"></i>
                             <span style="font-weight: 800; font-size: 14px; letter-spacing: 0.5px;">SVIP</span>
                             <span style="font-size: 11px; opacity: 0.8; margin-top: 2px;">Premium +</span>
                         </div>
+                        <!-- Ultimate VIP -->
+                        <div class="hm-vip-card" style="flex: 0 0 85%; scroll-snap-align: center; background: linear-gradient(135deg, #fbbf24, #d97706); border-radius: 20px; padding: 12px 10px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25); cursor: pointer; transition: transform 0.2s;">
+                            <i class="fas fa-star" style="font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"></i>
+                            <span style="font-weight: 800; font-size: 14px; letter-spacing: 0.5px;">Ultimate VIP</span>
+                            <span style="font-size: 11px; opacity: 0.8; margin-top: 2px;">All Access</span>
+                        </div>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; gap: 8px; width: 90%; max-width: 350px; margin: 0 auto; align-items: center;">
+                    <div style="display: flex; flex-direction: column; gap: 5px; width: 100%; max-width: 500px; margin: 0 auto; align-items: center;">
                         <!-- Edit Profile Button -->
-                        <button id="edit-profile-btn" class="edit-profile-btn prf-edit-btn" style="margin:0; width: 100%; min-height: 50px; font-size: 16px;">
+                        <button id="edit-profile-btn" class="edit-profile-btn prf-edit-btn" style="margin:0; width: 100%; height: 45px; min-height: 45px; font-size: 16px;">
                             <i class="fas fa-pen"></i>
                             Edit Profile
                         </button>
     
                         <!-- Logout Button -->
-                        <button id="logout-btn-app" class="prf-logout-btn" style="margin:0; width: 100%; min-height: 50px; font-size: 16px;">
+                        <button id="logout-btn-app" class="prf-logout-btn" style="margin:0; width: 100%; height: 45px; min-height: 45px; font-size: 16px;">
                             <i class="fas fa-sign-out-alt"></i>
                             <span data-i18n="settings_logout">Se déconnecter</span>
                         </button>
@@ -1593,6 +1599,39 @@ async function loadOwnProfile(user) {
             const ownCarouselEl = document.getElementById('own-gallery-carousel');
             if (ownCarouselEl) {
                 initProfileCarousel(ownCarouselEl);
+            }
+
+            // تفعيل السحب بالماوس (Drag to Scroll) لبطاقات VIP
+            const vipSection = document.querySelector('.profil-vip-section');
+            if (vipSection) {
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+
+                vipSection.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    vipSection.classList.add('active');
+                    startX = e.pageX - vipSection.offsetLeft;
+                    scrollLeft = vipSection.scrollLeft;
+                });
+
+                vipSection.addEventListener('mouseleave', () => {
+                    isDown = false;
+                    vipSection.classList.remove('active');
+                });
+
+                vipSection.addEventListener('mouseup', () => {
+                    isDown = false;
+                    vipSection.classList.remove('active');
+                });
+
+                vipSection.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - vipSection.offsetLeft;
+                    const walk = (x - startX) * 2; // سرعة السحب
+                    vipSection.scrollLeft = scrollLeft - walk;
+                });
             }
 
             // إعداد معرض الصور المعروض في الـ Lightbox للمستخدم الحالي
@@ -1791,6 +1830,11 @@ async function loadOwnProfile(user) {
 
                         const itemEl = document.getElementById(`social-${platform}-item`);
                         if (itemEl) {
+                            if (trimmed) {
+                                itemEl.classList.remove('social-inactive');
+                            } else {
+                                itemEl.classList.add('social-inactive');
+                            }
                             const existingLinkBtn = itemEl.querySelector('.social-account-link-btn');
                             if (existingLinkBtn) {
                                 if (trimmed) {
@@ -1803,10 +1847,12 @@ async function loadOwnProfile(user) {
                                                 : `https://facebook.com/${trimmed}`;
                                     existingLinkBtn.style.opacity = '1';
                                     existingLinkBtn.style.pointerEvents = 'auto';
+                                    existingLinkBtn.classList.remove('disabled');
                                 } else {
                                     existingLinkBtn.href = '#';
                                     existingLinkBtn.style.opacity = '0.35';
                                     existingLinkBtn.style.pointerEvents = 'none';
+                                    existingLinkBtn.classList.add('disabled');
                                 }
                             }
                         }

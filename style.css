@@ -7304,7 +7304,12 @@ body {
 }
 
 .prf-icon-tiktok {
-    background: #000000;
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.prf-icon-tiktok i {
+    color: #000000;
+    text-shadow: -1.5px -1.5px 0 #25f4ee, 1.5px 1.5px 0 #fe2c55;
 }
 
 .prf-icon-whatsapp {
@@ -7387,10 +7392,26 @@ body {
     flex: 1;
 }
 
+/* VIP Section Scrollbar hiding */
+.profil-vip-section::-webkit-scrollbar {
+    display: none;
+}
+.profil-vip-section {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    cursor: grab;
+}
+.profil-vip-section.active {
+    cursor: grabbing;
+}
+.hm-vip-card {
+    user-select: none;
+}
+
 /* Edit Profile button */
 .prf-edit-btn {
-    margin: 12px 0 6px !important;
-    width: 100% !important;
+    margin: 0 auto !important;
+    width: 98% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -7414,8 +7435,8 @@ body {
 
 /* Logout Profile button under Edit Profile */
 .prf-logout-btn {
-    margin: 0 0 28px !important;
-    width: 100% !important;
+    margin: 0 auto 15px auto !important;
+    width: 98% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -7688,37 +7709,73 @@ body {
     color: #6b7280 !important;
 }
 
-/* Instagram: Pink pen */
-.profil-card-new-clean .social-account-edit-btn[data-platform="instagram"] i {
+/* Active States: Link Icon */
+/* Instagram */
+#social-instagram-item:not(.social-inactive) .social-account-link-btn i {
     color: #e1306c !important;
 }
-/* WhatsApp: Green pen */
-.profil-card-new-clean .social-account-edit-btn[data-platform="whatsapp"] i {
+/* WhatsApp */
+#social-whatsapp-item:not(.social-inactive) .social-account-link-btn i {
     color: #25d366 !important;
 }
-/* TikTok: Black pen */
-.profil-card-new-clean .social-account-edit-btn[data-platform="tiktok"] i {
+/* TikTok */
+#social-tiktok-item:not(.social-inactive) .social-account-link-btn i {
     color: #000000 !important;
 }
-/* Facebook: Blue pen */
-.profil-card-new-clean .social-account-edit-btn[data-platform="facebook"] i {
+/* Facebook */
+#social-facebook-item:not(.social-inactive) .social-account-link-btn i {
     color: #1877f2 !important;
 }
+
+/* Pen Icon Backgrounds (Always Colored, White Icon) */
+#social-instagram-item .social-account-edit-btn {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; 
+    border: none !important;
+}
+#social-instagram-item .social-account-edit-btn i { color: #ffffff !important; }
+
+#social-whatsapp-item .social-account-edit-btn {
+    background: #25d366 !important; 
+    border-color: #25d366 !important;
+}
+#social-whatsapp-item .social-account-edit-btn i { color: #ffffff !important; }
+
+#social-tiktok-item .social-account-edit-btn {
+    background: #25f4ee !important; 
+    border-color: #25f4ee !important;
+}
+#social-tiktok-item .social-account-edit-btn i { color: #ffffff !important; }
+
+#social-facebook-item .social-account-edit-btn {
+    background: #1877f2 !important; 
+    border-color: #1877f2 !important;
+}
+#social-facebook-item .social-account-edit-btn i { color: #ffffff !important; }
+
+/* Inactive State Global Rules (For Link Icon Only) */
+.social-inactive .social-account-link-btn i {
+    color: #d1d5db !important; /* Link icon gray */
+}
+.social-inactive .social-account-link-btn {
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+    background: #f3f4f6 !important;
+    border-color: #e5e7eb !important;
+}
+
 /* Name Edit: Blue pen */
 .profil-card-new-clean #edit-name-btn:hover i {
     color: #0066ff !important;
 }
 
-/* Link/Visiter button inside circles */
-.profil-card-new-clean .social-account-link-btn i,
-.profil-card-new-clean .social-account-link-btn.disabled i {
-    color: #9ca3af !important;
+/* Link/Visiter button inside circles properties */
+.profil-card-new-clean .social-account-link-btn i {
     opacity: 1 !important;
     font-size: 14px !important;
     transition: color 0.2s !important;
 }
 .profil-card-new-clean .social-account-link-btn:hover i {
-    color: #0066ff !important;
+    opacity: 0.8 !important;
 }
 
 /* Light Theme overrides for Logout button */

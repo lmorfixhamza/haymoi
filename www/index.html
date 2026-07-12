@@ -11,7 +11,7 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap"></noscript>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-    <link rel="stylesheet" href="style.css?v=202607122100">
+    <link rel="stylesheet" href="style.css?v=202607122335">
 </head>
 <body>
 
@@ -30,6 +30,15 @@
         
         <!-- Lightweight Neon Floating Particles (Feature 4) -->
         <div id="neon-particles" class="neon-particles-container"></div>
+
+        <!-- Radar Waves Animation (centered behind logo) -->
+        <div class="radar-waves-container" aria-hidden="true">
+            <div class="radar-wave radar-wave--1"></div>
+            <div class="radar-wave radar-wave--2"></div>
+            <div class="radar-wave radar-wave--3"></div>
+            <div class="radar-wave radar-wave--4"></div>
+            <div class="radar-wave radar-wave--5"></div>
+        </div>
 
         <!-- Splash Screen Logo (Feature 1: will shrink & move to header) -->
         <div id="splash-logo" class="splash-logo-center">
@@ -61,6 +70,12 @@
                 </div>
                 <span class="proof-dot"></span>
                 <span class="proof-text">🔥 +<span id="proof-counter">0</span> personnes actives autour de vous</span>
+            </div>
+
+            <!-- Trust / Privacy Banner -->
+            <div class="trust-banner" id="trust-banner">
+                <span class="trust-lock-icon">🔒</span>
+                <span class="trust-banner-text">Privé &amp; Sécurisé à 100% • Votre localisation exacte n'est jamais partagée</span>
             </div>
 
             <div class="social-login-stack">
@@ -113,9 +128,30 @@
                 </div>
             </div>
             
+            <!-- How It Works - Inline Steps -->
+            <div class="how-it-works-container" id="how-it-works-container">
+                <div class="how-it-works-steps">
+                    <div class="hiw-step">
+                        <div class="hiw-step-icon">📍</div>
+                        <div class="hiw-step-label">Activez le GPS</div>
+                    </div>
+                    <div class="hiw-step-arrow">→</div>
+                    <div class="hiw-step">
+                        <div class="hiw-step-icon">👥</div>
+                        <div class="hiw-step-label">Trouvez des gens</div>
+                    </div>
+                    <div class="hiw-step-arrow">→</div>
+                    <div class="hiw-step">
+                        <div class="hiw-step-icon">💬</div>
+                        <div class="hiw-step-label">Communiquez</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="login-footer">
                 <a href="privacy.html">Politique de confidentialité</a> <span class="dot">•</span> 
-                <a href="terms.html">Conditions d'utilisation</a>
+                <a href="terms.html">Conditions d'utilisation</a> <span class="dot">•</span>
+                <a href="#" class="footer-how-link" id="link-how-it-works">✨ Comment ça marche ?</a>
             </div>
 
             <!-- Live Distance Radar Ticker -->
@@ -126,7 +162,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=202607122100"></script>
+    <script src="script.js?v=202607122335"></script>
     <script>
     (function() {
         'use strict';
@@ -248,6 +284,27 @@
                 });
             }
         }
+        // ======================================================
+        // "Comment ça marche ?" Toggle (lightweight inline reveal)
+        // ======================================================
+        function initHowItWorks() {
+            var link = document.getElementById('link-how-it-works');
+            var container = document.getElementById('how-it-works-container');
+            if (!link || !container) return;
+
+            var isOpen = false;
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                isOpen = !isOpen;
+                container.classList.toggle('hiw-open', isOpen);
+                if (isOpen) {
+                    requestAnimationFrame(function() {
+                        container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    });
+                }
+            });
+        }
+
 
         // ======================================================
         // NEW FEATURE 2: Interactive Neon Glow (Gyro/Touch)
@@ -361,6 +418,7 @@
             initSplashTransition();
             initButtonLoadingStates();
             initGuestPeek();
+            initHowItWorks();
             initInteractiveGlow();
         });
 

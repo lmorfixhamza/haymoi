@@ -8647,6 +8647,17 @@ body {
     align-items: center;
     overflow: hidden;
     background-color: #090a0f;
+    background-image: url('bg-login.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Hide old glow elements to let the new background shine through perfectly */
+.login-wrapper > .glow-bg,
+.login-wrapper > .glow-ring,
+.login-wrapper > .radar-waves-container {
+    display: none !important;
 }
 
 /* Glowing Background Effects */

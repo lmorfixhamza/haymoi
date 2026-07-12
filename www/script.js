@@ -617,11 +617,12 @@ async function handleRouting(user) {
 
     if (isIndexPage) {
         const targetUrl = profileExists ? 'app.html' : 'profile-setup.html';
-        const splashTextContainer = document.getElementById('splash-text-container');
-        if (splashTextContainer && splashTextContainer.style.display !== 'none') {
+        const splashLogo = document.getElementById('splash-logo');
+        if (splashLogo && !splashLogo.classList.contains('splash-logo--to-header')) {
+            // Wait for the cinematic splash transition (3s splash + 2s login reveal)
             setTimeout(() => {
                 window.location.href = targetUrl;
-            }, 4900); // Wait 4.9s for premium splash animation
+            }, 5500);
         } else {
             window.location.href = targetUrl;
         }

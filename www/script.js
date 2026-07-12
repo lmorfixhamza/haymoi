@@ -616,7 +616,15 @@ async function handleRouting(user) {
     const profileExists = await hasProfile(user.id);
 
     if (isIndexPage) {
-        window.location.href = profileExists ? 'app.html' : 'profile-setup.html';
+        const targetUrl = profileExists ? 'app.html' : 'profile-setup.html';
+        const splashTextContainer = document.getElementById('splash-text-container');
+        if (splashTextContainer && splashTextContainer.style.display !== 'none') {
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 4900); // Wait 4.9s for premium splash animation
+        } else {
+            window.location.href = targetUrl;
+        }
         return;
     }
 

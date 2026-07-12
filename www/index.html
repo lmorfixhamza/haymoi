@@ -18,32 +18,105 @@
     <!-- خلفية CSS بدون فيديو - أخف بكثير على الهواتف -->
     <div class="video-overlay"></div>
 
-    <div class="container">
-        <h1 class="login-title">
-            <span class="title-top">Bienvenue sur</span>
-            <span class="title-middle brand-highlight">HayMoi</span>
-        </h1>
-        <p>Découvrez les personnes proches de vous en un seul clic</p>
-
-        <div class="social-login">
-            <button id="login-btn" class="btn btn-login">
-                <i class="fab fa-google"></i> Se connecter avec Google
-            </button>
-            <button id="tiktok-btn" class="btn btn-tiktok">
-                <i class="fab fa-tiktok"></i> Se connecter avec TikTok
-            </button>
-            <button id="facebook-btn" class="btn btn-facebook">
-                <i class="fab fa-facebook"></i> Se connecter avec Facebook
-            </button>
-        </div>
+    <div class="login-wrapper">
+        <!-- Glowing background elements (Persistent) -->
+        <div class="glow-bg glow-purple"></div>
+        <div class="glow-bg glow-orange"></div>
+        <div class="glow-bg glow-bottom-purple"></div>
         
-        <div class="footer-links">
-            <a href="privacy.html">Politique de confidentialité</a> • 
-            <a href="terms.html">Conditions d'utilisation</a>
+        <!-- Glowing Rings -->
+        <div class="glow-ring main-ring"></div>
+        <div class="glow-ring top-right-ring"></div>
+        <div class="glow-ring bottom-left-ring"></div>
+        
+        <!-- Splash Particles -->
+        <div id="splash-particles" class="splash-particles"></div>
+
+        <!-- Splash Screen Logo -->
+        <div id="splash-text-container" class="splash-text-container">
+            <h1 class="splash-logo-text">HayMoi</h1>
+        </div>
+
+        <!-- Login Content (Fades in after splash) -->
+        <div id="login-content" class="login-content splash-hidden">
+            <div class="login-header">
+                <h1 class="login-title">
+                    <span class="title-top">BIENVENUE SUR</span>
+                    <span class="title-middle">HayMoi</span>
+                </h1>
+                <div class="heart-divider">
+                    <span class="divider-line"></span>
+                    <i class="far fa-heart divider-icon"></i>
+                    <span class="divider-line"></span>
+                </div>
+                <p class="subtitle">Découvrez les personnes proches<br>de vous en un seul clic</p>
+            </div>
+
+            <div class="social-login-stack">
+                <button id="login-btn" class="auth-btn btn-google">
+                    <svg class="auth-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    <span>Se connecter avec Google</span>
+                </button>
+                <button id="tiktok-btn" class="auth-btn btn-tiktok">
+                    <svg class="auth-icon filter-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.65-5.45-.25-2.45.69-4.94 2.53-6.52 1.83-1.61 4.39-2.23 6.74-1.63v4.07c-1.31-.38-2.73-.25-3.89.47-1.18.72-1.92 2.03-1.93 3.41-.01 1.34.61 2.62 1.66 3.39 1.13.82 2.65.98 3.97.45 1.11-.42 1.97-1.35 2.3-2.49.25-.87.21-1.79.22-2.7 0-5.32-.01-10.64.01-15.96z" fill="currentColor"/>
+                    </svg>
+                    <span>Se connecter avec TikTok</span>
+                </button>
+                <button id="facebook-btn" class="auth-btn btn-facebook">
+                    <svg class="auth-icon filter-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07" fill="currentColor"/>
+                    </svg>
+                    <span>Se connecter avec Facebook</span>
+                </button>
+            </div>
+            
+            <div class="login-footer">
+                <a href="privacy.html">Politique de confidentialité</a> <span class="dot">•</span> 
+                <a href="terms.html">Conditions d'utilisation</a>
+            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js?v=202607092038"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const particlesContainer = document.getElementById('splash-particles');
+            const splashTextContainer = document.getElementById('splash-text-container');
+            const loginContent = document.getElementById('login-content');
+
+            if (particlesContainer) {
+                for(let i=0; i<40; i++) {
+                    let p = document.createElement('div');
+                    p.className = 'splash-particle';
+                    p.style.left = (Math.random() * 100) + '%';
+                    p.style.top = (Math.random() * 100) + '%';
+                    p.style.animationDelay = (Math.random() * 3) + 's';
+                    particlesContainer.appendChild(p);
+                }
+            }
+
+            // At 5 seconds: Fade out logo, fade in login content
+            setTimeout(() => {
+                if (splashTextContainer) splashTextContainer.style.opacity = '0';
+                setTimeout(() => {
+                    if (splashTextContainer) splashTextContainer.style.display = 'none';
+                    if (loginContent) {
+                        loginContent.style.display = 'flex';
+                        // tiny delay to ensure display:flex is applied before changing opacity
+                        setTimeout(() => {
+                            loginContent.classList.remove('splash-hidden');
+                        }, 50);
+                    }
+                }, 1000); // 1s fade out duration
+            }, 5000);
+        });
+    </script>
 </body>
 </html>

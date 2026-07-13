@@ -16,10 +16,11 @@
     </style>
 
 
-    <style name="AppTheme.NoActionBarLaunch5" parent="Theme.SplashScreen">
+    <style name="AppTheme.NoActionBarLaunch6" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#000000</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
-        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="windowSplashScreenAnimatedIcon">@android:color/transparent</item>
+        <item name="android:windowSplashScreenAnimationDuration">0</item>
+        <item name="android:windowBackground">#000000</item>
         <item name="android:forceDarkAllowed">false</item>
     </style>
 </resources>

@@ -2,7 +2,7 @@
 <html lang="fr" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="tiktok-developers-site-verification" content="dMN2ZEKAvLribSDMBuelTa9rNcNyl3v1">
     <title>Explorez votre entourage | HayMoi</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,9 +15,7 @@
     <script>
         // Force native splash screen to hide immediately on boot
         document.addEventListener('DOMContentLoaded', function() {
-            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
-                window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 0 });
-            }
+            // Splash screen hide moved to initSplashTransition
         });
     </script>
 </head>
@@ -169,8 +167,8 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=202607122335"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="script.js?v=202607122335" defer></script>
     <script>
     (function() {
         'use strict';
@@ -213,7 +211,7 @@
             if (!splashLogo || !loginContent) return;
             
             if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
-                window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 0 });
+                window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 500 });
             }
             
             // Set exact 3 seconds duration for the custom neon splash screen

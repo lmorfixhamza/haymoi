@@ -2502,13 +2502,45 @@ function renderFilteredList(profiles, listContainer) {
     const list = document.createElement('div');
     list.className = 'users-list';
 
-    filtered.forEach((profile, index) => {
-        const card = createUserCard(profile, index);
-        card.addEventListener('click', () => openUserModal(profile));
-        list.appendChild(card);
-    });
-
     listContainer.appendChild(list);
+
+    let currentIndex = 0;
+    const batchSize = 20;
+
+    function loadNextBatch() {
+        const fragment = document.createDocumentFragment();
+        const end = Math.min(currentIndex + batchSize, filtered.length);
+        
+        for (let i = currentIndex; i < end; i++) {
+            const profile = filtered[i];
+            const card = createUserCard(profile, i);
+            card.addEventListener('click', () => openUserModal(profile));
+            fragment.appendChild(card);
+        }
+        
+        list.appendChild(fragment);
+        currentIndex = end;
+        
+        if (currentIndex < filtered.length) {
+            setupObserver();
+        }
+    }
+
+    function setupObserver() {
+        const lastCard = list.lastElementChild;
+        if (!lastCard) return;
+        
+        const observer = new IntersectionObserver((entries, obs) => {
+            if (entries[0].isIntersecting) {
+                obs.disconnect();
+                loadNextBatch();
+            }
+        }, { rootMargin: '200px' });
+        
+        observer.observe(lastCard);
+    }
+
+    loadNextBatch();
 }
 
 // === إنشاء بطاقة عضو واحد ===
@@ -4418,7 +4450,15 @@ async function loadActiveChats() {
                 listCard.className = 'chats-list-card';
                 container.appendChild(listCard);
 
-                activeProfiles.forEach((profile, index) => {
+                                let currentIndex = 0;
+                const batchSize = 20;
+
+                function loadNextBatch() {
+                    const fragment = document.createDocumentFragment();
+                    const end = Math.min(currentIndex + batchSize, activeProfiles.length);
+                    
+                    for (let index = currentIndex; index < end; index++) {
+                        const profile = activeProfiles[index];
                     let lastChat;
                     if (profile.is_group) {
                         const groupMsgs = window._groupMessages[profile.user_id] || [];
@@ -7269,3 +7309,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('haymoi-lang') || 'fr';
     translateApp(savedLang);
 });
+
+
+
+

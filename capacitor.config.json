@@ -1,5 +1,21 @@
 {
   "appId": "com.haymoi.app",
-  "appName": "MyChatApp",
-  "webDir": "www"
+  "appName": "HayMoi",
+  "webDir": "www",
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "450289761364-0n60jqhpuug27ro74oksv5bdkmj7hqae.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    },
+    "SplashScreen": {
+      "launchShowDuration": 3000,
+      "launchAutoHide": false,
+      "backgroundColor": "#090a0f",
+      "showSpinner": false,
+      "splashFullScreen": true,
+      "splashImmersive": true,
+      "androidSplashResourceName": "splash"
+    }
+  }
 }

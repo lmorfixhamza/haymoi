@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">MyChatApp</string>
-    <string name="title_activity_main">MyChatApp</string>
+    <string name="app_name">HayMoi</string>
+    <string name="title_activity_main">HayMoi</string>
     <string name="package_name">com.haymoi.app</string>
     <string name="custom_url_scheme">com.haymoi.app</string>
+    <string name="server_client_id">450289761364-0n60jqhpuug27ro74oksv5bdkmj7hqae.apps.googleusercontent.com</string>
 </resources>

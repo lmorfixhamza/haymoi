@@ -12,6 +12,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="style.css?v=202607122335">
+    <script>
+        // Force native splash screen to hide immediately on boot
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
+                window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 0 });
+            }
+        });
+    </script>
 </head>
 <body>
 
@@ -204,7 +212,11 @@
             var loginContent = document.getElementById('login-content');
             if (!splashLogo || !loginContent) return;
             
-            // Reduced to 1.2s to feel much snappier but keep the cinema effect
+            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
+                window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 0 });
+            }
+            
+            // Set exact 3 seconds duration for the custom neon splash screen
             setTimeout(function() {
                 splashLogo.classList.add('splash-logo--to-header');
                 setTimeout(function() {
@@ -213,7 +225,7 @@
                     setTimeout(function() { animateCounter(); }, 400);
                     setTimeout(function() { initRadarTicker(); }, 800);
                 }, 400); // Trigger slightly earlier
-            }, 1200); 
+            }, 3000); 
         }
 
         // ======================================================

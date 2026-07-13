@@ -110,15 +110,6 @@ async function loadAppData(user) {
     } catch (e) {
         debugLog("loadAppData: Error initializing notifications: " + e.message, true);
     }
-
-    // إخفاء شاشة الترحيب بسلاسة بعد تحميل كافة البيانات
-    const splash = document.getElementById('splash-screen');
-    if (splash) {
-        setTimeout(() => {
-            splash.classList.add('fade-out');
-            setTimeout(() => splash.remove(), 600);
-        }, 1500); // إظهار الشاشة لـ 1.5 ثانية لإضفاء مظهر احترافي فخم
-    }
 }
 
 const redirectTo = window.Capacitor ? 'com.haymoi.app://login' : (window.location.origin + window.location.pathname.replace(/[^/]*$/, 'app.html'));
@@ -4677,14 +4668,51 @@ function initializeApp() {
         const targetLoginBtn = e.target.closest('#login-btn');
         if (targetLoginBtn) {
             try {
-                const { error } = await sb.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: { redirectTo }
-                });
-                if (error) throw error;
+                if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+                    // Use Native Google Sign-In
+                    const { GoogleAuth } = window.Capacitor.Plugins;
+                    
+                    // Force initialize for Android reliability
+                    await GoogleAuth.initialize({
+                        clientId: '450289761364-0n60jqhpuug27ro74oksv5bdkmj7hqae.apps.googleusercontent.com',
+                        scopes: ['profile', 'email'],
+                        grantOfflineAccess: true
+                    });
+
+                    const googleUser = await GoogleAuth.signIn();
+                    if (googleUser && googleUser.authentication && googleUser.authentication.idToken) {
+                        // Pass idToken directly to Supabase
+                        const { error } = await sb.auth.signInWithIdToken({
+                            provider: 'google',
+                            token: googleUser.authentication.idToken
+                        });
+                        if (error) throw error;
+                    } else {
+                        throw new Error("Aucun jeton d'identification retourné par Google.");
+                    }
+                } else {
+                    // Fallback for Web browser
+                    const { error } = await sb.auth.signInWithOAuth({
+                        provider: 'google',
+                        options: { redirectTo }
+                    });
+                    if (error) throw error;
+                }
             } catch (err) {
-                console.error("Google login error:", err);
-                alert("Erreur de connexion Google: " + err.message);
+                // Handle cancellation gracefully without alert
+                const errMsg = (err.message || "").toLowerCase();
+                if (err.code === 16 || errMsg.includes('cancel') || errMsg.includes('12501') || errMsg.includes('cancellé') || errMsg.includes('annulé')) {
+                    console.log("Google Sign-In canceled by user.");
+                } else {
+                    console.error("Google login error:", err);
+                    alert("Erreur de connexion Google: " + err.message);
+                }
+            } finally {
+                // Always reset button loading state so user can retry
+                document.querySelectorAll('.auth-btn').forEach(b => {
+                    b.disabled = false;
+                    b.classList.remove('auth-btn--disabled', 'auth-btn--loading');
+                });
             }
             return;
         }

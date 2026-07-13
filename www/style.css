@@ -9056,7 +9056,7 @@ html, body {
     align-items: center;
     gap: 8px;
     padding: 8px 18px;
-    margin: 16px 0 24px;
+    margin: -10px 0 24px; /* Reduced top margin to shift everything up */
     border-radius: 30px;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(236,72,153,0.35);

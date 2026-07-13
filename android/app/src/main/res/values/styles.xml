@@ -16,8 +16,8 @@
     </style>
 
 
-    <style name="AppTheme.NoActionBarLaunch4" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#090a0f</item>
+    <style name="AppTheme.NoActionBarLaunch5" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#000000</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:forceDarkAllowed">false</item>

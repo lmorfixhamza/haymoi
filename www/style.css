@@ -9805,21 +9805,22 @@ html, body {
     100% { opacity: 0.8; transform: scale(1.3); }
 }
 
-/* --- Logo Container --- */
+/* --- Logo Container (matches login screen style) --- */
 .cs-logo {
     position: relative;
     z-index: 5;
     font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    font-size: clamp(44px, 12vw, 72px);
+    font-weight: 800;
+    font-size: clamp(50px, 14vw, 60px);
     color: #ffffff;
     letter-spacing: 2px;
     white-space: nowrap;
     opacity: 1;
     margin: 0;
     text-shadow:
-        0 0 8px rgba(255,255,255,0.4),
-        0 0 18px rgba(255,255,255,0.15);
+        0 0 15px rgba(255,255,255,0.8),
+        0 0 30px rgba(236,72,153,0.8),
+        0 0 50px rgba(236,72,153,0.6);
 }
 
 /* --- Individual Letter Animation --- */
@@ -9856,15 +9857,16 @@ html, body {
 /* --- Glow Pulse (after all letters land) --- */
 .cs-logo-glow .cs-letter {
     text-shadow:
-        0 0 10px rgba(255,255,255,0.6),
-        0 0 25px rgba(255,255,255,0.25);
+        0 0 15px rgba(255,255,255,0.8),
+        0 0 30px rgba(236,72,153,0.8),
+        0 0 50px rgba(236,72,153,0.6);
 }
 .cs-logo-glow {
-    animation: csWordGlow 2s ease-in-out infinite alternate;
+    animation: csWordGlow 2.5s ease-in-out infinite alternate;
 }
 @keyframes csWordGlow {
-    0%   { text-shadow: 0 0 8px rgba(255,255,255,0.4), 0 0 18px rgba(255,255,255,0.15); }
-    100% { text-shadow: 0 0 14px rgba(255,255,255,0.55), 0 0 30px rgba(255,255,255,0.22), 0 0 50px rgba(236,72,153,0.1); }
+    0%   { text-shadow: 0 0 15px rgba(255,255,255,0.8), 0 0 30px rgba(236,72,153,0.8), 0 0 50px rgba(236,72,153,0.6); }
+    100% { text-shadow: 0 0 20px rgba(255,255,255,0.9), 0 0 40px rgba(236,72,153,0.9), 0 0 70px rgba(236,72,153,0.5); }
 }
 
 /* --- Reduced Motion --- */

@@ -9,7 +9,7 @@
       "forceCodeForRefreshToken": true
     },
     "SplashScreen": {
-      "launchShowDuration": 3000,
+      "launchShowDuration": 1500,
       "launchAutoHide": false,
       "backgroundColor": "#000000",
       "showSpinner": false,

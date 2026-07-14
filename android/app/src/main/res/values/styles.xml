@@ -15,10 +15,10 @@
         <item name="android:background">@null</item>
     </style>
 
-
+    <!-- Pre-Android 12 Splash Screen -->
     <style name="AppTheme.NoActionBarLaunch8" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#000000</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash</item>
         <item name="android:windowBackground">#000000</item>
         <item name="android:forceDarkAllowed">false</item>
     </style>

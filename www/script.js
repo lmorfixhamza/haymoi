@@ -608,12 +608,12 @@ async function handleRouting(user) {
 
     if (isIndexPage) {
         const targetUrl = profileExists ? 'app.html' : 'profile-setup.html';
-        const splashLogo = document.getElementById('splash-logo');
-        if (splashLogo && !splashLogo.classList.contains('splash-logo--to-header')) {
-            // Wait for the cinematic splash transition (3s splash + 2s login reveal)
+        const cinemaSplash = document.getElementById('cinema-splash');
+        if (cinemaSplash && cinemaSplash.style.display !== 'none') {
+            // Wait for 4s animation + 380ms fade + buffer
             setTimeout(() => {
                 window.location.href = targetUrl;
-            }, 5500);
+            }, 4500);
         } else {
             window.location.href = targetUrl;
         }

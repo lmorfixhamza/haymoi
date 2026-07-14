@@ -11,15 +11,32 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap"></noscript>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-    <link rel="stylesheet" href="style.css?v=202607122335">
-    <script>
-        // Force native splash screen to hide immediately on boot
-        document.addEventListener('DOMContentLoaded', function() {
-            // Splash screen hide moved to initSplashTransition
-        });
-    </script>
+    <link rel="stylesheet" href="style.css?v=202607142050">
 </head>
 <body>
+
+    <!-- ══ Cinematic Splash Screen Overlay ══ -->
+    <div id="cinema-splash">
+        <!-- Soft radial glows -->
+        <div class="cs-glow cs-glow-purple"></div>
+        <div class="cs-glow cs-glow-orange"></div>
+        <div class="cs-glow cs-glow-pink"></div>
+        <!-- Neon circles -->
+        <div class="cs-ring cs-ring-1"></div>
+        <div class="cs-ring cs-ring-2"></div>
+        <div class="cs-ring cs-ring-3"></div>
+        <div class="cs-ring cs-ring-4"></div>
+        <div class="cs-ring cs-ring-5"></div>
+        <div class="cs-ring cs-ring-6"></div>
+        <div class="cs-ring cs-ring-7"></div>
+        <div class="cs-ring cs-ring-8"></div>
+        <!-- Stars -->
+        <div id="cs-stars"></div>
+        <!-- Logo (letter-by-letter cinematic reveal) -->
+        <h1 class="cs-logo" id="cs-logo">
+            <span class="cs-letter" style="animation-delay:0.4s">H</span><span class="cs-letter" style="animation-delay:0.55s">a</span><span class="cs-letter" style="animation-delay:0.7s">y</span><span class="cs-letter" style="animation-delay:0.95s">M</span><span class="cs-letter" style="animation-delay:1.1s">o</span><span class="cs-letter" style="animation-delay:1.25s">i</span>
+        </h1>
+    </div>
 
     <div class="video-overlay"></div>
 
@@ -44,11 +61,6 @@
             <div class="radar-wave radar-wave--3"></div>
             <div class="radar-wave radar-wave--4"></div>
             <div class="radar-wave radar-wave--5"></div>
-        </div>
-
-        <!-- Splash Screen Logo (Feature 1: will shrink & move to header) -->
-        <div id="splash-logo" class="splash-logo-center">
-            <h1 class="splash-logo-text">HayMoi</h1>
         </div>
 
         <!-- Login Content (Feature 1: slides up from bottom) -->
@@ -203,27 +215,57 @@
 
         // ======================================================
         // Cinematic Splash → Login Transition
-        // Zero-Latency optimization: removed artificial 3s delay
+        // Native splash covers WebView load, then smooth handoff to CSS splash
         // ======================================================
         function initSplashTransition() {
-            var splashLogo = document.getElementById('splash-logo');
+            var cinemaSplash = document.getElementById('cinema-splash');
             var loginContent = document.getElementById('login-content');
-            if (!splashLogo || !loginContent) return;
-            
+            if (!cinemaSplash || !loginContent) return;
+
+            // 1. Smooth transition from native splash to our CSS splash
             if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
-                window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 400 });
+                window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 300 });
             }
-            
-            // Set exact 3 seconds duration for the custom neon splash screen
+
+            // 2. Generate twinkling stars
+            var starsEl = document.getElementById('cs-stars');
+            if (starsEl) {
+                var frag = document.createDocumentFragment();
+                var starColors = ['#ffffff','rgba(168,85,247,0.9)','rgba(236,72,153,0.8)','rgba(249,115,22,0.7)'];
+                for (var i = 0; i < 45; i++) {
+                    var s = document.createElement('div');
+                    s.className = 'cs-star';
+                    var sz = 1 + Math.random() * 3;
+                    var clr = starColors[Math.floor(Math.random() * starColors.length)];
+                    s.style.cssText =
+                        'width:'+sz+'px;height:'+sz+'px;'+
+                        'left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;'+
+                        'background:'+clr+';box-shadow:0 0 '+(sz*3)+'px '+clr+';'+
+                        'animation-delay:'+(Math.random()*2)+'s;'+
+                        'animation-duration:'+(1+Math.random()*2)+'s;';
+                    frag.appendChild(s);
+                }
+                starsEl.appendChild(frag);
+            }
+
+            // 3. After all letters revealed, add subtle glow pulse
+            var logo = document.getElementById('cs-logo');
+            if (logo) {
+                setTimeout(function() { logo.classList.add('cs-logo-glow'); }, 2000);
+            }
+
+            // 4. After 4 seconds, fade out splash and reveal login
             setTimeout(function() {
-                splashLogo.classList.add('splash-logo--to-header');
+                cinemaSplash.classList.add('cinema-splash--fade-out');
+
                 setTimeout(function() {
+                    cinemaSplash.style.display = 'none';
                     loginContent.classList.remove('login-content--hidden');
                     loginContent.classList.add('login-content--visible');
                     setTimeout(function() { animateCounter(); }, 400);
                     setTimeout(function() { initRadarTicker(); }, 800);
-                }, 400); // Trigger slightly earlier
-            }, 3000); 
+                }, 380);
+            }, 4000);
         }
 
         // ======================================================

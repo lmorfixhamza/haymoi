@@ -9614,3 +9614,260 @@ html, body {
     }
 }
 
+
+/* ==============================================================================
+   CINEMATIC SPLASH SCREEN (CSS/JS)
+   Replicates the HayMoi cosmic neon splash from the design mockup.
+   Black cosmic bg, neon glowing circles, twinkling stars, logo zoom+glow.
+   Duration: 3 seconds, then 350ms fade-out.
+   ============================================================================== */
+
+/* --- Full-Screen Overlay --- */
+#cinema-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #000000;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 350ms ease-out;
+    will-change: opacity;
+}
+#cinema-splash.cinema-splash--fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- Neon Glowing Circles --- */
+.cs-ring {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* Top-left large purple circle */
+.cs-ring-1 {
+    top: -8%;
+    left: -22%;
+    width: 70vw;
+    height: 70vw;
+    border: 2px solid rgba(147, 51, 234, 0.5);
+    box-shadow:
+        0 0 30px 8px rgba(147, 51, 234, 0.2),
+        inset 0 0 30px 8px rgba(147, 51, 234, 0.1);
+    animation: csFloat1 8s ease-in-out infinite alternate;
+}
+
+/* Top-left inner purple circle */
+.cs-ring-2 {
+    top: 2%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    border: 1.5px solid rgba(168, 85, 247, 0.35);
+    box-shadow:
+        0 0 25px 6px rgba(168, 85, 247, 0.15),
+        inset 0 0 20px 6px rgba(168, 85, 247, 0.08);
+    animation: csFloat2 10s ease-in-out 0.5s infinite alternate;
+}
+
+/* Top-right thin purple arc */
+.cs-ring-3 {
+    top: 5%;
+    right: -15%;
+    width: 55vw;
+    height: 55vw;
+    border: 1px solid rgba(147, 51, 234, 0.25);
+    box-shadow: 0 0 20px 4px rgba(147, 51, 234, 0.1);
+    animation: csFloat3 9s ease-in-out 1s infinite alternate;
+}
+
+/* Bottom-left orange circle */
+.cs-ring-4 {
+    bottom: -12%;
+    left: -20%;
+    width: 65vw;
+    height: 65vw;
+    border: 2px solid rgba(249, 115, 22, 0.45);
+    box-shadow:
+        0 0 35px 10px rgba(249, 115, 22, 0.2),
+        inset 0 0 30px 8px rgba(249, 115, 22, 0.1);
+    animation: csFloat1 11s ease-in-out 0.3s infinite alternate;
+}
+
+/* Bottom-left inner orange circle */
+.cs-ring-5 {
+    bottom: -5%;
+    left: -12%;
+    width: 48vw;
+    height: 48vw;
+    border: 1.5px solid rgba(251, 146, 60, 0.3);
+    box-shadow: 0 0 22px 6px rgba(251, 146, 60, 0.12);
+    animation: csFloat2 9s ease-in-out 0.8s infinite alternate;
+}
+
+/* Bottom-right large pink circle */
+.cs-ring-6 {
+    bottom: -15%;
+    right: -18%;
+    width: 75vw;
+    height: 75vw;
+    border: 2px solid rgba(236, 72, 153, 0.45);
+    box-shadow:
+        0 0 40px 12px rgba(236, 72, 153, 0.2),
+        inset 0 0 35px 10px rgba(236, 72, 153, 0.1);
+    animation: csFloat3 10s ease-in-out infinite alternate;
+}
+
+/* Bottom-right inner pink circle */
+.cs-ring-7 {
+    bottom: -2%;
+    right: -8%;
+    width: 55vw;
+    height: 55vw;
+    border: 1.5px solid rgba(244, 114, 182, 0.3);
+    box-shadow: 0 0 25px 6px rgba(244, 114, 182, 0.12);
+    animation: csFloat1 8s ease-in-out 1.5s infinite alternate;
+}
+
+/* Bottom-right extra circle */
+.cs-ring-8 {
+    bottom: 8%;
+    right: 2%;
+    width: 38vw;
+    height: 38vw;
+    border: 1px solid rgba(236, 72, 153, 0.2);
+    box-shadow: 0 0 18px 4px rgba(236, 72, 153, 0.08);
+    animation: csFloat2 12s ease-in-out 2s infinite alternate;
+}
+
+/* Circle float animations */
+@keyframes csFloat1 {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(10px, -12px) rotate(3deg); }
+}
+@keyframes csFloat2 {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(-8px, 8px) rotate(-2deg); }
+}
+@keyframes csFloat3 {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(6px, 6px) rotate(4deg); }
+}
+
+/* --- Neon Glow Spots (soft radial glows behind circles) --- */
+.cs-glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(60px);
+}
+.cs-glow-purple {
+    top: -5%;
+    left: -15%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, rgba(147, 51, 234, 0.35) 0%, transparent 70%);
+}
+.cs-glow-orange {
+    bottom: -10%;
+    left: -15%;
+    width: 45vw;
+    height: 45vw;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.3) 0%, transparent 70%);
+}
+.cs-glow-pink {
+    bottom: -10%;
+    right: -10%;
+    width: 55vw;
+    height: 55vw;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.35) 0%, transparent 70%);
+}
+
+/* --- Stars Container --- */
+#cs-stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.cs-star {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0;
+    animation: csTwinkle ease-in-out infinite alternate;
+}
+@keyframes csTwinkle {
+    0%   { opacity: 0.05; transform: scale(0.7); }
+    100% { opacity: 0.8; transform: scale(1.3); }
+}
+
+/* --- Logo Container --- */
+.cs-logo {
+    position: relative;
+    z-index: 5;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: clamp(44px, 12vw, 72px);
+    color: #ffffff;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    opacity: 1;
+    margin: 0;
+    text-shadow:
+        0 0 8px rgba(255,255,255,0.4),
+        0 0 18px rgba(255,255,255,0.15);
+}
+
+/* --- Individual Letter Animation --- */
+.cs-letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(40px) scale(0.3) rotateX(90deg);
+    animation: csLetterIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes csLetterIn {
+    0%   {
+        opacity: 0;
+        transform: translateY(40px) scale(0.3) rotateX(90deg);
+        filter: blur(6px);
+    }
+    50%  {
+        opacity: 0.8;
+        transform: translateY(-6px) scale(1.08) rotateX(-5deg);
+        filter: blur(1px);
+    }
+    75%  {
+        opacity: 1;
+        transform: translateY(2px) scale(0.98) rotateX(2deg);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateX(0deg);
+        filter: blur(0);
+    }
+}
+
+/* --- Glow Pulse (after all letters land) --- */
+.cs-logo-glow .cs-letter {
+    text-shadow:
+        0 0 10px rgba(255,255,255,0.6),
+        0 0 25px rgba(255,255,255,0.25);
+}
+.cs-logo-glow {
+    animation: csWordGlow 2s ease-in-out infinite alternate;
+}
+@keyframes csWordGlow {
+    0%   { text-shadow: 0 0 8px rgba(255,255,255,0.4), 0 0 18px rgba(255,255,255,0.15); }
+    100% { text-shadow: 0 0 14px rgba(255,255,255,0.55), 0 0 30px rgba(255,255,255,0.22), 0 0 50px rgba(236,72,153,0.1); }
+}
+
+/* --- Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+    #cinema-splash { display: none !important; }
+}

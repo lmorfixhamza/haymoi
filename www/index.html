@@ -222,9 +222,11 @@
             var loginContent = document.getElementById('login-content');
             if (!cinemaSplash || !loginContent) return;
 
-            // 1. Smooth transition from native splash to our CSS splash
+            // 1. Smooth transition from native splash to our CSS splash (500ms delay to prevent black screen)
             if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
-                window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 300 });
+                setTimeout(function() {
+                    window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 300 });
+                }, 500);
             }
 
             // 2. Generate twinkling stars

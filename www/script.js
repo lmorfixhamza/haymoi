@@ -1272,6 +1272,10 @@ function initHeaderSearch() {
 }
 
 // === تحميل بيانات الملف الشخصي في قسم profil ===
+
+// ============================================================
+// 3. PROFILE & SETTINGS
+// ============================================================
 async function loadOwnProfile(user) {
     const container = document.getElementById('own-profile-container');
     if (!container || !user) {
@@ -4686,6 +4690,10 @@ async function loadActiveChats() {
     document.head.appendChild(style);
 })();
 
+
+// ============================================================
+// 6. AUTHENTICATION & APP INITIALIZATION
+// ============================================================
 function initializeApp() {
     // استخدام تفويض الأحداث (Event Delegation) لتفادي تلف مستمعي النقرات بسبب ترجمة المتصفح (Edge/Google Translate)
     document.addEventListener('click', async (e) => {
@@ -5123,6 +5131,10 @@ if (document.readyState === 'loading') {
 // === نظام إرسال الصور (Image Upload & Send) ===
 // ═══════════════════════════════════════════════════
 
+
+// ============================================================
+// 7. MEDIA, AUDIO & UPLOADS
+// ============================================================
 async function uploadAndSendImage(file) {
     if (!currentUser || !activeChatUserId) return;
 
@@ -5778,6 +5790,10 @@ function openReportModal(profile) {
 // === نظام الإشعارات (Message Notifications) ===
 // ═══════════════════════════════════════════════════
 
+
+// ============================================================
+// 8. NOTIFICATIONS & PRESENCE
+// ============================================================
 function initGlobalMessageNotifier() {
     if (!currentUser) return;
     if (globalMessageSubscription) return;

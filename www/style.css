@@ -1,5 +1,7 @@
 @charset "UTF-8";
-/* 1.     */
+/* ============================================================ */
+/* 1. GLOBAL RESET & VARIABLES                                  */
+/* ============================================================ */
 /* Google Fonts loaded via HTML <link> tags for better performance */
 
 * {
@@ -553,6 +555,10 @@ body {
 
 
 
+
+/* ============================================================ */
+/* 2. APP SHELL & NAVIGATION                                  */
+/* ============================================================ */
 .app-body {
     background: #0d0f14;
     color: var(--text-white);
@@ -8631,6 +8637,10 @@ body {
 
 
 
+
+/* ============================================================ */
+/* 7. LOGIN & AUTHENTICATION                                  */
+/* ============================================================ */
 /* === Mockup Login Screen Styles === */
 body {
     background-color: #090a0f !important; /* Force dark background */
@@ -8651,7 +8661,7 @@ body {
     align-items: center;
     overflow: hidden;
     background-color: #090a0f;
-    background-image: url('bg-login.png');
+    background-image: url('assets/images/bg-login.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

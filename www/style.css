@@ -9825,54 +9825,46 @@ html, body {
     color: #ffffff;
     letter-spacing: 2px;
     white-space: nowrap;
-    opacity: 1;
     margin: 0;
+
+    /* STATIC Neon Glow (DO NOT ANIMATE for 60fps performance) */
     text-shadow:
         0 0 15px rgba(255,255,255,0.8),
         0 0 30px rgba(236,72,153,0.8),
         0 0 50px rgba(236,72,153,0.6);
-}
 
-/* --- Individual Letter Animation --- */
-.cs-letter {
-    display: inline-block;
+    /* Hardware Accelerated Cinematic Reveal */
     opacity: 0;
-    transform: translateY(40px) scale(0.3) rotateX(90deg);
-    animation: csLetterIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform: scale(1.15) translateY(10px);
+    animation: csHardwareCinematicLogo 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-@keyframes csLetterIn {
-    0%   {
+@keyframes csHardwareCinematicLogo {
+    0% {
         opacity: 0;
-        transform: translateY(40px) scale(0.3) rotateX(90deg);
+        transform: scale(1.15) translateY(10px);
     }
-    50%  {
-        opacity: 0.8;
-        transform: translateY(-6px) scale(1.08) rotateX(-5deg);
-    }
-    75%  {
+    20% {
         opacity: 1;
-        transform: translateY(2px) scale(0.98) rotateX(2deg);
+        /* Drift out slowly */
     }
     100% {
         opacity: 1;
-        transform: translateY(0) scale(1) rotateX(0deg);
+        transform: scale(0.95) translateY(0);
     }
 }
 
-/* --- Glow Pulse (after all letters land) --- */
+/* --- Individual Letter Animation (Disabled for cinematic parent animation) --- */
+.cs-letter {
+    display: inline-block;
+}
+
+/* --- Glow Pulse (Removed to prevent lag) --- */
 .cs-logo-glow .cs-letter {
-    text-shadow:
-        0 0 15px rgba(255,255,255,0.8),
-        0 0 30px rgba(236,72,153,0.8),
-        0 0 50px rgba(236,72,153,0.6);
+    /* No heavy text-shadow animation */
 }
 .cs-logo-glow {
-    animation: csWordGlow 2.5s ease-in-out infinite alternate;
-}
-@keyframes csWordGlow {
-    0%   { text-shadow: 0 0 15px rgba(255,255,255,0.8), 0 0 30px rgba(236,72,153,0.8), 0 0 50px rgba(236,72,153,0.6); }
-    100% { text-shadow: 0 0 20px rgba(255,255,255,0.9), 0 0 40px rgba(236,72,153,0.9), 0 0 70px rgba(236,72,153,0.5); }
+    /* No animation */
 }
 
 /* --- Reduced Motion --- */

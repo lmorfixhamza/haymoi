@@ -222,12 +222,7 @@
             var loginContent = document.getElementById('login-content');
             if (!cinemaSplash || !loginContent) return;
 
-            // 1. Smooth transition from native splash to our CSS splash (500ms delay to prevent black screen)
-            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
-                setTimeout(function() {
-                    window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 300 });
-                }, 500);
-            }
+            // 1. Native splash screen will be hidden on window.load (see bottom of file)
 
             // 2. Generate twinkling stars
             var starsEl = document.getElementById('cs-stars');
@@ -474,6 +469,20 @@
             initGuestPeek();
             initHowItWorks();
             initInteractiveGlow();
+        });
+
+        // ======================================================
+        // Hide Native Splash Screen ONLY when DOM is fully loaded and painted
+        // ======================================================
+        window.addEventListener('load', function() {
+            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
+                // Wait for the next animation frame to ensure the CSS splash is fully painted
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 400 });
+                    });
+                });
+            }
         });
 
     })();

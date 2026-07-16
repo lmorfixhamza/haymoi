@@ -8661,7 +8661,7 @@ body {
     align-items: center;
     overflow: hidden;
     background-color: #090a0f;
-    background-image: url('assets/images/bg-login.png');
+    background-image: url('assets/images/haymoi_clean_background.jpg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -8886,6 +8886,10 @@ html, body {
     align-items: center;
     overflow: hidden;
     background-color: #0A0512;
+    background-image: url('assets/images/haymoi_clean_background.jpg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     contain: layout style;
 }
 
@@ -9870,4 +9874,94 @@ html, body {
 /* --- Reduced Motion --- */
 @media (prefers-reduced-motion: reduce) {
     #cinema-splash { display: none !important; }
+}
+
+/* ==============================================================================
+   5-SECOND CINEMATIC SPLASH
+   ============================================================================== */
+#cinematic-splash {
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/images/haymoi_clean_background.jpg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 4s to 5s overlay fades out */
+    animation: fadeOutSplash 5s linear forwards;
+    background-color: #000;
+}
+
+@keyframes fadeOutSplash {
+    0%, 80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.cs-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    /* 0s to 1s hidden, 1s to 2s fade in, stays visible */
+    animation: fadeInText 5s linear forwards;
+}
+
+@keyframes fadeInText {
+    0%, 20% { opacity: 0; transform: translateY(10px); }
+    40%, 100% { opacity: 1; transform: translateY(0); }
+}
+
+.cs-top-text {
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #ffffff;
+    letter-spacing: 5px;
+    margin-bottom: 5px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+}
+
+.cs-haymoi {
+    font-size: 80px;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #ff007f;
+    margin: 0 0 15px 0;
+    font-family: 'Outfit', sans-serif;
+    line-height: 1;
+}
+
+.cs-divider {
+    display: flex;
+    align-items: center;
+    width: 200px;
+    margin: 5px 0 20px 0;
+}
+
+.cs-divider::before, .cs-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.cs-divider span {
+    color: #ff007f;
+    font-size: 24px;
+    margin: 0 15px;
+    text-shadow: 0 0 15px #ff007f;
+}
+
+.cs-bottom-text {
+    font-size: 15px;
+    color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
 }

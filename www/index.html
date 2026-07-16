@@ -16,26 +16,13 @@
 <body>
 
     <!-- ══ Cinematic Splash Screen Overlay ══ -->
-    <div id="cinema-splash">
-        <!-- Soft radial glows -->
-        <div class="cs-glow cs-glow-purple"></div>
-        <div class="cs-glow cs-glow-orange"></div>
-        <div class="cs-glow cs-glow-pink"></div>
-        <!-- Neon circles -->
-        <div class="cs-ring cs-ring-1"></div>
-        <div class="cs-ring cs-ring-2"></div>
-        <div class="cs-ring cs-ring-3"></div>
-        <div class="cs-ring cs-ring-4"></div>
-        <div class="cs-ring cs-ring-5"></div>
-        <div class="cs-ring cs-ring-6"></div>
-        <div class="cs-ring cs-ring-7"></div>
-        <div class="cs-ring cs-ring-8"></div>
-        <!-- Stars -->
-        <div id="cs-stars"></div>
-        <!-- Logo (letter-by-letter cinematic reveal) -->
-        <h1 class="cs-logo" id="cs-logo">
-            <span class="cs-letter" style="animation-delay:0.3s">H</span><span class="cs-letter" style="animation-delay:0.5s">a</span><span class="cs-letter" style="animation-delay:0.7s">y</span><span class="cs-letter" style="animation-delay:1.0s">M</span><span class="cs-letter" style="animation-delay:1.2s">o</span><span class="cs-letter" style="animation-delay:1.4s">i</span>
-        </h1>
+    <div id="cinematic-splash">
+        <div class="cs-content">
+            <p class="cs-top-text">BIENVENUE SUR</p>
+            <h1 class="cs-haymoi">HayMoi</h1>
+            <div class="cs-divider"><span>♡</span></div>
+            <p class="cs-bottom-text">Découvrez les personnes proches<br>de vous en un seul clic</p>
+        </div>
     </div>
 
     <div class="video-overlay"></div>
@@ -215,54 +202,25 @@
 
         // ======================================================
         // Cinematic Splash → Login Transition
-        // Native splash covers WebView load, then smooth handoff to CSS splash
         // ======================================================
         function initSplashTransition() {
-            var cinemaSplash = document.getElementById('cinema-splash');
+            var cinematicSplash = document.getElementById('cinematic-splash');
             var loginContent = document.getElementById('login-content');
-            if (!cinemaSplash || !loginContent) return;
-
-            // 1. Native splash screen will be hidden on window.load (see bottom of file)
-
-            // 2. Generate twinkling stars
-            var starsEl = document.getElementById('cs-stars');
-            if (starsEl) {
-                var frag = document.createDocumentFragment();
-                var starColors = ['#ffffff','rgba(168,85,247,0.9)','rgba(236,72,153,0.8)','rgba(249,115,22,0.7)'];
-                for (var i = 0; i < 45; i++) {
-                    var s = document.createElement('div');
-                    s.className = 'cs-star';
-                    var sz = 1 + Math.random() * 3;
-                    var clr = starColors[Math.floor(Math.random() * starColors.length)];
-                    s.style.cssText =
-                        'width:'+sz+'px;height:'+sz+'px;'+
-                        'left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;'+
-                        'background:'+clr+';box-shadow:0 0 '+(sz*3)+'px '+clr+';'+
-                        'animation-delay:'+(Math.random()*2)+'s;'+
-                        'animation-duration:'+(1+Math.random()*2)+'s;';
-                    frag.appendChild(s);
-                }
-                starsEl.appendChild(frag);
+            
+            // Reveal login UI immediately so it sits underneath the splash screen
+            if (loginContent) {
+                loginContent.classList.remove('login-content--hidden');
+                loginContent.classList.add('login-content--visible');
+                setTimeout(function() { animateCounter(); }, 400);
+                setTimeout(function() { initRadarTicker(); }, 800);
             }
 
-            // 3. After all letters revealed, add subtle glow pulse
-            var logo = document.getElementById('cs-logo');
-            if (logo) {
-                setTimeout(function() { logo.classList.add('cs-logo-glow'); }, 2200);
-            }
-
-            // 4. After 4 seconds, fade out splash and reveal login
-            setTimeout(function() {
-                cinemaSplash.classList.add('cinema-splash--fade-out');
-
+            // Exactly after 5000ms, hide the cinematic splash from DOM
+            if (cinematicSplash) {
                 setTimeout(function() {
-                    cinemaSplash.style.display = 'none';
-                    loginContent.classList.remove('login-content--hidden');
-                    loginContent.classList.add('login-content--visible');
-                    setTimeout(function() { animateCounter(); }, 400);
-                    setTimeout(function() { initRadarTicker(); }, 800);
-                }, 380);
-            }, 4000);
+                    cinematicSplash.style.display = 'none';
+                }, 5000);
+            }
         }
 
         // ======================================================

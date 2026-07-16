@@ -11,7 +11,7 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Tajawal:wght@400;700&display=swap"></noscript>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-    <link rel="stylesheet" href="style.css?v=202607142050">
+    <link rel="stylesheet" href="style.min.css?v=202607142050">
 </head>
 <body>
 
@@ -54,7 +54,6 @@
         <div id="login-content" class="login-content login-content--hidden">
             <div class="login-header">
                 <h1 class="login-title">
-                    <span class="title-top">BIENVENUE SUR</span>
                     <span class="title-middle" id="login-logo-target">HayMoi</span>
                 </h1>
                 <div class="heart-divider">
@@ -62,7 +61,6 @@
                     <i class="far fa-heart divider-icon"></i>
                     <span class="divider-line"></span>
                 </div>
-                <p class="subtitle">Découvrez les personnes proches<br>de vous en un seul clic</p>
             </div>
 
             <!-- Social Proof Badge + Avatar Stack -->
@@ -167,7 +165,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="script.js?v=202607122335" defer></script>
+    <script src="script.min.js?v=202607122335" defer></script>
     <script>
     (function() {
         'use strict';
@@ -203,25 +201,7 @@
         // ======================================================
         // Cinematic Splash → Login Transition
         // ======================================================
-        function initSplashTransition() {
-            var cinematicSplash = document.getElementById('cinematic-splash');
-            var loginContent = document.getElementById('login-content');
-            
-            // Reveal login UI immediately so it sits underneath the splash screen
-            if (loginContent) {
-                loginContent.classList.remove('login-content--hidden');
-                loginContent.classList.add('login-content--visible');
-                setTimeout(function() { animateCounter(); }, 400);
-                setTimeout(function() { initRadarTicker(); }, 800);
-            }
-
-            // Exactly after 5000ms, hide the cinematic splash from DOM
-            if (cinematicSplash) {
-                setTimeout(function() {
-                    cinematicSplash.style.display = 'none';
-                }, 5000);
-            }
-        }
+        // The transition is now handled in window.onload
 
         // ======================================================
         // Social Proof Counter Animation
@@ -420,28 +400,47 @@
         // ======================================================
         // Initialize all features on DOM ready
         // ======================================================
+        // ======================================================
+        // Initialize all features on DOM ready
+        // ======================================================
         document.addEventListener('DOMContentLoaded', function() {
             createNeonParticles();
-            initSplashTransition();
             initButtonLoadingStates();
             initGuestPeek();
             initHowItWorks();
             initInteractiveGlow();
+            
+            // Show login content
+            var loginContent = document.getElementById('login-content');
+            if (loginContent) {
+                loginContent.classList.remove('login-content--hidden');
+                loginContent.classList.add('login-content--visible');
+                setTimeout(function() { animateCounter(); }, 400);
+                setTimeout(function() { initRadarTicker(); }, 800);
+            }
         });
 
         // ======================================================
-        // Hide Native Splash Screen ONLY when DOM is fully loaded and painted
+        // Cinematic Splash & Hide Native Splash Screen
         // ======================================================
-        window.addEventListener('load', function() {
+        window.onload = () => {
             if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
-                // Wait for the next animation frame to ensure the CSS splash is fully painted
-                requestAnimationFrame(function() {
-                    requestAnimationFrame(function() {
-                        window.Capacitor.Plugins.SplashScreen.hide({ fadeOutDuration: 400 });
-                    });
-                });
+                // Hide native splash immediately
+                window.Capacitor.Plugins.SplashScreen.hide();
             }
-        });
+            
+            const splash = document.getElementById('cinematic-splash');
+            if (splash) {
+                // Fade out after 5 seconds
+                setTimeout(() => {
+                    splash.style.transition = 'opacity 1s ease';
+                    splash.style.opacity = '0';
+                    setTimeout(() => {
+                        splash.style.display = 'none';
+                    }, 1000);
+                }, 4000);
+            }
+        };
 
     })();
     </script>

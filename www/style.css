@@ -8886,6 +8886,7 @@ html, body {
     align-items: center;
     overflow: hidden;
     background-color: #0A0512;
+    z-index: 1;
     background-image: url('assets/images/haymoi_clean_background.jpg.jpg');
     background-size: cover;
     background-position: center;
@@ -9884,8 +9885,9 @@ html, body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    background-color: #050505;
     background-image: url('assets/images/haymoi_clean_background.jpg.jpg');
     background-size: cover;
     background-position: center;
@@ -9893,14 +9895,6 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* 4s to 5s overlay fades out */
-    animation: fadeOutSplash 5s linear forwards;
-    background-color: #000;
-}
-
-@keyframes fadeOutSplash {
-    0%, 80% { opacity: 1; }
-    100% { opacity: 0; }
 }
 
 .cs-content {

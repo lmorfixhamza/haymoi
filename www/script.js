@@ -608,12 +608,12 @@ async function handleRouting(user) {
 
     if (isIndexPage) {
         const targetUrl = profileExists ? 'app.html' : 'profile-setup.html';
-        const cinemaSplash = document.getElementById('cinema-splash');
-        if (cinemaSplash && cinemaSplash.style.display !== 'none') {
-            // Wait for 4s animation + 380ms fade + buffer
+        const cinematicSplash = document.getElementById('cinematic-splash');
+        if (cinematicSplash && cinematicSplash.style.display !== 'none') {
+            // Wait for 5s cinematic splash before redirecting logged-in user
             setTimeout(() => {
                 window.location.href = targetUrl;
-            }, 4500);
+            }, 5000);
         } else {
             window.location.href = targetUrl;
         }
@@ -4454,15 +4454,7 @@ async function loadActiveChats() {
                 listCard.className = 'chats-list-card';
                 container.appendChild(listCard);
 
-                                let currentIndex = 0;
-                const batchSize = 20;
-
-                function loadNextBatch() {
-                    const fragment = document.createDocumentFragment();
-                    const end = Math.min(currentIndex + batchSize, activeProfiles.length);
-                    
-                    for (let index = currentIndex; index < end; index++) {
-                        const profile = activeProfiles[index];
+                activeProfiles.forEach((profile, index) => {
                     let lastChat;
                     if (profile.is_group) {
                         const groupMsgs = window._groupMessages[profile.user_id] || [];

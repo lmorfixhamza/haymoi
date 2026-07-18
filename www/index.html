@@ -409,38 +409,44 @@
             initGuestPeek();
             initHowItWorks();
             initInteractiveGlow();
-            
-            // Show login content
-            var loginContent = document.getElementById('login-content');
-            if (loginContent) {
-                loginContent.classList.remove('login-content--hidden');
-                loginContent.classList.add('login-content--visible');
-                setTimeout(function() { animateCounter(); }, 400);
-                setTimeout(function() { initRadarTicker(); }, 800);
-            }
         });
 
         // ======================================================
         // Cinematic Splash & Hide Native Splash Screen
         // ======================================================
-        window.onload = () => {
+        window.addEventListener('DOMContentLoaded', () => {
+            const splash = document.getElementById('cinematic-splash');
+            const loginContainer = document.getElementById('login-content');
+
+            // Hide login completely at the start
+            if(loginContainer) loginContainer.style.opacity = '0'; 
+
+            // Hide native splash once DOM is ready
             if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
-                // Hide native splash immediately
                 window.Capacitor.Plugins.SplashScreen.hide();
             }
-            
-            const splash = document.getElementById('cinematic-splash');
-            if (splash) {
-                // Fade out after 5 seconds
+
+            setTimeout(() => {
+                // Fade out the entire splash screen
+                splash.style.transition = 'opacity 0.8s ease-out';
+                splash.style.opacity = '0';
+                
                 setTimeout(() => {
-                    splash.style.transition = 'opacity 1s ease';
-                    splash.style.opacity = '0';
-                    setTimeout(() => {
-                        splash.style.display = 'none';
-                    }, 1000);
-                }, 4000);
-            }
-        };
+                    // Remove splash from DOM
+                    splash.style.display = 'none';
+                    // Now, smoothly fade IN the login screen
+                    if(loginContainer) {
+                        loginContainer.classList.remove('login-content--hidden');
+                        loginContainer.classList.add('login-content--visible');
+                        loginContainer.style.transition = 'opacity 0.5s ease-in';
+                        loginContainer.style.opacity = '1';
+                        
+                        setTimeout(function() { animateCounter(); }, 400);
+                        setTimeout(function() { initRadarTicker(); }, 800);
+                    }
+                }, 800); // Wait for splash to fade out completely
+            }, 4500); // Keep cinematic text visible for 4.5 seconds
+        });
 
     })();
     </script>

@@ -8661,7 +8661,7 @@ body {
     align-items: center;
     overflow: hidden;
     background-color: #090a0f;
-    background-image: url('assets/images/haymoi_clean_background.jpg.jpg');
+    background-image: url('assets/images/haymoi_clean_background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -8887,7 +8887,7 @@ html, body {
     overflow: hidden;
     background-color: #0A0512;
     z-index: 1;
-    background-image: url('assets/images/haymoi_clean_background.jpg.jpg');
+    background-image: url('assets/images/haymoi_clean_background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -9888,7 +9888,7 @@ html, body {
     width: 100vw;
     height: 100vh;
     background-color: #050505;
-    background-image: url('assets/images/haymoi_clean_background.jpg.jpg');
+    background-image: url('assets/images/haymoi_clean_background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

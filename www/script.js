@@ -4714,7 +4714,7 @@ function initializeApp() {
                     
                     // Force initialize for Android reliability
                     await GoogleAuth.initialize({
-                        clientId: '450289761364-0n60jqhpuug27ro74oksv5bdkmj7hqae.apps.googleusercontent.com',
+                        clientId: '118395481773-ss255frul31ch5deqmj3fkd62vd5uhte.apps.googleusercontent.com',
                         scopes: ['profile', 'email'],
                         grantOfflineAccess: true
                     });

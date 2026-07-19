@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "118395481773",
+    "project_id": "haymoi",
+    "storage_bucket": "haymoi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118395481773:android:797df2b6aa5995c61da024",
+        "android_client_info": {
+          "package_name": "com.haymoi.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "118395481773-ss255frul31ch5deqmj3fkd62vd5uhte.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXIhayoYsKvlmXwdsArpp4hyWEtIfApsY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118395481773-ss255frul31ch5deqmj3fkd62vd5uhte.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

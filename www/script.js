@@ -7321,3 +7321,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
+
+// ==============================================================================
+// NEW LOGIN REDESIGN LOGIC
+// ==============================================================================
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Password Visibility Toggle
+    const togglePasswordBtn = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('login-password');
+    const eyeIcon = document.getElementById('password-eye-icon');
+
+    if (togglePasswordBtn && passwordInput && eyeIcon) {
+        togglePasswordBtn.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle icon classes
+            if (type === 'text') {
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        });
+    }
+
+    // 2. Decorative Gradient Button Alert
+    const loginSubmitBtn = document.getElementById('login-submit-btn');
+    if (loginSubmitBtn) {
+        loginSubmitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Create a simple toast notification
+            const toast = document.createElement('div');
+            toast.textContent = "Veuillez utiliser la connexion sociale pour le moment (Google, TikTok, Facebook)";
+            toast.style.cssText = "position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:rgba(236,72,153,0.9); color:white; padding:12px 24px; border-radius:30px; font-family:'Outfit', sans-serif; font-size:14px; z-index:99999; box-shadow:0 4px 15px rgba(0,0,0,0.3); opacity:0; transition:opacity 0.3s ease; pointer-events:none;";
+            
+            document.body.appendChild(toast);
+            
+            // Fade in
+            setTimeout(() => { toast.style.opacity = "1"; }, 10);
+            
+            // Fade out and remove
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                setTimeout(() => { toast.remove(); }, 300);
+            }, 3000);
+        });
+    }
+});
